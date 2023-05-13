@@ -26,7 +26,9 @@ export default function App() {
     } catch (error) {
       console.log.error();
     } finally {
-      setIsLoaded(true);
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 2000);
     }
   };
 
@@ -48,6 +50,7 @@ export default function App() {
   }
 
   return (
+    //Bottom Tab
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
       <NavigationContainer>
         <BottomNav />
