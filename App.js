@@ -6,7 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Noahs branch</Text>
+      <Text>Seens branch</Text>
       <StatusBar style="auto" />
     </View>
   );
