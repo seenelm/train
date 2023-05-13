@@ -1,9 +1,11 @@
+import "react-native-gesture-handler";
 import { useState, useEffect, useCallback } from "react";
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
+import BottomNav from "./navigation/BottomNav";
 
 // Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
@@ -47,9 +49,9 @@ export default function App() {
 
   return (
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
-      <SafeAreaView>
-        <Text style={styles.label}>Noahs branch</Text>
-      </SafeAreaView>
+      <NavigationContainer>
+        <BottomNav />
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
@@ -58,8 +60,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
   label: {
     color: "blue",
