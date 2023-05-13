@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet, View } from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
-import ChatScreen from "../screens/ChatScreen";
+import ChatList from "../screens/ChatList";
 import ProfileScreen from "../screens/ProfileScreen";
 import Chat from "../assets/icons/logo.png";
 import ChatFocus from "../assets/icons/logo-outline.png";
@@ -30,7 +30,7 @@ const BottomNav = () => {
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen}
+        component={ChatList}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ focused }) => (
