@@ -4,7 +4,8 @@ import { Image, StyleSheet, View } from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
 import ChatScreen from "../screens/ChatScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import Chat from "../assets/icons/logo5.png";
+import Chat from "../assets/icons/logo.png";
+import ChatFocus from "../assets/icons/logo-outline.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Tab = createBottomTabNavigator();
@@ -24,6 +25,7 @@ const BottomNav = () => {
               style={styles.image}
             />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -31,7 +33,7 @@ const BottomNav = () => {
         component={ChatScreen}
         options={{
           tabBarLabel: "",
-          tabBarIcon: ({ size }) => (
+          tabBarIcon: ({ focused }) => (
             <View
               style={{
                 marginTop: 15,
@@ -39,9 +41,13 @@ const BottomNav = () => {
                 justifyContent: "center",
               }}
             >
-              <Image source={Chat} style={{ width: 75, height: 75 }} />
+              <Image
+                source={focused ? ChatFocus : Chat}
+                style={{ width: 75, height: 75 }}
+              />
             </View>
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -56,6 +62,7 @@ const BottomNav = () => {
               size={size}
             />
           ),
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
