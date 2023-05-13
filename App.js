@@ -8,9 +8,8 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
-import HomeScreen from "./assets/components/HomeScreen";
-import ProfileScreen from "./assets/components/ProfileScreen";
-import ClientScreen from "./assets/components/ClientScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import BottomNav from "./navigation/BottomNav";
 
 // Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
@@ -58,38 +57,9 @@ export default function App() {
   return (
     //Bottom Tab
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
-      <SafeAreaView>
-        <NavigationContainer>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              headerShown: false,
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName;
-
-                if (route.name === "Home") {
-                  iconName = focused ? "dot-circle" : "dot-circle";
-                } else if (route.name === "Client") {
-                  iconName = focused ? "users" : "users";
-                } else if (route.name === "Profile") {
-                  iconName = focused ? "user" : "user";
-                }
-
-                return (
-                  <FontAwesome5 name={iconName} size={size} color={color} />
-                );
-              },
-            })}
-            tabBarOptions={{
-              activeTintColor: "red",
-              inactiveTintColor: "gray",
-            }}
-          >
-            <Tab.Screen name="Home" component={HomeScreen} />
-            <Tab.Screen name="Client" component={ClientScreen} />
-            <Tab.Screen name="Profile" component={ProfileScreen} />
-          </Tab.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
+      <NavigationContainer>
+        <BottomNav />
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
@@ -98,8 +68,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
   },
   label: {
     color: "blue",
