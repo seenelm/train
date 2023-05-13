@@ -1,10 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 
 const ChatList = () => {
   return (
     <View style={styles.container}>
       <View style={styles.message}>
+        <Image />
         <Text style={styles.name}>Noah Gross</Text>
         <Text style={styles.content}>
           Hey to you wanna go watch the new Guardians of the Galaxy movie?
