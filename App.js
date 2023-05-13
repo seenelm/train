@@ -1,12 +1,20 @@
+import "react-native-gesture-handler";
 import { useState, useEffect, useCallback } from "react";
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
+import HomeScreen from "./assets/components/HomeScreen";
+import ProfileScreen from "./assets/components/ProfileScreen";
+import ClientScreen from "./assets/components/ClientScreen";
 
 // Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -24,7 +32,9 @@ export default function App() {
     } catch (error) {
       console.log.error();
     } finally {
-      setIsLoaded(true);
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 2000);
     }
   };
 
@@ -46,9 +56,39 @@ export default function App() {
   }
 
   return (
+    //Bottom Tab
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
       <SafeAreaView>
-        <Text style={styles.label}>Noahs branch</Text>
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              headerShown: false,
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+
+                if (route.name === "Home") {
+                  iconName = focused ? "dot-circle" : "dot-circle";
+                } else if (route.name === "Client") {
+                  iconName = focused ? "users" : "users";
+                } else if (route.name === "Profile") {
+                  iconName = focused ? "user" : "user";
+                }
+
+                return (
+                  <FontAwesome5 name={iconName} size={size} color={color} />
+                );
+              },
+            })}
+            tabBarOptions={{
+              activeTintColor: "red",
+              inactiveTintColor: "gray",
+            }}
+          >
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Client" component={ClientScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
       </SafeAreaView>
     </SafeAreaProvider>
   );
