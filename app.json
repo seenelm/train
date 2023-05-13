@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "train",
-    "slug": "train",
+    "name": "coach",
+    "slug": "coach",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
