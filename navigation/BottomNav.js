@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Image, StyleSheet, View } from "react-native";
 import DashboardScreen from "../screens/DashboardScreen";
-import ChatScreen from "../screens/ChatScreen";
+import ChatList from "../screens/ChatList";
 import ProfileScreen from "../screens/ProfileScreen";
 import Chat from "../assets/icons/logo5.png";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -24,11 +24,12 @@ const BottomNav = () => {
               style={styles.image}
             />
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
         name="Chat"
-        component={ChatScreen}
+        component={ChatList}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ size }) => (
@@ -42,6 +43,7 @@ const BottomNav = () => {
               <Image source={Chat} style={{ width: 75, height: 75 }} />
             </View>
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -56,6 +58,7 @@ const BottomNav = () => {
               size={size}
             />
           ),
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
