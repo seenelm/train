@@ -2,10 +2,6 @@ import "react-native-gesture-handler";
 import { useState, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,7 +9,6 @@ import BottomNav from "./navigation/BottomNav";
 
 // Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
-const Tab = createBottomTabNavigator();
 
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
