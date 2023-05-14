@@ -1,15 +1,34 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import Message from "./Message";
+import { View, StyleSheet } from "react-native";
 
-const ChatList = () => {
+const ChatList = ({ navigation }) => {
+  const handleTap = () => {
+    navigation.navigate("ChatScreen");
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.message}>
-        <Text style={styles.name}>Noah Gross</Text>
-        <Text style={styles.content}>
-          Hey to you wanna go watch the new Guardians of the Galaxy movie?
-        </Text>
-      </View>
+      <Message
+        name="Noah Gross"
+        content="Do you want to go see Guardians of the Galaxy!"
+        onPress={handleTap}
+      />
+      <Message
+        name="Yassine"
+        content="Do you want to go see Guardians of the Galaxy!"
+        onPress={handleTap}
+      />
+      <Message
+        name="Badr"
+        content="Do you want to go see Guardians of the Galaxy!"
+        onPress={handleTap}
+      />
+      <Message
+        name="Myah"
+        content="Do you want to go see Guardians of the Galaxy!"
+        onPress={handleTap}
+      />
     </View>
   );
 };
@@ -17,21 +36,8 @@ const ChatList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  message: {
-    padding: 10,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  name: {
-    fontWeight: "bold",
-    marginBottom: 5,
-  },
-  content: {
-    fontSize: 16,
+    paddingHorizontal: 20,
+    paddingTop: 10,
   },
 });
 
