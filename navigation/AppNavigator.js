@@ -1,37 +1,66 @@
-import React from "react";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { View, Image, StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Image, StyleSheet, View } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import DashboardScreen from "../screens/DashboardScreen";
 import ChatList from "../screens/ChatList";
 import ProfileScreen from "../screens/ProfileScreen";
+import ChatScreen from "../screens/ChatScreen";
+import EventDetailScreen from "../screens/EventDetailScreen";
+
 import Chat from "../assets/icons/logo.png";
 import ChatFocus from "../assets/icons/logo-outline.png";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import ChatScreen from "../screens/ChatScreen";
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-
-const ChatNav = () => {
-  return (
-    <View style={{ flex: 1 }}>
-      <Stack.Navigator>
-        <Stack.Screen name="ChatList" component={ChatList} />
-        <Stack.Screen name="ChatScreen" component={ChatScreen} />
-      </Stack.Navigator>
-    </View>
-  );
+const Tab = createBottomTabNavigator();
+const getCurrentRouteName = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "ChatList";
+  return routeName;
 };
 
 const AppNavigator = () => {
+  const ChatStack = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="ChatList"
+          component={ChatList}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ChatScreen"
+          component={ChatScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  };
+  const EventStack = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="DashboardScreen"
+          component={DashboardScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EventDetailScreen"
+          component={EventDetailScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  };
+
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
           name="Dash"
-          component={DashboardScreen}
+          component={EventStack}
           options={{
             tabBarLabel: "",
             tabBarIcon: ({ color, size, focused }) => (
@@ -46,26 +75,33 @@ const AppNavigator = () => {
         />
         <Tab.Screen
           name="Chat"
-          component={ChatNav}
-          options={{
-            tabBarLabel: "",
-            tabBarIcon: ({ focused }) => (
-              <View
-                style={{
-                  marginTop: 15,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Image
-                  source={focused ? ChatFocus : Chat}
-                  style={{ width: 75, height: 75 }}
-                />
-              </View>
-            ),
-            headerShown: false,
+          component={ChatStack}
+          options={({ route }) => {
+            const routeName = getCurrentRouteName(route);
+            return {
+              tabBarLabel: "",
+              tabBarIcon: ({ focused }) => (
+                <View
+                  style={{
+                    marginTop: 15,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    source={focused ? ChatFocus : Chat}
+                    style={{ width: 75, height: 75 }}
+                  />
+                </View>
+              ),
+              tabBarStyle: {
+                display: routeName === "ChatScreen" ? "none" : "flex",
+              },
+              headerShown: false,
+            };
           }}
         />
+
         <Tab.Screen
           name="Profile"
           component={ProfileScreen}

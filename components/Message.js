@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import ProfilePic from "../assets/icons/profpic.png";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Message = ({ name, content, onPress }) => {
   return (
@@ -28,13 +27,12 @@ const styles = StyleSheet.create({
   },
   messageContainer: {
     flexDirection: "row",
-    marginTop: 20,
+    marginTop: 10,
     marginRight: 30,
-    backgroundColor: "#f0f0f0",
     borderRadius: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     alignItems: "center",
-    maxWidth: "80%",
+    maxWidth: "90%",
   },
   message: {
     flexDirection: "column",
