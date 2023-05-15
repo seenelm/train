@@ -1,13 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
-import { View, Text, StyleSheet } from "react-native";
-
-const ChatScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Chat Screen</Text>
-    </View>
-=======
 import {
   View,
   TouchableOpacity,
@@ -39,17 +30,12 @@ const ChatScreen = () => {
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
->>>>>>> 334e4ef (added styling and a few other ui components)
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-<<<<<<< HEAD
-    justifyContent: "center",
-    alignItems: "center",
-=======
     flexDirection: "column",
     justifyContent: "space-between",
   },
@@ -92,7 +78,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     zIndex: 1,
->>>>>>> 334e4ef (added styling and a few other ui components)
   },
 });
 

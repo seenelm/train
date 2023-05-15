@@ -4,8 +4,7 @@ import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
-import { NavigationContainer } from "@react-navigation/native";
-import BottomNav from "./navigation/BottomNav";
+import AppNavigator from "./navigation/AppNavigator";
 
 // Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
@@ -52,9 +51,7 @@ export default function App() {
   return (
     //Bottom Tab
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
-      <NavigationContainer>
-        <BottomNav />
-      </NavigationContainer>
+      <AppNavigator />
     </SafeAreaProvider>
   );
 }
