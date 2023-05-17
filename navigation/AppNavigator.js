@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { View, Image, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -21,6 +22,14 @@ const getCurrentRouteName = (route) => {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "ChatList";
   return routeName;
 };
+=======
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MainNav from "./MainNav";
+
+const Stack = createStackNavigator();
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
 
 const AppNavigator = () => {
   const ChatStack = () => {
@@ -58,6 +67,7 @@ const AppNavigator = () => {
 
   return (
     <NavigationContainer>
+<<<<<<< HEAD
       <Tab.Navigator>
         <Tab.Screen
           name="Dash"
@@ -132,10 +142,14 @@ const AppNavigator = () => {
     <NavigationContainer>
       <MainNav />
 >>>>>>> seen
+=======
+      <MainNav />
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
     </NavigationContainer>
   );
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const styles = StyleSheet.create({
   image: {
@@ -149,4 +163,6 @@ const styles = StyleSheet.create({
 
 =======
 >>>>>>> seen
+=======
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
 export default AppNavigator;

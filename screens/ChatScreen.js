@@ -1,6 +1,7 @@
 import React from "react";
 import {
   View,
+<<<<<<< HEAD
   TouchableOpacity,
 <<<<<<< HEAD
   StyleSheet,
@@ -16,11 +17,21 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 =======
 import { styles } from "../styles/ChatScreenStyles";
 >>>>>>> seen
+=======
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Entypo } from "@expo/vector-icons";
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
 
 const ChatScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.chatArea}></View>
+<<<<<<< HEAD
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
@@ -36,6 +47,14 @@ const ChatScreen = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+=======
+      <View style={styles.input}>
+        <TouchableOpacity>
+          <Entypo name="camera" color="black" size={24} style={styles.button} />
+        </TouchableOpacity>
+        <TextInput style={styles.textInput} />
+      </View>
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
     </SafeAreaView>
   );
 };
@@ -76,6 +95,7 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     borderWidth: 1,
+<<<<<<< HEAD
     borderColor: "#ccc",
     borderRadius: 10,
     height: 40,
@@ -86,6 +106,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 20,
     zIndex: 1,
+=======
+    borderRadius: 50,
+    borderColor: "black",
+    marginHorizontal: 15,
+    paddingHorizontal: 12,
+>>>>>>> b0a225803735e16a4f166ee4afc6f4e9b8d736a4
   },
 });
 

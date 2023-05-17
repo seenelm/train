@@ -1,13 +1,8 @@
 import React from "react";
 import Message from "../components/Message";
-<<<<<<< HEAD
-import { Text, StyleSheet, FlatList, TextInput } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-=======
 import { Text, FlatList, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { styles } from "../styles/ChatListStyles";
->>>>>>> seen
 
 const ChatList = ({ navigation }) => {
   const handleTap = () => {
@@ -56,28 +51,4 @@ const ChatList = ({ navigation }) => {
   );
 };
 
-<<<<<<< HEAD
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 10,
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  TextInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginLeft: 30,
-    marginRight: 10,
-    height: 40,
-  },
-});
-
-=======
->>>>>>> seen
 export default ChatList;
