@@ -1,15 +1,23 @@
 import React from "react";
-import { View, Button, StyleSheet, TextInput } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Entypo } from "@expo/vector-icons";
 
 const ChatScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.chatArea}></View>
       <View style={styles.input}>
-        <Button title="Image" style={styles.button} />
+        <TouchableOpacity>
+          <Entypo name="camera" color="black" size={24} style={styles.button} />
+        </TouchableOpacity>
         <TextInput style={styles.textInput} />
-        <Button title="Camera" style={styles.button} />
       </View>
     </SafeAreaView>
   );
@@ -36,6 +44,11 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
+    borderWidth: 1,
+    borderRadius: 50,
+    borderColor: "black",
+    marginHorizontal: 15,
+    paddingHorizontal: 12,
   },
 });
 
