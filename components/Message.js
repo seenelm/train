@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import ProfilePic from "../assets/icons/profpic.png";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const Message = ({ name, content, onPress }) => {
   return (
