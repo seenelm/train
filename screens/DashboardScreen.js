@@ -1,9 +1,17 @@
 import React from "react";
+<<<<<<< HEAD
 import { Text, StyleSheet, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EventCalendar from "../components/EventCalendar";
 import EventCard from "../components/EventCard";
 import { SectionList } from "react-native";
+=======
+import { Text, SectionList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import EventCalendar from "../components/EventCalendar";
+import EventCard from "../components/EventCard";
+import { styles } from "../styles/DashboardStyles";
+>>>>>>> seen
 
 const DashboardScreen = ({ navigation }) => {
   const handleTap = () => {
@@ -66,6 +74,7 @@ const DashboardScreen = ({ navigation }) => {
   );
 };
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -82,4 +91,6 @@ const styles = StyleSheet.create({
   },
 });
 
+=======
+>>>>>>> seen
 export default DashboardScreen;

@@ -1,69 +1,47 @@
 import "react-native-gesture-handler";
+<<<<<<< HEAD
 import { useState, useEffect, useCallback } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as SplashScreen from "expo-splash-screen";
 import * as Fonts from "expo-font";
 import AppNavigator from "./navigation/AppNavigator";
+=======
+import { useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import * as SplashScreen from "expo-splash-screen";
+import AppNavigator from "./navigation/AppNavigator";
+import AppLoadingScreen from "./screens/AppLoadingScreen";
+import { styles } from "./styles/AppStyles";
+import LoginScreen from "./screens/LoginScreen";
+>>>>>>> seen
 
-// Make splash screen visible until app loads
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [appLoaded, setAppLoaded] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /**
-   * Load fonts at runtime.
-   */
-  const loadFonts = async () => {
-    try {
-      await Fonts.loadAsync({
-        bold: require("./assets/fonts/Roboto-Bold.ttf"),
-        italic: require("./assets/fonts/Roboto-Italic.ttf"),
-        regular: require("./assets/fonts/Roboto-Regular.ttf"),
-      });
-    } catch (error) {
-      console.log.error();
-    } finally {
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 2000);
-    }
+  const handleLogin = () => {
+    setIsLoggedIn(true);
   };
 
-  useEffect(() => {
-    loadFonts();
-  }, []);
+  if (!appLoaded) {
+    return <AppLoadingScreen setAppLoaded={setAppLoaded} />;
+  }
 
-  /**
-   * Hide loading screen
-   */
-  const handleLoadingScreen = useCallback(async () => {
-    if (isLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isLoaded]);
-
-  if (!isLoaded) {
-    return null;
+  if (!isLoggedIn) {
+    return <LoginScreen onLogin={handleLogin} />;
   }
 
   return (
+<<<<<<< HEAD
     //Bottom Tab
     <SafeAreaProvider style={styles.container} onLayout={handleLoadingScreen}>
+=======
+    <SafeAreaProvider style={styles.container}>
+>>>>>>> seen
       <AppNavigator />
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  label: {
-    color: "blue",
-    fontSize: 18,
-    fontFamily: "regular",
-  },
-});

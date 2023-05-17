@@ -2,13 +2,20 @@ import React from "react";
 import {
   View,
   TouchableOpacity,
+<<<<<<< HEAD
   StyleSheet,
+=======
+>>>>>>> seen
   TextInput,
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+<<<<<<< HEAD
+=======
+import { styles } from "../styles/ChatScreenStyles";
+>>>>>>> seen
 
 const ChatScreen = () => {
   return (
@@ -33,6 +40,7 @@ const ChatScreen = () => {
   );
 };
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -81,4 +89,6 @@ const styles = StyleSheet.create({
   },
 });
 
+=======
+>>>>>>> seen
 export default ChatScreen;

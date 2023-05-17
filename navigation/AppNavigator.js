@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { View, Image, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
@@ -118,10 +119,24 @@ const AppNavigator = () => {
           }}
         />
       </Tab.Navigator>
+=======
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import MainNav from "./MainNav";
+
+const Stack = createStackNavigator();
+
+const AppNavigator = () => {
+  return (
+    <NavigationContainer>
+      <MainNav />
+>>>>>>> seen
     </NavigationContainer>
   );
 };
 
+<<<<<<< HEAD
 const styles = StyleSheet.create({
   image: {
     marginTop: 15,
@@ -132,4 +147,6 @@ const styles = StyleSheet.create({
   },
 });
 
+=======
+>>>>>>> seen
 export default AppNavigator;
