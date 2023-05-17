@@ -1,9 +1,9 @@
 import React from "react";
-import { Text, StyleSheet, FlatList } from "react-native";
+import { Text, SectionList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EventCalendar from "../components/EventCalendar";
 import EventCard from "../components/EventCard";
-import { SectionList } from "react-native";
+import { styles } from "../styles/DashboardStyles";
 
 const DashboardScreen = ({ navigation }) => {
   const handleTap = () => {
@@ -65,21 +65,5 @@ const DashboardScreen = ({ navigation }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 10,
-  },
-  sectionListContainer: {
-    paddingTop: 10,
-    flexGrow: 1,
-  },
-  text: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-});
 
 export default DashboardScreen;
