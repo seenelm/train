@@ -11,18 +11,9 @@ SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appLoaded, setAppLoaded] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
 
   if (!appLoaded) {
     return <AppLoadingScreen setAppLoaded={setAppLoaded} />;
-  }
-
-  if (!isLoggedIn) {
-    return <LoginScreen onLogin={handleLogin} />;
   }
 
   return (

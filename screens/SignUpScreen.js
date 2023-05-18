@@ -7,19 +7,15 @@ import { styles } from "../styles/LoginScreenStyles";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function LoginScreen({ onLogin, navigation }) {
+export default function SignUpScreen({ onSignUp }) {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleLogin = () => {
+  const handleSignUp = () => {
     console.log(
-      `Logging in with username: ${username} and password: ${password}`
+      `Signing up with username: ${username} and password: ${password}`
     );
-    onLogin();
-  };
-
-  const handleTap = () => {
-    navigation.navigate("SignUpScreen");
+    onSignUp();
   };
 
   const [userInfo, setUserInfo] = React.useState(null);
@@ -33,10 +29,10 @@ export default function LoginScreen({ onLogin, navigation }) {
   });
 
   React.useEffect(() => {
-    handleSignInWithGoogle();
+    handleSignUpWithGoogle();
   }, [response]);
 
-  async function handleSignInWithGoogle() {
+  async function handleSignUpWithGoogle() {
     const user = await AsyncStorage.getItem("@user");
     if (!user) {
       if (response?.type === "success") {
@@ -65,7 +61,7 @@ export default function LoginScreen({ onLogin, navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Login</Text>
+      <Text style={styles.header}>Sign Up</Text>
       <Text>{JSON.stringify(userInfo, null, 2)}</Text>
       <View style={styles.inputContainer}>
         <TextInput
@@ -81,9 +77,12 @@ export default function LoginScreen({ onLogin, navigation }) {
           secureTextEntry
           style={styles.input}
         />
-        <Button title="Login" onPress={handleLogin} />
-        <Button title="sign in with google" onPress={() => promptAsync()} />
-        <Button title="Sign Up" onPress={handleTap} />
+        <Button title="Sign Up" onPress={handleSignUp} />
+        <Button title="sign up with google" onPress={() => promptAsync()} />
+        <Button
+          title="Delete"
+          onPress={() => AsyncStorage.removeItem("@user")}
+        />
       </View>
     </View>
   );
