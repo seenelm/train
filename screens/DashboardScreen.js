@@ -1,67 +1,64 @@
 import React from "react";
-import { Text, SectionList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import EventCalendar from "../components/EventCalendar";
-import EventCard from "../components/EventCard";
-import { styles } from "../styles/DashboardStyles";
+import {
+  FlatList,
+  SafeAreaView,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { sections } from "../assets/Data";
+import EventCard from "../events/EventCard";
+import { dashboardStyles } from "../styles/Styles";
+import addIcon from "../assets/icons/plus1.png";
+import bell from "../assets/icons/bell.png";
 
 const DashboardScreen = ({ navigation }) => {
-  const handleTap = () => {
-    navigation.navigate("EventDetailScreen");
+  const handleGroupTap = () => {
+    navigation.navigate("Group");
   };
-  const sections = [
-    {
-      title: "Today",
-      data: [
-        {
-          id: 1,
-          eventType: "Private",
-          eventName: "Field Training",
-          eventTime: "3:00-4:00pm",
-          eventLocation: "Tuscarora High",
-        },
-        {
-          id: 2,
-          eventType: "Public",
-          eventName: "Weight Room",
-          eventTime: "4:00-5 :00pm",
-          eventLocation: "Tuscarora High",
-        },
-      ],
-    },
-    {
-      title: "Schedule",
-      data: [
-        {
-          id: 3,
-          component: <EventCalendar />,
-        },
-      ],
-    },
-  ];
+
+  const handleAddGroupTap = () => {
+    navigation.navigate("AddGroup");
+  };
+
+  const renderItem = ({ item }) => (
+    <EventCard
+      fitspaceName={item.fitspaceName}
+      imageSource={item.imageSource}
+      onPress={handleGroupTap}
+    />
+  );
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <SectionList
-        showsVerticalScrollIndicator={false}
-        sections={sections}
-        renderItem={({ item }) =>
-          item.component || (
-            <EventCard
-              eventType={item.eventType}
-              eventName={item.eventName}
-              eventTime={item.eventTime}
-              eventLocation={item.eventLocation}
-              onPress={handleTap}
-            />
-          )
-        }
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.text}>{title}</Text>
-        )}
-        keyExtractor={(item) => item.id.toString()}
-        contentContainerStyle={styles.sectionListContainer}
-      />
+    <SafeAreaView style={dashboardStyles.container} edges={["top"]}>
+      {sections.map((section, index) => (
+        <View key={index} style={{ flex: 1 }}>
+          <View style={dashboardStyles.titleContainer}>
+            <Text style={dashboardStyles.text}>{section.title}</Text>
+            <TouchableOpacity style={dashboardStyles.iconContainer}>
+              <Image
+                source={bell}
+                resizeMode="contain"
+                style={dashboardStyles.image}
+              />
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={section.data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            numColumns={2}
+          />
+        </View>
+      ))}
+      <TouchableOpacity style={dashboardStyles.fab} onPress={handleAddGroupTap}>
+        <Image
+          source={addIcon}
+          resizeMode="contain"
+          style={dashboardStyles.plus}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
