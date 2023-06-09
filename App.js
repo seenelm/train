@@ -1,24 +1,34 @@
 import "react-native-gesture-handler";
 import { useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import * as SplashScreen from "expo-splash-screen";
-import AppNavigator from "./navigation/AppNavigator";
-import AppLoadingScreen from "./screens/AppLoadingScreen";
-import { styles } from "./styles/AppStyles";
-import LoginScreen from "./screens/LoginScreen";
+import { StyleSheet } from "react-native";
+import AppNav from "./nav/AppNav";
+import AppLoading from "./screens/AppLoading";
 
-SplashScreen.preventAutoHideAsync();
-
-export default function App() {
+const App = () => {
   const [appLoaded, setAppLoaded] = useState(false);
 
   if (!appLoaded) {
-    return <AppLoadingScreen setAppLoaded={setAppLoaded} />;
+    return <AppLoading setAppLoaded={setAppLoaded} appLoaded={appLoaded} />;
   }
 
   return (
     <SafeAreaProvider style={styles.container}>
-      <AppNavigator />
+      <AppNav />
     </SafeAreaProvider>
   );
-}
+};
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  label: {
+    color: "blue",
+    fontSize: 18,
+    fontFamily: "regular",
+  },
+});
+
+export default App;
