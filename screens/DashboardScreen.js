@@ -48,7 +48,7 @@ const DashboardScreen = ({ navigation }) => {
             data={section.data}
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
+            numColumns={1} // changed from 2 to 1
           />
         </View>
       ))}

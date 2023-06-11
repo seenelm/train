@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const checkCredentials = async (username, password) => {
   try {
-    const response = await axios.post("http://localhost:3000/login", {
+    const response = await axios.post("http://192.168.0.107:3000/login", {
       username,
       password,
     });
@@ -20,7 +20,7 @@ export const checkCredentials = async (username, password) => {
 
 export const createUser = async (username, password) => {
   try {
-    const response = await axios.post("http://localhost:3000/signup", {
+    const response = await axios.post("http://192.168.0.107:3000/signup", {
       username,
       password,
     });

@@ -4,18 +4,18 @@ export const sections = [
     data: [
       {
         id: 1,
-        fitspaceName: "Riverside Lacrosse",
-        imageSource: require("./side.png"),
+        fitspaceName: "Coachella",
+        imageSource: require("./chella.jpeg"),
       },
       {
         id: 2,
         fitspaceName: "Tuscarora Football",
-        imageSource: require("./tusky.png"),
+        imageSource: require("./tusky.jpeg"),
       },
       {
         id: 3,
-        fitspaceName: "Tuscarora DBs",
-        imageSource: require("./tusky.png"),
+        fitspaceName: "Melissa",
+        imageSource: require("./profile.jpeg"),
       },
     ],
   },

@@ -11,15 +11,16 @@ const EventCard = ({ fitspaceName, imageSource, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.cardContainer}>
-        <Text style={styles.fitspaceName}>{fitspaceName}</Text>
         <ImageBackground
           defaultSource={require("../assets/adaptive-icon.png")}
           source={imageSource}
           style={styles.imageBackground}
-          resizeMode="contain" // adjust this as per your requirements
+          resizeMode="cover"
+          imageStyle={{ borderRadius: 40 }}
         >
-          <View style={styles.imageContainer} />
+          <View style={styles.overlay} />
         </ImageBackground>
+        <Text style={styles.fitspaceName}>{fitspaceName}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -27,37 +28,38 @@ const EventCard = ({ fitspaceName, imageSource, onPress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 10,
+    flex: 1,
   },
   cardContainer: {
-    flexDirection: "column",
-    backgroundColor: "#EAEAEA",
-    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "transparent",
     padding: 10,
     marginBottom: 10,
     overflow: "hidden",
-    height: 190,
-    width: 180,
+    height: 150,
+    width: "100%",
+    borderBottomWidth: 0.5, // added borderBottomWidth
+    borderColor: "#E9E9E9", // added borderColor
   },
   imageBackground: {
-    width: "100%",
-    height: "100%",
-    justifyContent: "center",
-  },
-  imageContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    marginVertical: 10,
+    width: 100,
     height: 100,
+    justifyContent: "center",
+    marginRight: 10,
+    color: "black",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
   },
   fitspaceName: {
-    fontSize: 15,
+    fontSize: 22,
     fontWeight: "bold",
-    textAlign: "center",
+    textAlign: "left",
     color: "#000",
-  },
-  buttonContainer: {
-    marginTop: "auto",
+    flex: 1,
+    alignSelf: "center",
   },
 });
 

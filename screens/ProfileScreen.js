@@ -1,12 +1,15 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import profile from "../assets/icons/seenprofile.png";
 
 const ProfileScreen = () => {
+  const username = useSelector((state) => state.user.username);
+
   return (
     <View style={styles.container}>
       <Image style={styles.profileImg} source={profile} />
-      <Text style={styles.name}>Your Name</Text>
+      <Text style={styles.name}>{username}</Text>
 
       <View style={styles.socialMediaContainer}>
         <TouchableOpacity onPress={() => alert("Facebook pressed!")}>

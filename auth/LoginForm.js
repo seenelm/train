@@ -11,12 +11,19 @@ import CustomButton from "../components/CustomButton";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { checkCredentials } from "../api/Api";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUsername,
+  setPassword,
+  setHasError,
+  setErrorMessage,
+} from "../api/userSlice";
 
 const LoginForm = ({ onLogin, navigation }) => {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [errorMessage, setErrorMessage] = React.useState("");
-  const [hasError, setHasError] = React.useState(false);
+  const dispatch = useDispatch();
+  const { username, password, hasError, errorMessage } = useSelector(
+    (state) => state.user
+  );
 
   const handleLogin = async () => {
     try {
@@ -25,12 +32,12 @@ const LoginForm = ({ onLogin, navigation }) => {
       );
       const res = await checkCredentials(username, password);
       if (res.data.authenticated) {
-        setHasError(false);
-        setErrorMessage("");
+        dispatch(setHasError(false));
+        dispatch(setErrorMessage(""));
         onLogin();
       } else {
-        setHasError(true);
-        setErrorMessage("Incorrect username or password");
+        dispatch(setHasError(true));
+        dispatch(setErrorMessage("Incorrect username or password"));
       }
     } catch (err) {
       console.log("An error occurred during login", err);
@@ -38,8 +45,8 @@ const LoginForm = ({ onLogin, navigation }) => {
   };
 
   const clearError = () => {
-    setHasError(false);
-    setErrorMessage("");
+    dispatch(setHasError(false));
+    dispatch(setErrorMessage(""));
   };
 
   const clearPassword = () => {
@@ -68,7 +75,7 @@ const LoginForm = ({ onLogin, navigation }) => {
         <TextInput
           placeholder="Username"
           value={username}
-          onChangeText={setUsername}
+          onChangeText={(value) => dispatch(setUsername(value))}
           onFocus={clearError}
           style={inputStyle}
         />
@@ -76,7 +83,7 @@ const LoginForm = ({ onLogin, navigation }) => {
           <TextInput
             placeholder="Password"
             value={password}
-            onChangeText={setPassword}
+            onChangeText={(value) => dispatch(setPassword(value))}
             secureTextEntry
             onFocus={clearError}
             style={[inputStyle, loginStyles.passwordInput]} // apply passwordInput style

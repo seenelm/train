@@ -1,6 +1,8 @@
 import "react-native-gesture-handler";
 import { useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Provider } from "react-redux"; // import Provider from react-redux
+import store from "./api/store";
 import { StyleSheet } from "react-native";
 import AppNav from "./nav/AppNav";
 import AppLoading from "./screens/AppLoading";
@@ -13,9 +15,11 @@ const App = () => {
   }
 
   return (
-    <SafeAreaProvider style={styles.container}>
-      <AppNav />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider style={styles.container}>
+        <AppNav />
+      </SafeAreaProvider>
+    </Provider>
   );
 };
 
