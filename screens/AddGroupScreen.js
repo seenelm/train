@@ -12,12 +12,27 @@ import * as ImagePicker from "expo-image-picker";
 import uploadImage from "../assets/icons/uploadimg.png";
 import { Dimensions } from "react-native";
 
+import { useSelector } from "react-redux";
+import { useThunk } from "../hooks/useThunk";
+import { addFitSpace } from "../store";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const AddGroupScreen = ({ navigation }) => {
   const [fitspaceName, setFitspaceName] = useState("");
   const [image, setImage] = useState(null);
+  const [createFitSpace, error] = useThunk(addFitSpace);
+
+  const handleFitspaceAdd = (e) => {
+    e.preventDefault();
+    createFitSpace(fitspaceName);
+    console.log({ fitspaceName });
+  };
+
+  if (error) {
+    console.log("Error: " + error);
+  }
 
   useEffect(() => {
     (async () => {
@@ -73,7 +88,7 @@ const AddGroupScreen = ({ navigation }) => {
       <CustomButton
         title="Continue"
         style={buttonStyles}
-        onPress={() => console.log("Continue Pressed")}
+        onPress={handleFitspaceAdd}
       />
       <CustomButton
         title="Cancel"

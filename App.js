@@ -4,6 +4,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import AppNav from "./nav/AppNav";
 import AppLoading from "./screens/AppLoading";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 const App = () => {
   const [appLoaded, setAppLoaded] = useState(false);
@@ -13,9 +15,11 @@ const App = () => {
   }
 
   return (
-    <SafeAreaProvider style={styles.container}>
-      <AppNav />
-    </SafeAreaProvider>
+    <Provider store={store}>
+      <SafeAreaProvider style={styles.container}>
+        <AppNav />
+      </SafeAreaProvider>
+    </Provider>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import {
   View,
   TextInput,
@@ -18,12 +18,25 @@ const LoginForm = ({ onLogin, navigation }) => {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [hasError, setHasError] = React.useState(false);
 
+  // useEffect(() => {
+  //   if (results.data && results.data.authenticated) {
+  //     onLogin();
+  //   } else {
+  //     console.log("Authentication failed: ", results.data);
+  //   }
+  // }, [results.data]);
+
+  // useEffect(() => {
+  //   onLogin();
+  // }, []);
+
   const handleLogin = async () => {
     try {
       console.log(
         `Logging in with username: ${username} and password: ${password}`
       );
       const res = await checkCredentials(username, password);
+      console.log(res);
       if (res.data.authenticated) {
         setHasError(false);
         setErrorMessage("");
@@ -91,7 +104,7 @@ const LoginForm = ({ onLogin, navigation }) => {
           )}
         </View>
         {hasError && <Text style={loginStyles.errorText}>{errorMessage}</Text>}
-        <CustomButton title="Login" onPress={handleLogin} style={loginStyle} />
+        <CustomButton title="Login" onPress={onLogin} style={loginStyle} />
       </View>
     </SafeAreaView>
   );
