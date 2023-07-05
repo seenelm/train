@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { loginStyles } from "../styles/Styles";
-import CustomButton from "../components/CustomButton";
+import Button from "../components/Button";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createUser } from "../api/Api";
@@ -23,16 +23,11 @@ const SignUpForm = ({ onSignUp, navigation }) => {
     try {
       const res = await createUser(username, password);
       if (res.data.success) {
-        // User was successfully created, call the onSignUp function to navigate
         onSignUp();
       } else {
-        // Handle signup error
-        // You might want to set an error state variable here to display an error message
       }
     } catch (err) {
       console.log("An error occurred during sign up", err);
-      // Handle network error
-      // You might want to set an error state variable here to display an error message
     }
   };
 
@@ -62,28 +57,25 @@ const SignUpForm = ({ onSignUp, navigation }) => {
           secureTextEntry
           style={loginStyles.input}
         />
-        <CustomButton
-          title="Sign up"
-          onPress={handleSignUp}
-          style={signupStyle}
-        />
       </View>
+      <Button
+        onPress={handleSignUp}
+        style={signupStyle.signUpButton}
+        textStyle={signupStyle.buttonText}
+      >
+        Sign up
+      </Button>
     </SafeAreaView>
   );
 };
 
 const signupStyle = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
+  signUpButton: {
     borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
   },
   buttonText: {
-    color: "white",
+    fontFamily: "bold",
+    fontSize: 20,
   },
   icon: {
     position: "absolute",

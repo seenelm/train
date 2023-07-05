@@ -1,45 +1,37 @@
-import React from "react";
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from "@react-navigation/stack";
-import LoginScreen from "../auth/LoginScreen";
+import StackNav from "../components/Stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
+import AuthForm from "../auth/AuthForm";
 import LoginForm from "../auth/LoginForm";
-import SignUpScreen from "../auth/SignUpScreen";
 import SignUpForm from "../auth/SignUpForm";
 
-const Stack = createStackNavigator();
+const getScreens = (onLogin, onSignUp) => [
+  {
+    name: "AuthForm",
+    component: (props) => (
+      <AuthForm
+        {...props}
+        onLoginForm={() => props.navigation.navigate("Login")}
+        onSignUpForm={() => props.navigation.navigate("Sign up")}
+      />
+    ),
+  },
+  {
+    name: "Login",
+    component: (props) => <LoginForm {...props} onLogin={onLogin} />,
+  },
+  {
+    name: "Sign up",
+    component: (props) => <SignUpForm {...props} onSignUp={onSignUp} />,
+  },
+];
+
+const options = {
+  headerShown: false,
+  cardStyleInterpolator: CardStyleInterpolators.forFadeFromBottomAndroid,
+};
 
 const AuthNav = ({ onLogin, onSignUp }) => (
-  <Stack.Navigator
-    screenOptions={{
-      headerShown: false,
-      cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-    }}
-  >
-    <Stack.Screen name="LoginScreen">
-      {(props) => (
-        <LoginScreen
-          {...props}
-          onSignUpScreen={() => props.navigation.navigate("SignUpScreen")}
-        />
-      )}
-    </Stack.Screen>
-    <Stack.Screen name="SignUpScreen">
-      {(props) => (
-        <SignUpScreen
-          {...props}
-          onLoginScreen={() => props.navigation.navigate("LoginScreen")}
-        />
-      )}
-    </Stack.Screen>
-    <Stack.Screen name="Login">
-      {(props) => <LoginForm {...props} onLogin={onLogin} />}
-    </Stack.Screen>
-    <Stack.Screen name="Sign up">
-      {(props) => <SignUpForm {...props} onSignUp={onSignUp} />}
-    </Stack.Screen>
-  </Stack.Navigator>
+  <StackNav screens={getScreens(onLogin, onSignUp)} options={options} />
 );
 
 export default AuthNav;

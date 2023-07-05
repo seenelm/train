@@ -1,21 +1,21 @@
 export const sections = [
   {
-    title: "Fitspaces",
+    title: "Hi, Noah!",
     data: [
       {
         id: 1,
-        fitspaceName: "Coachella",
-        imageSource: require("./chella.jpeg"),
-      },
-      {
-        id: 2,
         fitspaceName: "Tuscarora Football",
         imageSource: require("./tusky.jpeg"),
       },
       {
+        id: 2,
+        fitspaceName: "D Block",
+        imageSource: require("./safeties.jpeg"),
+      },
+      {
         id: 3,
-        fitspaceName: "Melissa",
-        imageSource: require("./profile.jpeg"),
+        fitspaceName: "Juniors",
+        imageSource: require("./gunna.jpeg"),
       },
     ],
   },
@@ -24,24 +24,28 @@ export const sections = [
 export const messages = [
   {
     id: 1,
-    name: "Noah Gross",
+    name: "Tuscarora Football",
     content:
-      "Do you want to go see Guardians of the Galaxy! test test tes test test test test test",
+      "We have a team meeting after practice on Monday, I will need the Safties to stay after the team meetng to go over",
+    profilePic: require("./tusky.jpeg"),
   },
   {
     id: 2,
-    name: "Yassine",
-    content: "Do you want to go see Guardians of the Galaxy!",
+    name: "Juniors",
+    content: "Whats the word brodie",
+    profilePic: require("./gunna.jpeg"),
   },
   {
     id: 3,
-    name: "Badr",
-    content: "Do you want to go see Guardians of the Galaxy!",
+    name: "Noah",
+    content: "Do you want to go see Guard",
+    profilePic: require("./icons/noahprofile.png"),
   },
   {
     id: 4,
-    name: "Myah",
-    content: "Do you want to go see Guardians of the Galaxy!",
+    name: "Yassine",
+    content: "Damn boi thats hot! Dont play w him!!! BRRR",
+    profilePic: require("./icons/seenprofile.png"),
   },
 ];
 
@@ -65,5 +69,23 @@ export const athletes = [
     id: 4,
     name: "Myah Gross",
     content: "Basketball Player",
+  },
+];
+
+export const events = [
+  {
+    id: 1,
+    EventName: "Fitness Assessment",
+    time: "2023-06-18",
+  },
+  {
+    id: 2,
+    EventName: "Bodyweight Workout",
+    time: "2023-06-22",
+  },
+  {
+    id: 3,
+    EventName: "Testing",
+    time: "2023-06-30",
   },
 ];

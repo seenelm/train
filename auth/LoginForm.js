@@ -5,9 +5,10 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { loginStyles } from "../styles/Styles";
-import CustomButton from "../components/CustomButton";
+import Button from "../components/Button";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { checkCredentials } from "../api/Api";
@@ -18,6 +19,7 @@ import {
   setHasError,
   setErrorMessage,
 } from "../api/userSlice";
+import logo from "../assets/icons/logo3.png";
 
 const LoginForm = ({ onLogin, navigation }) => {
   const dispatch = useDispatch();
@@ -51,6 +53,7 @@ const LoginForm = ({ onLogin, navigation }) => {
 
   const clearPassword = () => {
     setPassword("");
+    setPassword("");
     clearError();
   };
 
@@ -62,6 +65,7 @@ const LoginForm = ({ onLogin, navigation }) => {
   return (
     <SafeAreaView style={loginStyles.container}>
       <View style={loginStyles.headerContainer}>
+        <Image source={logo} style={loginStyles.logo} />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           activeOpacity={0.6}
@@ -69,7 +73,8 @@ const LoginForm = ({ onLogin, navigation }) => {
         >
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={loginStyles.header}>Login</Text>
+        <Text style={loginStyles.header}>Welcome back!</Text>
+        <Text>Please enter your details to sign in</Text>
       </View>
       <View style={loginStyles.inputContainer}>
         <TextInput
@@ -78,15 +83,18 @@ const LoginForm = ({ onLogin, navigation }) => {
           onChangeText={(value) => dispatch(setUsername(value))}
           onFocus={clearError}
           style={inputStyle}
+          keyboardAppearance="dark"
+          autoFocus={true}
         />
         <View style={loginStyles.passwordInputContainer}>
           <TextInput
             placeholder="Password"
             value={password}
             onChangeText={(value) => dispatch(setPassword(value))}
-            secureTextEntry
+            secureTextEntry={true}
             onFocus={clearError}
-            style={[inputStyle, loginStyles.passwordInput]} // apply passwordInput style
+            style={[inputStyle, loginStyles.passwordInput]}
+            keyboardAppearance="dark"
           />
           {hasError && (
             <TouchableOpacity
@@ -98,24 +106,25 @@ const LoginForm = ({ onLogin, navigation }) => {
           )}
         </View>
         {hasError && <Text style={loginStyles.errorText}>{errorMessage}</Text>}
-        <CustomButton title="Login" onPress={handleLogin} style={loginStyle} />
       </View>
+      <Button
+        onPress={handleLogin}
+        style={loginStyle.loginButton}
+        textStyle={loginStyle.buttonText}
+      >
+        Login
+      </Button>
     </SafeAreaView>
   );
 };
 
 const loginStyle = StyleSheet.create({
-  buttonContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "black",
+  loginButton: {
     borderRadius: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
   },
   buttonText: {
-    color: "white",
+    fontFamily: "bold",
+    fontSize: 20,
   },
   icon: {
     position: "absolute",

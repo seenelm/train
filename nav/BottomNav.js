@@ -1,104 +1,132 @@
 import React, { useRef } from "react";
-import { Animated, StyleSheet, Image } from "react-native";
+import { Animated, StyleSheet, Image, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import homeIcon from "../assets/icons/home.png";
-import homeIconFocused from "../assets/icons/home-focus.png";
-import searchIcon from "../assets/icons/search.png";
-import searchIconFocused from "../assets/icons/search-focus.png";
-import profileIcon from "../assets/icons/user.png";
-import profileIconFocused from "../assets/icons/user-focus.png";
+import message from "../assets/icons/message.png";
+import messageFocused from "../assets/icons/message-focus.png";
+import group from "../assets/icons/group.png";
+import groupFocused from "../assets/icons/group-focus.png";
+import calendar from "../assets/icons/calendar.png";
+import calendarFocused from "../assets/icons/calendar-focus.png";
 
-import DashboardScreen from "../screens/DashboardScreen";
-import ProfileScreen from "../screens/ProfileScreen";
-import SearchScreen from "../screens/SearchScreen";
+import Dashboard from "../screens/Dashboard";
+import ChatList from "../screens/ChatList";
+import Calendar from "../screens/Calendar";
 
 const Tab = createBottomTabNavigator();
 
 export const BottomNav = () => {
-  // Create animated value for each tab
-  const homeValue = useRef(new Animated.Value(1)).current;
-  const searchValue = useRef(new Animated.Value(1)).current;
-  const profileValue = useRef(new Animated.Value(1)).current;
+  const messageValue = useRef(new Animated.Value(1)).current;
+  const groupValue = useRef(new Animated.Value(1)).current;
+  const calendarValue = useRef(new Animated.Value(1)).current;
+  const selectorPosition = useRef(new Animated.Value(1)).current;
 
   const animateIcon = (value) => {
     Animated.sequence([
-      Animated.spring(value, {
-        toValue: 1.3,
-        friction: 10,
+      Animated.timing(value, {
+        toValue: 1.05,
+        duration: 70, // Adjust the duration as needed
         useNativeDriver: false,
       }),
-      Animated.spring(value, {
+      Animated.timing(value, {
         toValue: 1,
-        friction: 10,
+        duration: 70, // Adjust the duration as needed
         useNativeDriver: false,
       }),
     ]).start();
   };
 
+  const animateSelector = (toValue) => {
+    Animated.timing(selectorPosition, {
+      toValue,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  };
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      initialRouteName="Search"
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: "black",
+          borderRadius: 33,
+          height: 70,
+          paddingHorizontal: 25,
+          position: "absolute",
+          zIndex: 1,
+          bottom: 20,
+          left: 20,
+          right: 20,
+        },
+      }}
+    >
       <Tab.Screen
         name="Home"
-        component={DashboardScreen}
+        component={ChatList}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ size, focused }) => (
-            <Animated.View style={{ transform: [{ scale: homeValue }] }}>
-              <Image
-                source={focused ? homeIconFocused : homeIcon}
-                style={[styles.image, { height: size, width: size }]}
-              />
-            </Animated.View>
+            <View style={[styles.icon, focused]}>
+              <Animated.View style={{ transform: [{ scale: messageValue }] }}>
+                <Image
+                  source={focused ? messageFocused : message}
+                  style={[{ height: size, width: size }]}
+                />
+              </Animated.View>
+            </View>
           ),
           headerShown: false,
         }}
         listeners={{
           focus: () => {
-            animateIcon(homeValue);
+            animateIcon(messageValue);
           },
         }}
       />
 
       <Tab.Screen
         name="Search"
-        component={SearchScreen}
+        component={Dashboard}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ size, focused }) => (
-            <Animated.View style={{ transform: [{ scale: searchValue }] }}>
-              <Image
-                source={focused ? searchIconFocused : searchIcon}
-                style={[styles.image, { height: size, width: size }]}
-              />
-            </Animated.View>
+            <View style={[styles.icon, focused]}>
+              <Animated.View style={{ transform: [{ scale: groupValue }] }}>
+                <Image
+                  source={focused ? groupFocused : group}
+                  style={[styles.image, { height: size, width: size }]}
+                />
+              </Animated.View>
+            </View>
           ),
           headerShown: false,
         }}
         listeners={{
           focus: () => {
-            animateIcon(searchValue);
+            animateIcon(groupValue);
           },
         }}
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={Calendar}
         options={{
           tabBarLabel: "",
           tabBarIcon: ({ size, focused }) => (
-            <Animated.View style={{ transform: [{ scale: profileValue }] }}>
-              <Image
-                source={focused ? profileIconFocused : profileIcon}
-                style={[styles.image, { height: size, width: size }]}
-              />
-            </Animated.View>
+            <View style={[styles.icon, focused && styles.iconFocused]}>
+              <Animated.View style={{ transform: [{ scale: calendarValue }] }}>
+                <Image
+                  source={focused ? calendarFocused : calendar}
+                  style={[styles.image, { height: size, width: size }]}
+                />
+              </Animated.View>
+            </View>
           ),
           headerShown: false,
         }}
         listeners={{
           focus: () => {
-            animateIcon(profileValue);
+            animateIcon(calendarValue);
           },
         }}
       />
@@ -107,12 +135,11 @@ export const BottomNav = () => {
 };
 
 const styles = StyleSheet.create({
-  image: {
-    marginTop: 15,
-    marginBottom: -10,
+  icon: {
     justifyContent: "center",
     alignItems: "center",
-    height: 25,
-    width: 25,
+    padding: 10,
+    marginTop: 15,
+    marginBottom: -30,
   },
 });

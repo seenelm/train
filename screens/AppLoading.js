@@ -1,30 +1,57 @@
-import { useEffect } from "react";
-import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import { Animated, Image, Dimensions } from "react-native";
 import * as Fonts from "expo-font";
 
-const AppLoading = ({ setAppLoaded }) => {
-  const loadFonts = async () => {
-    try {
-      SplashScreen.preventAutoHideAsync();
+const AppLoading = () => {
+  const [fadeAnim] = useState(new Animated.Value(1));
 
-      await Fonts.loadAsync({
-        bold: require("../assets/fonts/Roboto-Bold.ttf"),
-        italic: require("../assets/fonts/Roboto-Italic.ttf"),
-        regular: require("../assets/fonts/Roboto-Regular.ttf"),
-      });
+  const loadResources = async () => {
+    try {
+      await loadFonts();
     } catch (error) {
       console.error(error);
     } finally {
-      setAppLoaded(true);
-      SplashScreen.hideAsync();
+      Animated.timing(fadeAnim, {
+        toValue: 10,
+        duration: 1500,
+        useNativeDriver: true,
+      }).start();
     }
   };
 
-  useEffect(() => {
-    loadFonts();
-  }, [setAppLoaded]);
+  const loadFonts = async () => {
+    return Fonts.loadAsync({
+      bold: require("../assets/fonts/Roboto-Bold.ttf"),
+      italic: require("../assets/fonts/Roboto-Italic.ttf"),
+      regular: require("../assets/fonts/Roboto-Regular.ttf"),
+    });
+  };
 
-  return null;
+  useEffect(() => {
+    loadResources();
+  }, []);
+
+  return (
+    <Animated.View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "white",
+        opacity: fadeAnim, // animated opacity
+      }}
+    >
+      <Image
+        source={require("../assets/splash.png")}
+        style={{
+          position: "absolute",
+          width: Dimensions.get("window").width,
+          height: Dimensions.get("window").height,
+          resizeMode: "cover",
+        }}
+      />
+    </Animated.View>
+  );
 };
 
 export default AppLoading;

@@ -5,18 +5,23 @@ export const chatListStyles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
     paddingBottom: 5,
+    backgroundColor: "white",
   },
   text: {
-    fontSize: 40,
-    fontWeight: "bold",
-    marginBottom: 20,
+    fontSize: 35,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 10,
   },
   TextInput: {
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 10,
-    marginLeft: 30,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginBottom: 10,
+    marginLeft: 10,
     marginRight: 10,
     height: 40,
   },
@@ -24,9 +29,14 @@ export const chatListStyles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     margin: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
   },
   halfPage: {
     flex: 0.5,
+    margin: 10,
+    backgroundColor: "#fff",
+    borderRadius: 10,
   },
 });
 
@@ -35,6 +45,7 @@ export const chatScreenStyles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
+    backgroundColor: "white",
   },
   chatArea: {
     flex: 1,
@@ -58,18 +69,17 @@ export const chatScreenStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 5,
     paddingTop: 5,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "white",
     borderTopWidth: 1,
     borderTopColor: "#e1e1e1",
   },
   textInput: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
     height: 40,
-    paddingRight: 40,
-    paddingLeft: 10,
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    alignSelf: "center",
   },
   sendButton: {
     position: "absolute",
@@ -82,44 +92,41 @@ export const dashboardStyles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
+    backgroundColor: "white",
   },
   sectionListContainer: {
     paddingTop: 10,
     flexGrow: 1,
   },
   text: {
-    fontSize: 40,
+    fontSize: 25,
     fontWeight: "bold",
-    marginBottom: 20,
-  },
-  fab: {
-    position: "absolute",
-    width: 56,
-    height: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    right: 20,
-    bottom: 25,
-    backgroundColor: "#2A2A2A",
-    borderRadius: 30,
-    elevation: 8,
+
+    color: "black",
   },
   image: {
     flex: 1,
     aspectRatio: 1,
+    marginTop: 2,
   },
-  plus: {
-    flex: 1,
-    aspectRatio: 1,
-    maxHeight: 21,
-    maxWidth: 21,
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    marginRight: 10,
   },
   iconContainer: {
     flex: 1,
     aspectRatio: 1,
-    maxHeight: 28,
-    maxWidth: 30,
-    marginBottom: 15,
+    maxHeight: 25,
+    maxWidth: 27,
+    marginLeft: 13,
+    marginRight: 2,
+  },
+  iconGroup: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   titleContainer: {
     flexDirection: "row",
@@ -127,49 +134,66 @@ export const dashboardStyles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
   },
+  listContainer: {
+    backgroundColor: "white",
+  },
+  addGroupContainer: {
+    alignItems: "center",
+  },
+  addGroupButton: {
+    backgroundColor: "black",
+    borderRadius: 30,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    marginVertical: 20,
+  },
+  addGroupImage: {
+    width: 20,
+    height: 20,
+  },
 });
 
 export const loginStyles = StyleSheet.create({
   container: {
     flex: 1,
-
     padding: 20,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
   },
   header: {
-    fontSize: 48,
+    fontSize: 28,
     fontWeight: "bold",
   },
   headerContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },
+  button: {
+    width: "100%",
+  },
   inputContainer: {
     marginTop: 40,
+    alignItems: "center",
   },
   input: {
     height: 50,
-    borderColor: "lightgray",
+    width: "90%",
     borderWidth: 1,
-    borderRadius: 5,
     marginBottom: 20,
     paddingHorizontal: 15,
     backgroundColor: "transparent",
-  },
-  button: {
-    backgroundColor: "blue",
-    width: "80%",
-    alignSelf: "center",
+    borderColor: "transparent",
+    borderBottomColor: "black",
   },
   inputError: {
     height: 50,
-    borderColor: "red",
+    borderColor: "transparent",
+    borderBottomColor: "red",
     borderWidth: 1,
-    borderRadius: 5,
     marginBottom: 20,
     paddingHorizontal: 15,
     backgroundColor: "transparent",
+    width: "90%",
   },
   errorText: {
     color: "red",
@@ -179,6 +203,7 @@ export const loginStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     position: "relative",
+    width: "90%",
   },
   passwordInput: {
     flex: 1,
@@ -188,5 +213,10 @@ export const loginStyles = StyleSheet.create({
     right: 10,
     top: 14,
     padding: 5,
+  },
+  logo: {
+    width: 50, // Set the width you want
+    height: 50, // Set the height you want
+    resizeMode: "contain", // To ensure the logo fits within the width and height
   },
 });

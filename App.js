@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux"; // import Provider from react-redux
 import store from "./api/store";
@@ -10,23 +10,29 @@ import AppLoading from "./screens/AppLoading";
 const App = () => {
   const [appLoaded, setAppLoaded] = useState(false);
 
-  if (!appLoaded) {
-    return <AppLoading setAppLoaded={setAppLoaded} appLoaded={appLoaded} />;
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAppLoaded(true);
+    }, 2000); // Set delay time to 2 seconds
 
-  return (
+    return () => clearTimeout(timer);
+  }, []);
+
+  return appLoaded ? (
     <Provider store={store}>
       <SafeAreaProvider style={styles.container}>
         <AppNav />
       </SafeAreaProvider>
     </Provider>
+  ) : (
+    <AppLoading />
   );
 };
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#eee",
   },
   label: {
     color: "blue",
