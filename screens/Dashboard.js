@@ -46,13 +46,12 @@ const Dashboard = ({ navigation }) => {
         <View key={index} style={{ flex: 1 }}>
           <View style={dashboardStyles.titleContainer}>
             <View style={dashboardStyles.iconGroup}>
-              <TouchableOpacity onPress={handleProfileTap}>
-                <Image
-                  source={profile}
-                  resizeMode="cover"
-                  style={dashboardStyles.profileImage}
-                />
-              </TouchableOpacity>
+              <Button
+                onPress={handleProfileTap}
+                imgSource={profile}
+                style={dashboardStyles.profileImage1}
+                imgStyle={dashboardStyles.profileImage}
+              />
               <Text style={dashboardStyles.text}>{section.title}</Text>
             </View>
 
@@ -74,20 +73,12 @@ const Dashboard = ({ navigation }) => {
             renderItem={renderItem}
             keyExtractor={(item) => item.id.toString()}
             numColumns={1}
-            ListFooterComponent={
-              <View style={dashboardStyles.addGroupContainer}>
-                <Button
-                  onPress={handleAddGroupTap}
-                  style={dashboardStyles.addGroupButton}
-                >
-                  <Image
-                    source={addgroup}
-                    resizeMode="contain"
-                    style={dashboardStyles.addGroupImage}
-                  />
-                </Button>
-              </View>
-            }
+          />
+          <Button
+            onPress={handleAddGroupTap}
+            style={dashboardStyles.addGroupButton}
+            imgSource={addgroup}
+            imgStyle={dashboardStyles.addGroupIcon}
           />
         </View>
       ))}

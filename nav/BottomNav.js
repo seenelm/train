@@ -49,14 +49,11 @@ export const BottomNav = () => {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: "black",
-          borderRadius: 33,
-          height: 70,
+          height: 85,
           paddingHorizontal: 25,
           position: "absolute",
           zIndex: 1,
-          bottom: 20,
-          left: 20,
-          right: 20,
+          bottom: 0,
         },
       }}
     >

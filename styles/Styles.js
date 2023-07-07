@@ -110,10 +110,16 @@ export const dashboardStyles = StyleSheet.create({
     marginTop: 2,
   },
   profileImage: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     borderRadius: 25,
     marginRight: 10,
+  },
+  profileImage1: {
+    backgroundColor: "transparent",
+    width: 25,
+    height: 25,
+    marginRight: 30,
   },
   iconContainer: {
     flex: 1,
@@ -137,19 +143,18 @@ export const dashboardStyles = StyleSheet.create({
   listContainer: {
     backgroundColor: "white",
   },
-  addGroupContainer: {
-    alignItems: "center",
+  addGroupIcon: {
+    width: 30,
+    height: 30,
   },
   addGroupButton: {
     backgroundColor: "black",
     borderRadius: 30,
-    paddingHorizontal: 30,
-    paddingVertical: 10,
-    marginVertical: 20,
-  },
-  addGroupImage: {
-    width: 20,
-    height: 20,
+    width: 60,
+    height: 60,
+    bottom: 60,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
@@ -162,6 +167,7 @@ export const loginStyles = StyleSheet.create({
   header: {
     fontSize: 28,
     fontWeight: "bold",
+    margin: 15,
   },
   headerContainer: {
     flexDirection: "column",
@@ -181,19 +187,20 @@ export const loginStyles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 15,
-    backgroundColor: "transparent",
+    backgroundColor: "#F6F6F8",
     borderColor: "transparent",
-    borderBottomColor: "black",
+    borderRadius: 5,
   },
   inputError: {
     height: 50,
-    borderColor: "transparent",
-    borderBottomColor: "red",
+    width: "90%",
     borderWidth: 1,
     marginBottom: 20,
     paddingHorizontal: 15,
-    backgroundColor: "transparent",
-    width: "90%",
+    backgroundColor: "#F6F6F8",
+    borderColor: "transparent",
+    borderRadius: 5,
+    borderColor: "red",
   },
   errorText: {
     color: "red",

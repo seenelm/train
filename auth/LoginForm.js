@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useRef, useEffect, useMemo } from "react";
 import {
   View,
   TextInput,
@@ -73,12 +73,13 @@ const LoginForm = ({ onLogin, navigation }) => {
         >
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={loginStyles.header}>Welcome back!</Text>
+        <Text style={loginStyles.header}>Welcome back</Text>
         <Text>Please enter your details to sign in</Text>
       </View>
-      <View style={loginStyles.inputContainer}>
+      <View style={loginStyles.inputContainer} importantForAutofill="yes">
         <TextInput
-          placeholder="Username"
+          textContentType="username"
+          placeholder="Email or Username"
           value={username}
           onChangeText={(value) => dispatch(setUsername(value))}
           onFocus={clearError}
@@ -95,6 +96,7 @@ const LoginForm = ({ onLogin, navigation }) => {
             onFocus={clearError}
             style={[inputStyle, loginStyles.passwordInput]}
             keyboardAppearance="dark"
+            textContentType="password"
           />
           {hasError && (
             <TouchableOpacity
@@ -105,22 +107,31 @@ const LoginForm = ({ onLogin, navigation }) => {
             </TouchableOpacity>
           )}
         </View>
+
         {hasError && <Text style={loginStyles.errorText}>{errorMessage}</Text>}
       </View>
       <Button
         onPress={handleLogin}
-        style={loginStyle.loginButton}
+        style={loginStyle.signInButton}
         textStyle={loginStyle.buttonText}
       >
-        Login
+        Sign in
       </Button>
+      <Text
+        style={loginStyle.forgotText}
+        onPress={() => navigation.navigate("ForgotForm")}
+      >
+        Forgot password?
+      </Text>
     </SafeAreaView>
   );
 };
 
 const loginStyle = StyleSheet.create({
-  loginButton: {
-    borderRadius: 5,
+  signInButton: {
+    alignSelf: "center",
+    borderRadius: 10,
+    width: "90%",
   },
   buttonText: {
     fontFamily: "bold",
@@ -129,6 +140,13 @@ const loginStyle = StyleSheet.create({
   icon: {
     position: "absolute",
     left: -10,
+  },
+  forgotText: {
+    margin: 20,
+    alignSelf: "center",
+    fontFamily: "bold",
+    color: "black",
+    fontSize: 15,
   },
 });
 

@@ -4,6 +4,7 @@ import {
   TextInput,
   StyleSheet,
   Text,
+  Image,
   TouchableOpacity,
 } from "react-native";
 import { loginStyles } from "../styles/Styles";
@@ -11,8 +12,10 @@ import Button from "../components/Button";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { createUser } from "../api/Api";
+import logo from "../assets/icons/logo3.png";
 
 const SignUpForm = ({ onSignUp, navigation }) => {
+  const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
@@ -34,6 +37,7 @@ const SignUpForm = ({ onSignUp, navigation }) => {
   return (
     <SafeAreaView style={loginStyles.container}>
       <View style={loginStyles.headerContainer}>
+        <Image source={logo} style={loginStyles.logo} />
         <TouchableOpacity
           onPress={() => navigation.goBack()}
           activeOpacity={0.6}
@@ -41,11 +45,18 @@ const SignUpForm = ({ onSignUp, navigation }) => {
         >
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text style={loginStyles.header}>Sign Up</Text>
+        <Text style={loginStyles.header}>Welcome</Text>
+        <Text>Please enter your details to sign up</Text>
       </View>
       <View style={loginStyles.inputContainer}>
         <TextInput
-          placeholder="Username"
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          style={loginStyles.input}
+        />
+        <TextInput
+          placeholder="Email"
           value={username}
           onChangeText={setUsername}
           style={loginStyles.input}
@@ -65,13 +76,18 @@ const SignUpForm = ({ onSignUp, navigation }) => {
       >
         Sign up
       </Button>
+      <Text style={signupStyle.haveAccount} onPress={() => {}}>
+        Have an account?
+      </Text>
     </SafeAreaView>
   );
 };
 
 const signupStyle = StyleSheet.create({
   signUpButton: {
-    borderRadius: 5,
+    alignSelf: "center",
+    borderRadius: 10,
+    width: "90%",
   },
   buttonText: {
     fontFamily: "bold",
@@ -80,6 +96,13 @@ const signupStyle = StyleSheet.create({
   icon: {
     position: "absolute",
     left: -10,
+  },
+  haveAccount: {
+    margin: 20,
+    alignSelf: "center",
+    fontFamily: "bold",
+    color: "black",
+    fontSize: 15,
   },
 });
 export default SignUpForm;
