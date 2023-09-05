@@ -29,7 +29,7 @@ const CreateGroup = ({navigation}) => {
     e.preventDefault();
     try {
       const response = await dispatch(addGroup({name, userId})).unwrap();
-      //   navigation.replace('Group', {groupName: name});
+      navigation.replace('Group', {groupName: name});
     } catch (err) {
       console.log('Error: ', err);
     }

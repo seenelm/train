@@ -6,7 +6,7 @@ import {
   clearErrors,
   setName,
 } from '../features/auth/usersSlice';
-import {groupsReducer} from '../features/dash/groupsSlice';
+import {groupsReducer} from '../features/groups/groupsSlice';
 
 const rootReducer = combineReducers({
   users: usersReducer,

@@ -1,38 +1,49 @@
 import React from 'react';
-import {View, Image, StyleSheet} from 'react-native';
-import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
-import profile from '../assets/icons/noahprofile.png';
+import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useSelector} from 'react-redux';
+import {DrawerContentScrollView} from '@react-navigation/drawer';
+import profile from '../assets/icons/seenprofile.png';
 
 function CustomDrawer(props) {
   const {navigation} = props;
+  const name = useSelector(state => state.users.username);
 
   return (
     <DrawerContentScrollView {...props}>
-      <DrawerItem
-        label=""
-        icon={() => (
+      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <View style={styles.profileContainer}>
           <View style={styles.circularContainer}>
             <Image source={profile} style={styles.imageStyle} />
           </View>
-        )}
-        onPress={() => navigation.navigate('Profile')}
-      />
+          <Text style={styles.name}>{name}</Text>
+        </View>
+      </TouchableOpacity>
+
+      {/* You can add other DrawerItems below if needed */}
     </DrawerContentScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  profileContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
   circularContainer: {
     width: 100,
     height: 100,
-    borderRadius: 20, // half of the width and height
+    borderRadius: 50, // half of the width and height
     overflow: 'hidden',
-    marginLeft: 55,
   },
   imageStyle: {
     width: 100,
     height: 100,
     borderRadius: 50, // half of the width and height
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
 });
 

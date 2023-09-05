@@ -17,7 +17,7 @@ const TopNav = ({route, navigation}) => {
         tabBarInactiveTintColor: 'grey',
         tabBarLabelStyle: {fontSize: 12, paddingHorizontal: 5},
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: 'white',
           elevation: 0,
           shadowOpacity: 0,
         },

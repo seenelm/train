@@ -9,7 +9,7 @@ import profile from '../../assets/icons/noahprofile.png';
 import addgroup from '../../assets/icons/add.png';
 
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchGroups} from './fetchGroups';
+import {fetchGroups} from '../groups/fetchGroups';
 
 const Dashboard = ({navigation}) => {
   const dispatch = useDispatch();

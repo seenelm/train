@@ -6,20 +6,35 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
+import ContextMenu from 'react-native-context-menu-view'; // <-- Import
 
 const Card = ({fitspaceName, imageSource, onPress}) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onPress} style={styles.touchableArea}>
-        <ImageBackground
-          defaultSource={require('../assets/trainer.jpg')}
-          source={imageSource}
-          style={styles.imageBackground}
-          resizeMode="cover">
-          <View style={styles.overlay} />
-        </ImageBackground>
-        <Text style={styles.fitspaceName}>{fitspaceName}</Text>
+      <TouchableOpacity
+        onPress={onPress}
+        style={styles.touchableArea}
+        activeOpacity={0.6}>
+        <ContextMenu
+          actions={[
+            {title: 'Edit Fitspace', systemIcon: 'pencil'},
+            {title: 'Leave Fitspace', systemIcon: 'trash'},
+          ]}
+          onPress={e => {
+            console.warn(
+              `Pressed ${e.nativeEvent.name} at index ${e.nativeEvent.index}`,
+            );
+          }}>
+          <ImageBackground
+            defaultSource={require('../assets/trainer.jpg')}
+            source={imageSource}
+            style={styles.imageBackground}
+            resizeMode="cover">
+            <View style={styles.overlay} />
+          </ImageBackground>
+        </ContextMenu>
       </TouchableOpacity>
+      <Text style={styles.fitspaceName}>{fitspaceName}</Text>
     </View>
   );
 };

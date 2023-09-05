@@ -240,3 +240,14 @@ export const calendarStyles = StyleSheet.create({
     height: 25,
   },
 });
+
+export const appIcons = StyleSheet.create({
+  icon: {
+    width: 23,
+    height: 23,
+    margin: 10,
+  },
+  button: {
+    backgroundColor: 'transparent',
+  },
+});
