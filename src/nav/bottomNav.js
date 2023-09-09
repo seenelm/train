@@ -36,13 +36,6 @@ export const BottomNav = () => {
     ]).start();
   };
 
-  const animateSelector = toValue => {
-    Animated.timing(selectorPosition, {
-      toValue,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
   return (
     <Tab.Navigator
       initialRouteName="Search"
@@ -130,7 +123,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 0,
-    // marginTop: 15,
     marginBottom: -30,
   },
 });

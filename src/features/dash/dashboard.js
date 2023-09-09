@@ -5,7 +5,7 @@ import Card from '../../components/card';
 import Button from '../../components/button';
 import {chatListStyles, dashboardStyles} from '../../styles/styles';
 import search from '../../assets/icons/search.png';
-import profile from '../../assets/icons/noahprofile.png';
+import profile from '../../assets/icons/profilepic.png';
 import addgroup from '../../assets/icons/add.png';
 
 import {useDispatch, useSelector} from 'react-redux';

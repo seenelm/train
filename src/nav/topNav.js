@@ -25,8 +25,8 @@ const TopNav = ({route, navigation}) => {
           backgroundColor: 'black',
           borderRadius: 30,
           height: 25,
-          width: '24.5%', // Set to desired width
-          left: '4.5%', // Adjust the position to center it (50% - half of the width)
+          width: '24.5%',
+          left: '4.5%',
           top: '50%',
           marginTop: -12,
         },

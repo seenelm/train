@@ -1,6 +1,6 @@
+import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import MainNav from './mainNav';
-import Profile from '../features/profile/profile';
 import CustomDrawerContent from '../components/customDrawer';
 
 const Drawer = createDrawerNavigator();
@@ -8,6 +8,7 @@ const Drawer = createDrawerNavigator();
 function MyDrawer() {
   return (
     <Drawer.Navigator
+      screenOptions={{swipeEnabled: false}}
       drawerContent={props => <CustomDrawerContent {...props} />}>
       <Drawer.Screen
         name="Main"
@@ -15,14 +16,6 @@ function MyDrawer() {
         options={{
           headerShown: false,
           drawerLabel: () => null,
-        }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          headerShown: false,
-          swipeEnabled: false, // Disable swipe for drawer
         }}
       />
     </Drawer.Navigator>

@@ -6,9 +6,19 @@ import {
   ImageBackground,
   StyleSheet,
 } from 'react-native';
-import ContextMenu from 'react-native-context-menu-view'; // <-- Import
+import ContextMenu from 'react-native-context-menu-view';
+import {useNavigation} from '@react-navigation/native';
 
 const Card = ({fitspaceName, imageSource, onPress}) => {
+  const navigation = useNavigation();
+
+  const handleEditFitspace = ({nativeEvent}) => {
+    if (nativeEvent.name === 'Edit Fitspace') {
+      // Navigate to the "Fitspace Info" screen only when "Edit Fitspace" is pressed
+      navigation.navigate('Fitspace Info', {groupName: fitspaceName});
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -20,11 +30,7 @@ const Card = ({fitspaceName, imageSource, onPress}) => {
             {title: 'Edit Fitspace', systemIcon: 'pencil'},
             {title: 'Leave Fitspace', systemIcon: 'trash'},
           ]}
-          onPress={e => {
-            console.warn(
-              `Pressed ${e.nativeEvent.name} at index ${e.nativeEvent.index}`,
-            );
-          }}>
+          onPress={handleEditFitspace}>
           <ImageBackground
             defaultSource={require('../assets/trainer.jpg')}
             source={imageSource}
@@ -62,7 +68,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     overflow: 'hidden',
   },
-
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'transparent',

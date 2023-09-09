@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {useSelector} from 'react-redux';
 import {DrawerContentScrollView} from '@react-navigation/drawer';
-import profile from '../assets/icons/seenprofile.png';
+import profile from '../assets/icons/profilepic.png';
 
 function CustomDrawer(props) {
   const {navigation} = props;
@@ -10,14 +10,26 @@ function CustomDrawer(props) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-        <View style={styles.profileContainer}>
-          <View style={styles.circularContainer}>
+      <View style={styles.profileContainer}>
+        <View style={styles.circularContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
             <Image source={profile} style={styles.imageStyle} />
-          </View>
-          <Text style={styles.name}>{name}</Text>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
+        <Text style={styles.name}>{name}</Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Main', {screen: 'Profile'})}>
+          <Text style={styles.page}>Profile</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Main', {screen: 'Request'})}>
+          <Text style={styles.page}>Requests</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.page}>Settings</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* You can add other DrawerItems below if needed */}
     </DrawerContentScrollView>
@@ -32,18 +44,23 @@ const styles = StyleSheet.create({
   circularContainer: {
     width: 100,
     height: 100,
-    borderRadius: 50, // half of the width and height
+    borderRadius: 50,
     overflow: 'hidden',
   },
   imageStyle: {
     width: 100,
     height: 100,
-    borderRadius: 50, // half of the width and height
+    borderRadius: 50,
   },
   name: {
     fontSize: 16,
     fontWeight: 'bold',
     marginTop: 10,
+  },
+  page: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 20,
   },
 });
 

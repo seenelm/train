@@ -15,6 +15,8 @@ import EditGroup from '../features/groups/editGroup';
 import Button from '../components/button';
 import {appIcons} from '../styles/styles';
 
+import Request from '../features/requests/request';
+
 const MainStack = createStackNavigator();
 
 const MainNav = () => {
@@ -29,9 +31,7 @@ const MainNav = () => {
         <MainStack.Screen
           name="SearchScreen"
           component={Search}
-          options={{
-            headerShown: false,
-          }}
+          options={{headerShown: false}}
         />
         <MainStack.Screen
           name="ProfileScreen"
@@ -39,9 +39,27 @@ const MainNav = () => {
           options={{headerShown: false}}
         />
         <MainStack.Screen
-          name="EditGroup"
+          name="Fitspace Info"
           component={EditGroup}
-          options={{headerShown: false}}
+          options={({route, navigation}) => {
+            const {groupName} = route.params;
+            return {
+              headerShown: true,
+              headerStyle: {
+                borderBottomColor: 'white',
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerLeft: () => (
+                <Button
+                  onPress={() => navigation.goBack()}
+                  imgSource={Back}
+                  imgStyle={appIcons.icon}
+                  style={appIcons.button}
+                />
+              ),
+            };
+          }}
         />
         <MainStack.Screen
           name="Group"
@@ -52,12 +70,14 @@ const MainNav = () => {
               headerShown: true,
               headerStyle: {
                 borderBottomColor: 'white',
-                elevation: 0, // remove shadow on Android
-                shadowOpacity: 0, // remove shadow on iOS
+                elevation: 0,
+                shadowOpacity: 0,
               },
               headerTitle: () => (
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('EditGroup')}>
+                  onPress={() =>
+                    navigation.navigate('Fitspace Info', {groupName})
+                  }>
                   <Text>{groupName}</Text>
                 </TouchableOpacity>
               ),
@@ -69,24 +89,6 @@ const MainNav = () => {
                   style={appIcons.button}
                 />
               ),
-              //   headerLeft: () => (
-              //     <Ionicons
-              //       name="arrow-back"
-              //       size={24}
-              //       color="black"
-              //       style={{ paddingLeft: 15 }}
-              //       onPress={() => navigation.goBack()}
-              //     />
-              //   ),
-              //   headerRight: () => (
-              //     <MaterialIcons
-              //       name="more-horiz"
-              //       size={24}
-              //       color="black"
-              //       style={{ paddingRight: 15 }}
-              //       onPress={() => navigation.navigate("EditGroup")}
-              //     />
-              //   ),
             };
           }}
         />
@@ -103,6 +105,11 @@ const MainNav = () => {
         <MainStack.Screen
           name="ChatScreen"
           component={Chat}
+          options={{headerShown: false}}
+        />
+        <MainStack.Screen
+          name="Request"
+          component={Request}
           options={{headerShown: false}}
         />
         <MainStack.Screen

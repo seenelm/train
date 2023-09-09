@@ -6,9 +6,11 @@ import {
   FlatList,
   View,
   StyleSheet,
+  Image,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Profile from '../../components/profile';
+import searchicon from '../../assets/icons/search.png';
 
 import {athletes} from '../../assets/Data';
 
@@ -67,18 +69,24 @@ const Search = () => {
         Search
       </Animated.Text>
       <Animated.View style={{transform: [{translateY: textTranslate}]}}>
-        <TextInput
-          style={searchStyles.TextInput}
-          placeholder="Jump to..."
-          onChangeText={text => setSearch(text)}
-          value={search}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          autoCorrect={false}
-          spellCheck={false}
-          keyboardAppearance="dark"
-          autoFocus={true}
-        />
+        <View style={searchStyles.searchBar}>
+          <Image
+            source={searchicon}
+            style={{width: 20, height: 20, marginRight: 10}}
+          />
+          <TextInput
+            placeholder="Jump to..."
+            style={searchStyles.textInput}
+            onChangeText={text => setSearch(text)}
+            value={search}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardAppearance="dark"
+            autoFocus={true}
+          />
+        </View>
       </Animated.View>
       {search.length > 0 && filteredAthletes.length > 0 && (
         <View style={{alignSelf: 'stretch'}}>
@@ -119,17 +127,26 @@ const searchStyles = StyleSheet.create({
   },
   text: {
     fontSize: 40,
-    // fontWeight: 'bold',
+    fontWeight: 'bold',
     marginBottom: 20,
   },
-  TextInput: {
-    borderWidth: 1,
-    borderColor: '#ccc',
+  searchBar: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     borderRadius: 10,
     paddingHorizontal: 10,
     marginLeft: 10,
     marginRight: 10,
     height: 40,
+    backgroundColor: '#F6F6F8',
+  },
+  searchIcon: {
+    padding: 10,
+  },
+  textInput: {
+    width: '100%',
+    height: '100%',
   },
 });
 

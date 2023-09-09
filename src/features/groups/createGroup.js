@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: 'black',
-    fontFamily: 'bold',
+    fontWeight: 'bold',
   },
   continueButton: {
     borderRadius: 5,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   continueButtonText: {
     color: 'white',
-    fontFamily: 'bold',
+    fontWeight: 'bold',
   },
   image: {
     resizeMode: 'contain',
