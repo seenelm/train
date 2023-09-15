@@ -7,10 +7,12 @@ import {
   setName,
 } from '../features/auth/usersSlice';
 import {groupsReducer} from '../features/groups/groupsSlice';
+import overlayReducer from '../features/groups/overlaySlice';
 
 const rootReducer = combineReducers({
   users: usersReducer,
   groups: groupsReducer,
+  overlay: overlayReducer,
 });
 
 export function setupStore(preloadedState) {

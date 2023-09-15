@@ -3,7 +3,7 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-import {TouchableOpacity, Text, View} from 'react-native';
+import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
 import TopNav from './topNav';
 import AddGroup from '../features/groups/createGroup';
 import Search from '../features/search/search';
@@ -14,6 +14,7 @@ import Back from '../assets/icons/back.png';
 import EditGroup from '../features/groups/editGroup';
 import Button from '../components/button';
 import {appIcons} from '../styles/styles';
+import ConnectedHeader from '../features/groups/editGroupHeader';
 
 import Request from '../features/requests/request';
 
@@ -41,8 +42,7 @@ const MainNav = () => {
         <MainStack.Screen
           name="Fitspace Info"
           component={EditGroup}
-          options={({route, navigation}) => {
-            const {groupName} = route.params;
+          options={({navigation}) => {
             return {
               headerShown: true,
               headerStyle: {
@@ -50,17 +50,20 @@ const MainNav = () => {
                 elevation: 0,
                 shadowOpacity: 0,
               },
-              headerLeft: () => (
-                <Button
-                  onPress={() => navigation.goBack()}
-                  imgSource={Back}
-                  imgStyle={appIcons.icon}
-                  style={appIcons.button}
-                />
+              header: props => (
+                <ConnectedHeader {...props}>
+                  <Button
+                    onPress={() => navigation.goBack()}
+                    imgSource={Back}
+                    imgStyle={appIcons.icon}
+                    style={appIcons.button}
+                  />
+                </ConnectedHeader>
               ),
             };
           }}
         />
+
         <MainStack.Screen
           name="Group"
           component={TopNav}
@@ -122,4 +125,15 @@ const MainNav = () => {
   );
 };
 
+const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.3)', // Semi-transparent black
+    zIndex: 0,
+  },
+});
 export default MainNav;

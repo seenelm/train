@@ -92,6 +92,7 @@ const SignIn = ({onLogin, navigation}) => {
             textContentType="username"
             placeholder="Email or Username"
             value={username}
+            autoFocus={true}
             onChangeText={value => {
               dispatch(setUsername(value));
               dispatch(clearErrors());

@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import ProfilePic from '../assets/icons/profpic.png';
+import ProfilePic from '../assets/icons/profilepic.png';
+import forward from '../assets/icons/forward.png';
 
-const Profile = ({name, content, onPress}) => {
+const Profile = ({name, content, onPress, showForwardIcon = false}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.messageContainer}>
@@ -13,6 +14,9 @@ const Profile = ({name, content, onPress}) => {
             {content}
           </Text>
         </View>
+        {showForwardIcon && (
+          <Image style={styles.forwardIcon} source={forward} />
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -29,6 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 5,
     alignItems: 'center',
+    justifyContent: 'space-between', // Ensures items are spaced out to the edges
   },
   message: {
     flexDirection: 'column',
@@ -36,7 +41,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   name: {
-    // fontWeight: 'bold',
     marginBottom: 5,
   },
   content: {
@@ -44,9 +48,13 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 25,
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+  },
+  forwardIcon: {
+    width: 15,
+    height: 15,
   },
 });
 
