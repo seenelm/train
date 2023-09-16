@@ -1,19 +1,22 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+import Config from "react-native-config";
+import * as Keychain from "react-native-keychain";
 
 const loginUser = createAsyncThunk(
-  'users/login',
-  async ({username, password}, thunkAPI) => {
+  "users/login",
+  async ({ username, password }, thunkAPI) => {
     try {
       const data = {
         username: username,
         password: password,
       };
 
-      const response = await axios.post(
-        'http://192.168.0.107:3000/api/login',
-        data,
-      );
+      const response = await axios.post(`${Config.API_URL}/api/login`, data);
+
+      if (response.data.success && response.data.token) {
+        await Keychain.setGenericPassword("userToken", response.data.token);
+      }
 
       return response.data;
     } catch (error) {
@@ -21,7 +24,7 @@ const loginUser = createAsyncThunk(
         return thunkAPI.rejectWithValue(error.response.data.errors);
       }
     }
-  },
+  }
 );
 
-export {loginUser};
+export { loginUser };

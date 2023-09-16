@@ -1,18 +1,20 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import ProfilePic from '../assets/icons/profilepic.png';
-import forward from '../assets/icons/forward.png';
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import ProfilePic from "../assets/icons/profilepic.png";
+import forward from "../assets/icons/forward.png";
 
-const Profile = ({name, content, onPress, showForwardIcon = false}) => {
+const Profile = ({ name, content, onPress, showForwardIcon = false }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.messageContainer}>
-        <Image source={ProfilePic} style={styles.image} />
-        <View style={styles.message}>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.content} numberOfLines={2} ellipsizeMode="tail">
-            {content}
-          </Text>
+        <View style={styles.messageContainer}>
+          <Image source={ProfilePic} style={styles.image} />
+          <View style={styles.message}>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.content} numberOfLines={2} ellipsizeMode="tail">
+              {content}
+            </Text>
+          </View>
         </View>
         {showForwardIcon && (
           <Image style={styles.forwardIcon} source={forward} />
@@ -25,18 +27,17 @@ const Profile = ({name, content, onPress, showForwardIcon = false}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
+    paddingTop: 10,
   },
   messageContainer: {
-    flexDirection: 'row',
-    marginTop: 10,
+    flexDirection: "row",
     borderRadius: 10,
     marginBottom: 5,
-    alignItems: 'center',
-    justifyContent: 'space-between', // Ensures items are spaced out to the edges
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   message: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginLeft: 10,
     flexShrink: 1,
   },

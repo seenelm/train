@@ -1,16 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  TextInput,
-  StyleSheet,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import {loginStyles} from '../../styles/styles';
-import Button from '../../components/button';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import logo from '../../assets/icons/logo3.png';
+import React, { useState, useEffect } from "react";
+import { View, TextInput, StyleSheet, Text, Image } from "react-native";
+import { loginStyles } from "../../styles/styles";
+import Button from "../../components/button";
+import { SafeAreaView } from "react-native-safe-area-context";
+import logo from "../../assets/icons/logo3.png";
 
 import {
   registerUser,
@@ -18,15 +11,17 @@ import {
   setPassword,
   setName,
   clearErrors,
-} from '../../api/store';
-import {useSelector, useDispatch} from 'react-redux';
+} from "../../api/store";
+import { useSelector, useDispatch } from "react-redux";
 
-const SignUp = ({onSignUp, navigation}) => {
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [nameError, setNameError] = useState('');
+const SignUp = ({ onSignUp, navigation }) => {
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [nameError, setNameError] = useState("");
   const dispatch = useDispatch();
-  const {name, username, password, errors} = useSelector(state => state.users);
+  const { name, username, password, errors } = useSelector(
+    (state) => state.users
+  );
 
   useEffect(() => {
     renderUsernameError();
@@ -34,50 +29,50 @@ const SignUp = ({onSignUp, navigation}) => {
     renderNameError();
   }, [errors]);
 
-  const handleSignUp = async e => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
     try {
       const response = await dispatch(
-        registerUser({username, password, name}),
+        registerUser({ username, password, name })
       ).unwrap();
 
       onSignUp();
     } catch (err) {
-      console.log('Error: ', err);
+      console.log("Error: ", err);
     }
   };
 
   const renderUsernameError = () => {
-    if (errors.username !== '') {
+    if (errors.username !== "") {
       setUsernameError(errors.username);
     } else {
-      setUsernameError('');
+      setUsernameError("");
     }
   };
 
   const renderPasswordError = () => {
-    if (errors.password !== '') {
+    if (errors.password !== "") {
       setPasswordError(errors.password);
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
   const renderNameError = () => {
-    if (errors.name !== '') {
+    if (errors.name !== "") {
       setNameError(errors.name);
     } else {
-      setNameError('');
+      setNameError("");
     }
   };
 
-  const inputStyleWithError = hasError => {
+  const inputStyleWithError = (hasError) => {
     return hasError
       ? [loginStyles.input, loginStyles.inputError]
       : loginStyles.input;
   };
 
   const handlePress = () => {
-    navigation.replace('Login');
+    navigation.replace("Login");
     dispatch(clearErrors());
   };
 
@@ -99,7 +94,7 @@ const SignUp = ({onSignUp, navigation}) => {
           <TextInput
             placeholder="Name"
             value={name}
-            onChangeText={value => {
+            onChangeText={(value) => {
               dispatch(setName(value));
               dispatch(clearErrors());
             }}
@@ -116,7 +111,7 @@ const SignUp = ({onSignUp, navigation}) => {
           <TextInput
             placeholder="Username"
             value={username}
-            onChangeText={value => {
+            onChangeText={(value) => {
               dispatch(setUsername(value));
               dispatch(clearErrors());
             }}
@@ -135,7 +130,7 @@ const SignUp = ({onSignUp, navigation}) => {
           <TextInput
             placeholder="Password"
             value={password}
-            onChangeText={value => {
+            onChangeText={(value) => {
               dispatch(setPassword(value));
               dispatch(clearErrors());
             }}
@@ -153,7 +148,8 @@ const SignUp = ({onSignUp, navigation}) => {
       <Button
         onPress={handleSignUp}
         style={signupStyle.signUpButton}
-        textStyle={signupStyle.buttonText}>
+        textStyle={signupStyle.buttonText}
+      >
         Sign up
       </Button>
       <Text style={signupStyle.haveAccount} onPress={handlePress}>
@@ -165,40 +161,40 @@ const SignUp = ({onSignUp, navigation}) => {
 
 const signupStyle = StyleSheet.create({
   inputWithErrorContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   errorContainer: {
-    width: '90%',
+    width: "90%",
     paddingLeft: 10,
   },
   signUpButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     borderRadius: 10,
-    width: '90%',
+    width: "90%",
   },
   buttonText: {
     // fontFamily: 'bold',
     fontSize: 20,
   },
   icon: {
-    position: 'absolute',
+    position: "absolute",
     left: -10,
   },
   haveAccount: {
     margin: 20,
-    alignSelf: 'center',
-    color: 'black',
+    alignSelf: "center",
+    color: "black",
     fontSize: 15,
   },
   error: {
     marginTop: -20,
-    color: 'red',
+    color: "red",
     fontSize: 12,
     // fontFamily: 'bold',
-    textAlign: 'left',
-    alignSelf: 'flex-start',
+    textAlign: "left",
+    alignSelf: "flex-start",
   },
 });
 export default SignUp;

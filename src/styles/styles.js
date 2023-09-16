@@ -1,9 +1,9 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const chatListStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   messageContainer: {
     flex: 0,
@@ -14,7 +14,7 @@ export const chatListStyles = StyleSheet.create({
   },
   TextInput: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingTop: 10,
@@ -29,35 +29,35 @@ export const chatListStyles = StyleSheet.create({
 export const chatScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: 'white',
+    flexDirection: "column",
+    justifyContent: "space-between",
+    backgroundColor: "white",
   },
   chatArea: {
     flex: 1,
     paddingBottom: 10,
   },
   input: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 10,
     borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    borderTopColor: "#ccc",
   },
   button: {
     marginHorizontal: 5,
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingBottom: 5,
     paddingTop: 5,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopWidth: 1,
-    borderTopColor: '#e1e1e1',
+    borderTopColor: "#e1e1e1",
   },
   textInput: {
     flex: 1,
@@ -65,10 +65,10 @@ export const chatScreenStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     paddingHorizontal: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   sendButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 20,
     zIndex: 1,
   },
@@ -78,7 +78,7 @@ export const dashboardStyles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   sectionListContainer: {
     paddingTop: 10,
@@ -87,7 +87,7 @@ export const dashboardStyles = StyleSheet.create({
   text: {
     fontSize: 25,
     // fontWeight: 'bold',
-    color: 'black',
+    color: "black",
   },
   image: {
     flex: 1,
@@ -100,27 +100,35 @@ export const dashboardStyles = StyleSheet.create({
     borderRadius: 25,
   },
   profileImage1: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     width: 45,
     height: 45,
     marginRight: 15,
+    marginBottom: 10,
+  },
+  logoHeader: {
+    backgroundColor: "transparent",
+    width: 30,
+    height: 30,
+    // marginRight: 15,
   },
   iconContainer: {
     flex: 1,
     aspectRatio: 1,
     maxHeight: 45,
     maxWidth: 45,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
+    marginBottom: 10,
   },
   iconGroup: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   titleContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 10,
   },
   // listContainer: {
@@ -131,15 +139,15 @@ export const dashboardStyles = StyleSheet.create({
     height: 24,
   },
   addGroupButton: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 30,
     width: 60,
     height: 60,
     bottom: 11,
     right: 15,
-    position: 'absolute', // Add this line to position it absolutely.
-    alignSelf: 'flex-end',
-    shadowColor: '#000', // For iOS
+    position: "absolute", // Add this line to position it absolutely.
+    alignSelf: "flex-end",
+    shadowColor: "#000", // For iOS
     shadowOffset: {
       width: 0,
       height: 2, // Shadow position
@@ -153,7 +161,7 @@ export const loginStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   header: {
     fontSize: 28,
@@ -161,52 +169,52 @@ export const loginStyles = StyleSheet.create({
     margin: 5,
   },
   headerContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
   button: {
-    width: '100%',
+    width: "100%",
   },
   inputContainer: {
     marginTop: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   input: {
     height: 50,
-    width: '90%',
+    width: "90%",
     borderWidth: 1,
     marginBottom: 27,
     paddingHorizontal: 15,
-    backgroundColor: '#F6F6F8',
-    borderColor: 'transparent',
+    backgroundColor: "#F6F6F8",
+    borderColor: "transparent",
     borderRadius: 5,
   },
   inputError: {
     height: 50,
-    width: '90%',
+    width: "90%",
     borderWidth: 1,
     marginBottom: 27,
     paddingHorizontal: 15,
-    backgroundColor: '#F6F6F8',
-    borderColor: 'transparent',
+    backgroundColor: "#F6F6F8",
+    borderColor: "transparent",
     borderRadius: 5,
-    borderColor: 'red',
+    borderColor: "red",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 12,
   },
   passwordInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
   },
   passwordInput: {
     flex: 1,
   },
   clearIcon: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
     top: 14,
     padding: 5,
@@ -214,23 +222,23 @@ export const loginStyles = StyleSheet.create({
   logo: {
     width: 50,
     height: 50,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
 });
 
 export const calendarStyles = StyleSheet.create({
   addEventButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 45,
     right: 15,
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.29,
     shadowRadius: 4.65,
     elevation: 7,
@@ -248,6 +256,6 @@ export const appIcons = StyleSheet.create({
     margin: 10,
   },
   button: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
 });

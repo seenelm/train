@@ -1,18 +1,16 @@
-import React from 'react';
-import {useSelector} from 'react-redux';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import profile from '../../assets/icons/profilepic.png';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import React from "react";
+
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import profile from "../../assets/icons/profilepic.png";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Button from "../../components/button";
 
 const Profile = () => {
-  const username = useSelector(state => state.users.username);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileSection}>
         <Image style={styles.profileImg} source={profile} />
         <View style={styles.profileDetails}>
-          <Text style={styles.username}>@{username}</Text>
           <Text style={styles.name}>Yassine Elmellouki</Text>
           <Text style={styles.role}>Personal Trainer</Text>
         </View>
@@ -20,18 +18,20 @@ const Profile = () => {
       <View style={styles.followSection}>
         <View style={styles.fButton}>
           <TouchableOpacity>
-            <Text>200</Text>
+            <Text style={styles.count}>210</Text>
           </TouchableOpacity>
           <Text style={styles.fTitle}>Followers</Text>
         </View>
-
+        <Text style={styles.spacer}>|</Text>
         <View style={styles.fButton}>
           <TouchableOpacity>
-            <Text>200</Text>
+            <Text style={styles.count}>402</Text>
           </TouchableOpacity>
           <Text style={styles.fTitle}>Following</Text>
         </View>
       </View>
+
+      <Button style={styles.editBtn}>Edit Profile</Button>
     </SafeAreaView>
   );
 };
@@ -39,23 +39,22 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   centerItems: {
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 30,
   },
   profileSection: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   followSection: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 30,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 10,
   },
   title: {
     fontSize: 30,
@@ -66,33 +65,47 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginBottom: 20,
-    marginRight: 10,
   },
   profileDetails: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginLeft: 10,
   },
   username: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 2,
   },
   name: {
     fontSize: 18,
+    fontWeight: "bold",
     marginBottom: 2,
+    textAlign: "center",
   },
   role: {
     fontSize: 15,
     marginBottom: 20,
+    textAlign: "center",
   },
   fButton: {
     padding: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   fTitle: {
-    fontSize: 17,
-    fontWeight: 'bold',
+    fontSize: 15,
     marginBottom: 2,
+  },
+  count: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  editBtn: {
+    borderRadius: 10,
+    marginBottom: 20,
+    height: 50,
+  },
+  spacer: {
+    fontSize: 20,
+    margin: 10,
   },
 });
 
