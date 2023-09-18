@@ -13,6 +13,7 @@ const loginUser = createAsyncThunk(
       };
 
       const response = await axios.post(`${Config.API_URL}/api/login`, data);
+      console.log("Token", response.data.token);
 
       if (response.data.success && response.data.token) {
         await Keychain.setGenericPassword("userToken", response.data.token);

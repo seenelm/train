@@ -1,10 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
 import 'react-native-gesture-handler';
 import {useState, useEffect} from 'react';
@@ -13,69 +6,47 @@ import {Provider} from 'react-redux'; // import Provider from react-redux
 import {setupStore} from './src/api/store';
 import AppNav from './src/nav/appNav';
 import AppLoading from './src/components/appLoading';
-// import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
+// import * as Keychain from 'react-native-keychain';
 
-// import {
-//   Colors,
-//   DebugInstructions,
-//   Header,
-//   LearnMoreLinks,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
 
-// type SectionProps = PropsWithChildren<{
-//   title: string;
-// }>;
-
-// function Section({children, title}: SectionProps): JSX.Element {
-//   const isDarkMode = useColorScheme() === 'dark';
-//   return (
-//     <View style={styles.sectionContainer}>
-//       <Text
-//         style={[
-//           styles.sectionTitle,
-//           {
-//             color: isDarkMode ? Colors.white : Colors.black,
-//           },
-//         ]}>
-//         {title}
-//       </Text>
-//       <Text
-//         style={[
-//           styles.sectionDescription,
-//           {
-//             color: isDarkMode ? Colors.light : Colors.dark,
-//           },
-//         ]}>
-//         {children}
-//       </Text>
-//     </View>
-//   );
-// }
 
 function App(): JSX.Element {
   
-  // const isDarkMode = useColorScheme() === 'dark';
-
-  // const backgroundStyle = {
-  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  // };
   const [appLoaded, setAppLoaded] = useState(false);
   const store = setupStore();
+
+  // const getToken = async () => {
+  //   try {
+  //     const credentials = await Keychain.getGenericPassword();
+  //     if (credentials) {
+  //       // If you have token-specific logic, handle it here.
+  //       return credentials.password;
+  //     }
+  //   } catch (error) {
+  //     console.error('Could not retrieve token from keychain', error);
+  //   }
+  //   return null;
+  // };
+
+  // useEffect(() => {
+  //   const initializeApp = async () => {
+  //     const token = await getToken();
+  //     if (token) {
+  //       // Handle authenticated state if needed
+  //     } else {
+  //       // Handle unauthenticated state if needed
+  //     }
+  //     setAppLoaded(true);
+  //   };
+
+  //   initializeApp();
+  // }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setAppLoaded(true);
-    }, 2000); // Set delay time to 2 seconds
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);

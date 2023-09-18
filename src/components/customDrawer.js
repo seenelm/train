@@ -3,10 +3,19 @@ import { View, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { useSelector } from "react-redux";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import profile from "../assets/icons/profilepic.png";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/auth/usersSlice";
 
 function CustomDrawer(props) {
   const { navigation } = props;
   const name = useSelector((state) => state.users.username);
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    // Other logout logic here if needed
+    // E.g., redirecting user, clearing tokens, etc.
+  };
 
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
@@ -31,6 +40,9 @@ function CustomDrawer(props) {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {}}>
           <Text style={styles.page}>Settings</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogout}>
+          <Text style={styles.logout}>Log Out</Text>
         </TouchableOpacity>
       </View>
 
@@ -64,6 +76,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 20,
+  },
+  logout: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 20,
+    color: "red",
   },
 });
 
