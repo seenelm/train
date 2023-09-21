@@ -13,8 +13,9 @@ const usersSlice = createSlice({
     errors: {},
     loading: false,
     success: null,
-    isLoggedIn: false, // Added this line
+    isLoggedIn: false,
     token: null,
+    isCheckingLoginStatus: true,
   },
   reducers: {
     setUsername: (state, action) => {
@@ -29,14 +30,16 @@ const usersSlice = createSlice({
     setName: (state, action) => {
       state.name = action.payload;
     },
-    setToken: (state, action) => {
-      state.token = action.payload;
+    setCheckingLoginStatus: (state, action) => {
+      state.isCheckingLoginStatus = action.payload;
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
+    setUserId: (state, action) => {
+      state.userId = action.payload;
+    },
     logout: (state) => {
-      // New logout reducer
       state.username = "";
       state.password = "";
       state.name = "";
@@ -46,46 +49,46 @@ const usersSlice = createSlice({
       state.success = null;
       state.isLoggedIn = false;
       state.token = null;
-      Keychain.resetGenericPassword(); // Clear the token from keychain
+      Keychain.resetGenericPassword();
     },
   },
   extraReducers(builder) {
     builder.addCase(registerUser.pending, (state, action) => {
       state.loading = true;
       state.userId = null;
-      state.isLoggedIn = false; // Updated this line
+      state.isLoggedIn = false;
     });
     builder.addCase(registerUser.fulfilled, (state, action) => {
       state.loading = false;
       state.errors = {};
       state.userId = action.payload.userId;
-      state.isLoggedIn = true; // Set isLoggedIn to true here
+      state.isLoggedIn = true;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
       state.errors = action.payload;
       state.userId = null;
-      state.isLoggedIn = false; // Updated this line
+      state.isLoggedIn = false;
     });
     builder.addCase(loginUser.pending, (state, action) => {
       state.loading = true;
       state.success = null;
       state.userId = null;
-      state.isLoggedIn = false; // Updated this line
+      state.isLoggedIn = false;
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       state.loading = false;
       state.success = action.payload;
       state.userId = action.payload.userId;
       state.errors = {};
-      state.isLoggedIn = true; // Set isLoggedIn to true here
+      state.isLoggedIn = true;
     });
     builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
       state.success = null;
       state.userId = null;
       state.errors = action.payload;
-      state.isLoggedIn = false; // Updated this line
+      state.isLoggedIn = false;
     });
   },
 });
@@ -97,7 +100,9 @@ export const {
   setName,
   logout,
   setToken,
-  setIsLoggedIn, // Add this line
+  setIsLoggedIn,
+  setUserId,
+  setCheckingLoginStatus,
 } = usersSlice.actions;
 
 export const usersReducer = usersSlice.reducer;

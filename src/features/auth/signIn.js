@@ -1,24 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {View, TextInput, Text, StyleSheet, Image} from 'react-native';
-import {loginStyles} from '../../styles/styles';
-import Button from '../../components/button';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { View, TextInput, Text, StyleSheet, Image } from "react-native";
+import { loginStyles } from "../../styles/styles";
+import Button from "../../components/button";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setUsername,
   setPassword,
   loginUser,
   clearErrors,
-} from '../../api/store';
-import logo from '../../assets/icons/logo3.png';
+} from "../../api/store";
+import logo from "../../assets/icons/logo3.png";
 
-const SignIn = ({onLogin, navigation}) => {
+const SignIn = ({ onLogin, navigation }) => {
   const dispatch = useDispatch();
-  const [loginError, setLoginError] = useState('');
-  const [usernameError, setUsernameError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const {username, password, success, errors} = useSelector(
-    state => state.users,
+  const [loginError, setLoginError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const { username, password, success, errors } = useSelector(
+    (state) => state.users
   );
 
   useEffect(() => {
@@ -33,40 +33,43 @@ const SignIn = ({onLogin, navigation}) => {
     }
   }, [success]);
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await dispatch(loginUser({username, password})).unwrap();
+      const response = await dispatch(
+        loginUser({ username, password })
+      ).unwrap();
+      console.log("Response:", response);
     } catch (err) {
-      console.log('Error: ', err);
+      console.log("Error: ", err);
     }
   };
 
   const renderLoginError = () => {
-    if (errors.message !== '') {
+    if (errors.message !== "") {
       setLoginError(errors.message);
     } else {
-      setLoginError('');
+      setLoginError("");
     }
   };
 
   const renderUsernameError = () => {
-    if (errors.username !== '') {
+    if (errors.username !== "") {
       setUsernameError(errors.username);
     } else {
-      setUsernameError('');
+      setUsernameError("");
     }
   };
 
   const renderPasswordError = () => {
-    if (errors.password !== '') {
+    if (errors.password !== "") {
       setPasswordError(errors.password);
     } else {
-      setPasswordError('');
+      setPasswordError("");
     }
   };
 
-  const inputStyleWithError = hasError => {
+  const inputStyleWithError = (hasError) => {
     return hasError
       ? [loginStyles.input, loginStyles.inputError]
       : loginStyles.input;
@@ -93,7 +96,7 @@ const SignIn = ({onLogin, navigation}) => {
             placeholder="Email or Username"
             value={username}
             autoFocus={true}
-            onChangeText={value => {
+            onChangeText={(value) => {
               dispatch(setUsername(value));
               dispatch(clearErrors());
             }}
@@ -111,7 +114,7 @@ const SignIn = ({onLogin, navigation}) => {
               textContentType="password"
               placeholder="Password"
               value={password}
-              onChangeText={value => {
+              onChangeText={(value) => {
                 dispatch(setPassword(value));
                 dispatch(clearErrors());
               }}
@@ -134,7 +137,8 @@ const SignIn = ({onLogin, navigation}) => {
       <Button
         onPress={handleLogin}
         style={loginStyle.signInButton}
-        textStyle={loginStyle.buttonText}>
+        textStyle={loginStyle.buttonText}
+      >
         Sign in
       </Button>
       <Text style={loginStyle.forgotText} onPress={() => {}}>
@@ -146,17 +150,17 @@ const SignIn = ({onLogin, navigation}) => {
 
 const loginStyle = StyleSheet.create({
   signInButton: {
-    alignSelf: 'center',
+    alignSelf: "center",
     borderRadius: 10,
-    width: '90%',
+    width: "90%",
   },
   inputWithErrorContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
+    flexDirection: "column",
+    alignItems: "center",
+    width: "100%",
   },
   errorContainer: {
-    width: '90%',
+    width: "90%",
     paddingLeft: 10,
   },
   buttonText: {
@@ -164,22 +168,22 @@ const loginStyle = StyleSheet.create({
     fontSize: 20,
   },
   icon: {
-    position: 'absolute',
+    position: "absolute",
     left: -10,
   },
   forgotText: {
     margin: 20,
-    alignSelf: 'center',
-    color: 'black',
+    alignSelf: "center",
+    color: "black",
     fontSize: 15,
   },
   error: {
     marginTop: -20,
-    color: 'red',
+    color: "red",
     fontSize: 12,
     // fontFamily: 'bold',
-    textAlign: 'left',
-    alignSelf: 'flex-start',
+    textAlign: "left",
+    alignSelf: "flex-start",
   },
 });
 

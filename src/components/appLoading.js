@@ -1,48 +1,58 @@
-import React, { useEffect, useState } from "react";
-import { Animated, Image, Dimensions, Text, View } from "react-native";
-import * as Font from "react-native-global-font";
+import React, { useEffect } from "react";
+import { Animated, Image, Dimensions } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { checkLoginStatus } from "../api/actions";
+import { NavigationContainer } from "@react-navigation/native";
+import MyDrawer from "../nav/drawerNav";
+import AuthNav from "../nav/authNav";
 
 const AppLoading = () => {
-  const [fadeAnim] = useState(new Animated.Value(1));
+  const dispatch = useDispatch();
+  const fadeAnim = new Animated.Value(1);
+  const { isLoggedIn, isCheckingLoginStatus } = useSelector(
+    (state) => state.users
+  );
 
-  // const loadResources = async () => {
-  //   try {
-  //     Font.applyGlobal('Roboto-Regular'); // Set the default global font
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     Animated.timing(fadeAnim, {
-  //       toValue: 0,
-  //       duration: 1500,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   }
-  // };
+  useEffect(() => {
+    const checkStatus = async () => {
+      await dispatch(checkLoginStatus());
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 2000,
+        useNativeDriver: true,
+      }).start();
+    };
+    checkStatus();
+  }, [dispatch]);
 
-  // useEffect(() => {
-  //   loadResources();
-  // }, []);
+  if (isCheckingLoginStatus) {
+    return (
+      <Animated.View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+          opacity: fadeAnim, // animated opacity
+        }}
+      >
+        <Image
+          source={require("../assets/splash.png")}
+          style={{
+            position: "absolute",
+            width: Dimensions.get("window").width,
+            height: Dimensions.get("window").height,
+            resizeMode: "cover",
+          }}
+        />
+      </Animated.View>
+    );
+  }
 
   return (
-    <Animated.View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "white",
-        opacity: fadeAnim, // animated opacity
-      }}
-    >
-      <Image
-        source={require("../assets/splash.png")}
-        style={{
-          position: "absolute",
-          width: Dimensions.get("window").width,
-          height: Dimensions.get("window").height,
-          resizeMode: "cover",
-        }}
-      />
-    </Animated.View>
+    <NavigationContainer>
+      {isLoggedIn ? <MyDrawer /> : <AuthNav />}
+    </NavigationContainer>
   );
 };
 

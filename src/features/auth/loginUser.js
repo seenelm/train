@@ -3,7 +3,7 @@ import axios from "axios";
 import Config from "react-native-config";
 import * as Keychain from "react-native-keychain";
 
-const loginUser = createAsyncThunk(
+export const loginUser = createAsyncThunk(
   "users/login",
   async ({ username, password }, thunkAPI) => {
     try {
@@ -13,19 +13,19 @@ const loginUser = createAsyncThunk(
       };
 
       const response = await axios.post(`${Config.API_URL}/api/login`, data);
-      console.log("Token", response.data.token);
 
-      if (response.data.success && response.data.token) {
-        await Keychain.setGenericPassword("userToken", response.data.token);
-      }
+      await Keychain.setGenericPassword(
+        response.data.userId,
+        response.data.token
+      );
 
       return response.data;
     } catch (error) {
-      if (error.response.data.errors) {
+      if (error.response && error.response.data && error.response.data.errors) {
         return thunkAPI.rejectWithValue(error.response.data.errors);
+      } else {
+        throw error;
       }
     }
   }
 );
-
-export { loginUser };

@@ -22,7 +22,6 @@ const Dashboard = ({ navigation }) => {
 
   const fetchSections = async () => {
     try {
-      console.log("User ID: ", userId);
       await dispatch(fetchGroups({ userId })).unwrap();
     } catch (err) {
       console.log("Error1: ", err);
