@@ -1,13 +1,13 @@
-import {configureStore, combineReducers} from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
   usersReducer,
   setUsername,
   setPassword,
   clearErrors,
   setName,
-} from '../features/auth/usersSlice';
-import {groupsReducer} from '../features/groups/groupsSlice';
-import overlayReducer from '../features/groups/overlaySlice';
+} from "../features/auth/usersSlice";
+import { groupsReducer } from "../features/groups/groupsSlice";
+import overlayReducer from "../features/groups/overlaySlice";
 
 const rootReducer = combineReducers({
   users: usersReducer,
@@ -22,6 +22,6 @@ export function setupStore(preloadedState) {
   });
 }
 
-export {setUsername, setPassword, clearErrors, setName};
-export * from '../features/auth/registerUser';
-export * from '../features/auth/loginUser';
+export { setUsername, setPassword, clearErrors, setName };
+export * from "../features/auth/registerUser";
+export * from "../features/auth/loginUser";
