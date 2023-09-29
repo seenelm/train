@@ -10,32 +10,29 @@ import {
   setUsername,
   setPassword,
   setName,
-  clearErrors,
 } from "../../api/store";
 import { useSelector, useDispatch } from "react-redux";
+import { useRegisterUserMutation } from "../../api/apiSlice";
 
 const SignUp = ({ onSignUp, navigation }) => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
   const dispatch = useDispatch();
-  const { name, username, password, errors } = useSelector(
-    (state) => state.users
-  );
+  const { name, username, password } = useSelector((state) => state.users);
+
+  const [registerUser, { isError, error }] = useRegisterUserMutation();
 
   useEffect(() => {
     renderUsernameError();
     renderPasswordError();
     renderNameError();
-  }, [errors]);
+  }, [isError, error]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await dispatch(
-        registerUser({ username, password, name })
-      ).unwrap();
-
+      await registerUser({ username, password, name }).unwrap();
       onSignUp();
     } catch (err) {
       console.log("Error: ", err);
@@ -43,26 +40,33 @@ const SignUp = ({ onSignUp, navigation }) => {
   };
 
   const renderUsernameError = () => {
-    if (errors.username !== "") {
-      setUsernameError(errors.username);
+    console.log("Register Error: ", error);
+    if (isError && error.username !== "") {
+      setUsernameError(error.username);
     } else {
       setUsernameError("");
     }
   };
 
   const renderPasswordError = () => {
-    if (errors.password !== "") {
-      setPasswordError(errors.password);
+    if (isError && error.password !== "") {
+      setPasswordError(error.password);
     } else {
       setPasswordError("");
     }
   };
   const renderNameError = () => {
-    if (errors.name !== "") {
-      setNameError(errors.name);
+    if (isError && error.name !== "") {
+      setNameError(error.name);
     } else {
       setNameError("");
     }
+  };
+
+  const clearErrors = () => {
+    setNameError("");
+    setUsernameError("");
+    setPasswordError("");
   };
 
   const inputStyleWithError = (hasError) => {
@@ -73,7 +77,7 @@ const SignUp = ({ onSignUp, navigation }) => {
 
   const handlePress = () => {
     navigation.replace("Login");
-    dispatch(clearErrors());
+    clearErrors();
   };
 
   return (
@@ -96,7 +100,7 @@ const SignUp = ({ onSignUp, navigation }) => {
             value={name}
             onChangeText={(value) => {
               dispatch(setName(value));
-              dispatch(clearErrors());
+              clearErrors();
             }}
             style={inputStyleWithError(nameError)}
             autoCorrect={false}
@@ -113,7 +117,7 @@ const SignUp = ({ onSignUp, navigation }) => {
             value={username}
             onChangeText={(value) => {
               dispatch(setUsername(value));
-              dispatch(clearErrors());
+              clearErrors();
             }}
             style={inputStyleWithError(usernameError)}
             textContentType="oneTimeCode"
@@ -132,7 +136,7 @@ const SignUp = ({ onSignUp, navigation }) => {
             value={password}
             onChangeText={(value) => {
               dispatch(setPassword(value));
-              dispatch(clearErrors());
+              clearErrors();
             }}
             secureTextEntry
             style={inputStyleWithError(passwordError)}
