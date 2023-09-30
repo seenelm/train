@@ -1,11 +1,44 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {addGroup} from './addGroup';
-import {fetchGroups} from './fetchGroups';
+import { createSlice } from "@reduxjs/toolkit";
+import { addGroup } from "./addGroup";
+import { fetchGroups } from "./fetchGroups";
+import { apiSlice } from "../../api/apiSlice";
+import { getToken } from "../../api/actions";
+import { createSelector } from "@reduxjs/toolkit";
+
+export const extendedGroupsSlice = apiSlice.injectEndpoints({
+  endpoints: (builder) => {
+    return {
+      fetchGroups: builder.query({
+        query: ({ userId }) => {
+          return {
+            url: `/users/${userId}`,
+            method: "GET",
+            headers: {
+              Authorization: `bearer ${getToken()}`,
+            },
+          };
+        },
+        transformResponse: (response) => {
+          return response.groups;
+        },
+      }),
+    };
+  },
+});
+
+const selectGroups = extendedGroupsSlice.endpoints.fetchGroups.select();
+
+export const selectUserGroups = createSelector(
+  selectGroups,
+  (user) => user.groups
+);
+
+export const { useFetchGroupsQuery } = extendedGroupsSlice;
 
 const groupsSlice = createSlice({
-  name: 'groups',
+  name: "groups",
   initialState: {
-    name: '',
+    name: "",
     groups: [],
     errors: {},
     loading: false,
@@ -48,5 +81,5 @@ const groupsSlice = createSlice({
   },
 });
 
-export const {setGroupName} = groupsSlice.actions;
+export const { setGroupName } = groupsSlice.actions;
 export const groupsReducer = groupsSlice.reducer;

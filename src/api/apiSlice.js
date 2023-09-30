@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createSelector } from "@reduxjs/toolkit";
+import { storeToken } from "./actions";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -17,8 +19,12 @@ export const apiSlice = createApi({
             },
           };
         },
-
-        transformResponse: (responseData) => {
+        transformResponse: async (responseData) => {
+          const token = responseData.token;
+          console.log("Token: ", token);
+          await storeToken(token).catch((error) => {
+            console.log("Error storing token: ", error);
+          });
           return responseData.userId;
         },
         transformErrorResponse: (response, meta, arg) => {
@@ -45,6 +51,13 @@ export const apiSlice = createApi({
       }),
     };
   },
+});
+
+// export const selectUserId = (state, userId) => userId;
+const selectUsers = apiSlice.endpoints.registerUser.select();
+
+export const selectUserId = createSelector(selectUsers, (usersData) => {
+  usersData.userId;
 });
 
 export const { useRegisterUserMutation, useLoginUserMutation } = apiSlice;

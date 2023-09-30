@@ -32,15 +32,19 @@ const SignUp = ({ onSignUp, navigation }) => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await registerUser({ username, password, name }).unwrap();
+      const response = await registerUser({
+        username,
+        password,
+        name,
+      }).unwrap();
+      console.log("Signup Response: ", response);
       onSignUp();
     } catch (err) {
-      console.log("Error: ", err);
+      console.log("SignUp Error: ", err);
     }
   };
 
   const renderUsernameError = () => {
-    console.log("Register Error: ", error);
     if (isError && error.username !== "") {
       setUsernameError(error.username);
     } else {
