@@ -1,15 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector } from "@reduxjs/toolkit";
-import { storeToken } from "./actions";
-import {
-  setUserId,
-  setIsLoggedIn,
-  setCheckingLoginStatus,
-  setHasToken,
-} from "../features/auth/usersSlice";
-import * as Keychain from "react-native-keychain";
-import { useDispatch } from "react-redux";
-import { getToken } from "./actions";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -28,34 +18,9 @@ export const apiSlice = createApi({
             },
           };
         },
-
-        // transformResponse: async (responseData) => {
-        //   //   const token = responseData.token;
-        //   //   await storeToken(token).catch((error) => {
-        //   //     console.log("Error storing token: ", error);
-        //   //   });
-        //   //   const dispatch = useDispatch();
-        //   //   dispatch(setHasToken(true));
-        //   //   return responseData.userId;
-        // },
         transformErrorResponse: (response, meta, arg) => {
           return response.data.errors;
         },
-        // onQueryStarted: async (args, { dispatch }) => {
-        //   try {
-        //     const credentials = getToken();
-        //     console.log("Credentials: ", credentials.password);
-        //     if (credentials.password) {
-        //       dispatch(setUserId(credentials.username));
-        //       dispatch(setIsLoggedIn(true));
-        //     } else {
-        //       dispatch(setIsLoggedIn(false));
-        //     }
-        //   } catch (error) {
-        //     console.error("Error fetching credentials from Keychain:", error);
-        //     dispatch(setIsLoggedIn(false));
-        //   }
-        // },
       }),
       loginUser: builder.mutation({
         query: ({ username, password }) => {
@@ -67,9 +32,6 @@ export const apiSlice = createApi({
               password: password,
             },
           };
-        },
-        transformResponse: (responseData) => {
-          return responseData.userId;
         },
         transformErrorResponse: (response, meta, arg) => {
           return response.data.errors;

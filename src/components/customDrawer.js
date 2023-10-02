@@ -5,7 +5,6 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import profile from "../assets/icons/profilepic.png";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/usersSlice";
-import * as Keychain from "react-native-keychain";
 
 function CustomDrawer(props) {
   const { navigation } = props;
@@ -14,8 +13,6 @@ function CustomDrawer(props) {
 
   const handleLogout = () => {
     dispatch(logout());
-    // Other logout logic here if needed
-    // E.g., redirecting user, clearing tokens, etc.
   };
 
   return (

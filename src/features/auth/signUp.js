@@ -5,20 +5,13 @@ import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from "../../assets/icons/logo3.png";
 
-import {
-  registerUser,
-  setUsername,
-  setPassword,
-  setName,
-} from "../../api/store";
-import { setUserId, setIsLoggedIn } from "./usersSlice";
-import { setHasToken } from "./usersSlice";
+import { setUsername, setPassword, setName } from "../../api/store";
+import { setIsLoggedIn } from "./usersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../../api/apiSlice";
-import { storeToken } from "../../api/actions";
 import * as Keychain from "react-native-keychain";
 
-const SignUp = ({ onSignUp, navigation }) => {
+const SignUp = ({ navigation }) => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
@@ -26,25 +19,6 @@ const SignUp = ({ onSignUp, navigation }) => {
   const { name, username, password } = useSelector((state) => state.users);
 
   const [registerUser, { isError, error }] = useRegisterUserMutation();
-
-  useEffect(() => {
-    const fetchCredentials = async () => {
-      try {
-        const credentials = await Keychain.getGenericPassword();
-        console.log("Credentials: ", credentials.password);
-        if (credentials.password) {
-          dispatch(setUserId(credentials.username));
-          dispatch(setIsLoggedIn(true));
-        } else {
-          dispatch(setIsLoggedIn(false));
-        }
-      } catch (error) {
-        console.error("Error fetching credentials from Keychain:", error);
-        dispatch(setIsLoggedIn(false));
-      }
-    };
-    fetchCredentials();
-  }, []);
 
   useEffect(() => {
     renderUsernameError();
@@ -59,17 +33,15 @@ const SignUp = ({ onSignUp, navigation }) => {
         username,
         password,
         name,
-      }).unwrap(); // This will throw an error if the mutation fails.
-      console.log("Token: ", response);
-      // Assuming that the token is in the response, adjust as necessary.
+      }).unwrap();
       const token = response.token;
-      console.log("Token to be stored: ", token);
+      const newUsername = response.username;
 
       // Store the token.
-      await storeToken(token);
-
-      // Any other logic you want to perform on successful registration.
-      onSignUp();
+      await Keychain.setGenericPassword(newUsername, token).catch((error) => {
+        console.log("Error storing token in KeyChain: ", error);
+      });
+      dispatch(setIsLoggedIn(true));
     } catch (err) {
       console.log("SignUp Error: ", err);
     }
