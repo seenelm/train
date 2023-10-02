@@ -10,7 +10,11 @@ const AppNav = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MyDrawer /> : <AuthNav onLogin={checkLoginStatus} />}
+      {isLoggedIn ? (
+        <MyDrawer />
+      ) : (
+        <AuthNav onLogin={checkLoginStatus} onSignUp={checkLoginStatus} />
+      )}
     </NavigationContainer>
   );
 };

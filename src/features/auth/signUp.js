@@ -4,6 +4,7 @@ import { loginStyles } from "../../styles/styles";
 import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import logo from "../../assets/icons/logo3.png";
+import * as Keychain from "react-native-keychain";
 
 import {
   registerUser,

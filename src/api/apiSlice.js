@@ -4,7 +4,7 @@ import { storeToken } from "./actions";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://192.168.1.59:3000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://192.168.0.107:3000/api" }),
   endpoints: (builder) => {
     return {
       registerUser: builder.mutation({
@@ -19,13 +19,13 @@ export const apiSlice = createApi({
             },
           };
         },
-        transformResponse: async (responseData) => {
-          const token = responseData.token;
-          console.log("Token: ", token);
-          await storeToken(token).catch((error) => {
-            console.log("Error storing token: ", error);
-          });
-          return responseData.userId;
+        onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+          try {
+            const { data } = await queryFulfilled;
+            await storeToken(data.token);
+          } catch (err) {
+            console.error("Error storing token: ", err);
+          }
         },
         transformErrorResponse: (response, meta, arg) => {
           return response.data.errors;
@@ -53,7 +53,6 @@ export const apiSlice = createApi({
   },
 });
 
-// export const selectUserId = (state, userId) => userId;
 const selectUsers = apiSlice.endpoints.registerUser.select();
 
 export const selectUserId = createSelector(selectUsers, (usersData) => {
