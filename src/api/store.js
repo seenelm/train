@@ -16,6 +16,25 @@ import { apiSlice } from "./apiSlice";
 //   overlay: overlayReducer,
 // });
 
+// const reducers = {
+//   users: usersReducer,
+//   groups: groupsReducer,
+//   overlay: overlayReducer,
+//   [apiSlice.reducerPath]: apiSlice.reducer,
+// };
+
+// const reducer = combineReducers(reducers);
+
+// export function setupStore(preloadedState) {
+//   return configureStore({
+//     reducer,
+//     middleware: (getDefaultMiddleware) => {
+//       return getDefaultMiddleware().concat(apiSlice.middleware);
+//     },
+//     preloadedState,
+//   });
+// }
+
 export function setupStore(preloadedState) {
   return configureStore({
     reducer: {

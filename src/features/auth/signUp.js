@@ -11,8 +11,12 @@ import {
   setPassword,
   setName,
 } from "../../api/store";
+import { setUserId, setIsLoggedIn } from "./usersSlice";
+import { setHasToken } from "./usersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../../api/apiSlice";
+import { storeToken } from "../../api/actions";
+import * as Keychain from "react-native-keychain";
 
 const SignUp = ({ onSignUp, navigation }) => {
   const [usernameError, setUsernameError] = useState("");
@@ -22,6 +26,25 @@ const SignUp = ({ onSignUp, navigation }) => {
   const { name, username, password } = useSelector((state) => state.users);
 
   const [registerUser, { isError, error }] = useRegisterUserMutation();
+
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      try {
+        const credentials = await Keychain.getGenericPassword();
+        console.log("Credentials: ", credentials.password);
+        if (credentials.password) {
+          dispatch(setUserId(credentials.username));
+          dispatch(setIsLoggedIn(true));
+        } else {
+          dispatch(setIsLoggedIn(false));
+        }
+      } catch (error) {
+        console.error("Error fetching credentials from Keychain:", error);
+        dispatch(setIsLoggedIn(false));
+      }
+    };
+    fetchCredentials();
+  }, []);
 
   useEffect(() => {
     renderUsernameError();
@@ -36,8 +59,16 @@ const SignUp = ({ onSignUp, navigation }) => {
         username,
         password,
         name,
-      }).unwrap();
-      console.log("Signup Response: ", response);
+      }).unwrap(); // This will throw an error if the mutation fails.
+      console.log("Token: ", response);
+      // Assuming that the token is in the response, adjust as necessary.
+      const token = response.token;
+      console.log("Token to be stored: ", token);
+
+      // Store the token.
+      await storeToken(token);
+
+      // Any other logic you want to perform on successful registration.
       onSignUp();
     } catch (err) {
       console.log("SignUp Error: ", err);

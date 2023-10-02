@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser } from "./registerUser";
-import { loginUser } from "./loginUser";
+// import { registerUser } from "./registerUser";
+// import { loginUser } from "./loginUser";
 import * as Keychain from "react-native-keychain";
 
 const usersSlice = createSlice({
@@ -11,11 +11,9 @@ const usersSlice = createSlice({
     name: "",
     userId: null,
     errors: {},
-    loading: false,
-    success: null,
     isLoggedIn: false,
-    token: null,
-    isCheckingLoginStatus: true,
+    isCheckingLoginStatus: false,
+    hasToken: false,
   },
   reducers: {
     setUsername: (state, action) => {
@@ -39,57 +37,18 @@ const usersSlice = createSlice({
     setUserId: (state, action) => {
       state.userId = action.payload;
     },
+    setHasToken: (state, action) => {
+      state.hasToken = action.payload;
+    },
     logout: (state) => {
       state.username = "";
       state.password = "";
       state.name = "";
       state.userId = null;
       state.errors = {};
-      state.loading = false;
-      state.success = null;
       state.isLoggedIn = false;
-      state.token = null;
       Keychain.resetGenericPassword();
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(registerUser.pending, (state, action) => {
-      state.loading = true;
-      state.userId = null;
-      state.isLoggedIn = false;
-    });
-    builder.addCase(registerUser.fulfilled, (state, action) => {
-      state.loading = false;
-      state.errors = {};
-      state.userId = action.payload.userId;
-      state.isLoggedIn = true;
-    });
-    builder.addCase(registerUser.rejected, (state, action) => {
-      state.loading = false;
-      state.errors = action.payload;
-      state.userId = null;
-      state.isLoggedIn = false;
-    });
-    builder.addCase(loginUser.pending, (state, action) => {
-      state.loading = true;
-      state.success = null;
-      state.userId = null;
-      state.isLoggedIn = false;
-    });
-    builder.addCase(loginUser.fulfilled, (state, action) => {
-      state.loading = false;
-      state.success = action.payload;
-      state.userId = action.payload.userId;
-      state.errors = {};
-      state.isLoggedIn = true;
-    });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      state.loading = false;
-      state.success = null;
-      state.userId = null;
-      state.errors = action.payload;
-      state.isLoggedIn = false;
-    });
   },
 });
 
@@ -103,6 +62,7 @@ export const {
   setIsLoggedIn,
   setUserId,
   setCheckingLoginStatus,
+  setHasToken,
 } = usersSlice.actions;
 
 export const usersReducer = usersSlice.reducer;

@@ -18,9 +18,10 @@ export const extendedGroupsSlice = apiSlice.injectEndpoints({
             },
           };
         },
-        transformResponse: (response) => {
-          return response.groups;
-        },
+        // transformResponse: (response) => {
+        //   console.log("Groups: ", response);
+        //   return response.groups;
+        // },
       }),
     };
   },

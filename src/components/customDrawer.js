@@ -5,6 +5,7 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import profile from "../assets/icons/profilepic.png";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/usersSlice";
+import * as Keychain from "react-native-keychain";
 
 function CustomDrawer(props) {
   const { navigation } = props;

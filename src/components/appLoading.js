@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Animated, Image, Dimensions } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { checkLoginStatus } from "../api/actions";
+import { checkLoginStatus, checkLogin } from "../api/actions";
 import { NavigationContainer } from "@react-navigation/native";
 import MyDrawer from "../nav/drawerNav";
 import AuthNav from "../nav/authNav";
@@ -14,16 +14,30 @@ const AppLoading = () => {
   );
 
   useEffect(() => {
-    const checkStatus = async () => {
-      await dispatch(checkLoginStatus());
-      Animated.timing(fadeAnim, {
-        toValue: 0,
-        duration: 2000,
-        useNativeDriver: true,
-      }).start();
-    };
-    checkStatus();
-  }, [dispatch]);
+    // const checkStatus = () => {
+    //   checkLoginStatus(dispatch).catch((err) => {
+    //     console.log("Error login status: ", err);
+    //   });
+    Animated.timing(fadeAnim, {
+      toValue: 0,
+      duration: 2000,
+      useNativeDriver: true,
+    }).start();
+    // };
+    // checkStatus();
+  }, []);
+
+  // useEffect(() => {
+  //   const checkStatus = () => {
+  //     checkLogin(dispatch);
+  //     Animated.timing(fadeAnim, {
+  //       toValue: 0,
+  //       duration: 2000,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   };
+  //   checkStatus();
+  // }, [dispatch]);
 
   if (isCheckingLoginStatus) {
     return (
