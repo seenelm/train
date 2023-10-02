@@ -4,69 +4,73 @@ import { loginStyles } from "../../styles/styles";
 import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setUsername,
-  setPassword,
-  loginUser,
-  clearErrors,
-} from "../../api/store";
+import { setUsername, setPassword } from "../../api/store";
 import logo from "../../assets/icons/logo3.png";
 
-const SignIn = ({ onLogin, navigation }) => {
+import { useLoginUserMutation } from "../../api/apiSlice";
+import { setIsLoggedIn } from "./usersSlice";
+import * as Keychain from "react-native-keychain";
+
+const SignIn = () => {
   const dispatch = useDispatch();
   const [loginError, setLoginError] = useState("");
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const { username, password, success, errors } = useSelector(
-    (state) => state.users
-  );
+  const { username, password } = useSelector((state) => state.users);
+
+  const [loginUser, { isError, error }] = useLoginUserMutation();
 
   useEffect(() => {
     renderLoginError();
     renderUsernameError();
     renderPasswordError();
-  }, [errors]);
-
-  useEffect(() => {
-    if (success) {
-      onLogin();
-    }
-  }, [success]);
+  }, [error]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await dispatch(
-        loginUser({ username, password })
-      ).unwrap();
-      console.log("Response:", response);
+      const response = await loginUser({ username, password }).unwrap();
+      console.log("Login Response: ", response);
+      const token = response.token;
+      const newUsername = response.username;
+
+      // Store the token.
+      await Keychain.setGenericPassword(newUsername, token).catch((error) => {
+        console.log("Error storing token in KeyChain: ", error);
+      });
+      dispatch(setIsLoggedIn(true));
     } catch (err) {
       console.log("Error: ", err);
     }
   };
 
   const renderLoginError = () => {
-    if (errors.message !== "") {
-      setLoginError(errors.message);
+    if (isError && error.message !== "") {
+      setLoginError(error.message);
     } else {
       setLoginError("");
     }
   };
 
   const renderUsernameError = () => {
-    if (errors.username !== "") {
-      setUsernameError(errors.username);
+    if (isError && error.username !== "") {
+      setUsernameError(error.username);
     } else {
       setUsernameError("");
     }
   };
 
   const renderPasswordError = () => {
-    if (errors.password !== "") {
-      setPasswordError(errors.password);
+    if (isError && error.password !== "") {
+      setPasswordError(error.password);
     } else {
       setPasswordError("");
     }
+  };
+
+  const clearErrors = () => {
+    setUsernameError("");
+    setPasswordError("");
   };
 
   const inputStyleWithError = (hasError) => {
@@ -98,7 +102,7 @@ const SignIn = ({ onLogin, navigation }) => {
             autoFocus={true}
             onChangeText={(value) => {
               dispatch(setUsername(value));
-              dispatch(clearErrors());
+              clearErrors();
             }}
             style={inputStyleWithError(loginError || usernameError)}
           />
@@ -116,7 +120,7 @@ const SignIn = ({ onLogin, navigation }) => {
               value={password}
               onChangeText={(value) => {
                 dispatch(setPassword(value));
-                dispatch(clearErrors());
+                clearErrors();
               }}
               secureTextEntry={true}
               style={inputStyleWithError(loginError || passwordError)}

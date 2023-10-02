@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector } from "@reduxjs/toolkit";
-import { storeToken } from "./actions";
 
 export const apiSlice = createApi({
   reducerPath: "api",
@@ -19,6 +18,7 @@ export const apiSlice = createApi({
             },
           };
         },
+<<<<<<< HEAD
         onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
           try {
             const { data } = await queryFulfilled;
@@ -27,6 +27,8 @@ export const apiSlice = createApi({
             console.error("Error storing token: ", err);
           }
         },
+=======
+>>>>>>> origin/TRAIN-56/feature/rtk-query
         transformErrorResponse: (response, meta, arg) => {
           return response.data.errors;
         },
@@ -41,9 +43,6 @@ export const apiSlice = createApi({
               password: password,
             },
           };
-        },
-        transformResponse: (responseData) => {
-          return responseData.userId;
         },
         transformErrorResponse: (response, meta, arg) => {
           return response.data.errors;

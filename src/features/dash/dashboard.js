@@ -12,32 +12,15 @@ import profile from "../../assets/icons/profilepic.png";
 import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
 
-import { useDispatch, useSelector } from "react-redux";
-// import { fetchGroups } from "../groups/fetchGroups";
+import { useSelector } from "react-redux";
 import { selectUserId } from "../../api/apiSlice";
-import { useFetchGroupsQuery, selectUserGroups } from "../groups/groupsSlice";
+import { useFetchGroupsQuery } from "../groups/groupsSlice";
 
 const Dashboard = ({ navigation }) => {
-  const dispatch = useDispatch();
-  const { groups } = useSelector((state) => state.groups);
-  // const { userId } = useSelector((state) => state.users);
   const userId = useSelector(selectUserId);
-  // const groups = useSelector(selectUserGroups);
 
-  const { fetchGroups } = useFetchGroupsQuery();
-
-  const fetchSections = async () => {
-    try {
-      console.log("UserId: ", userId);
-      await dispatch(fetchGroups({ userId })).unwrap();
-    } catch (err) {
-      console.log("Error1: ", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchSections();
-  }, []);
+  const { data } = useFetchGroupsQuery({ userId });
+  const groups = data?.groups;
 
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
@@ -97,8 +80,8 @@ const Dashboard = ({ navigation }) => {
           data={groups}
           renderItem={renderItem}
           keyExtractor={(item) => item._id}
-          numColumns={groups.length === 1 ? 1 : 2}
-          key={groups.length === 1 ? "singleColumn" : "doubleColumn"}
+          numColumns={groups?.length === 1 ? 1 : 2}
+          key={groups?.length === 1 ? "singleColumn" : "doubleColumn"}
         />
 
         <Button

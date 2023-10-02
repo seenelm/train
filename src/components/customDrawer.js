@@ -13,8 +13,6 @@ function CustomDrawer(props) {
 
   const handleLogout = () => {
     dispatch(logout());
-    // Other logout logic here if needed
-    // E.g., redirecting user, clearing tokens, etc.
   };
 
   return (

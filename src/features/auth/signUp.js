@@ -6,16 +6,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import logo from "../../assets/icons/logo3.png";
 import * as Keychain from "react-native-keychain";
 
-import {
-  registerUser,
-  setUsername,
-  setPassword,
-  setName,
-} from "../../api/store";
+import { setUsername, setPassword, setName } from "../../api/store";
+import { setIsLoggedIn } from "./usersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "../../api/apiSlice";
+import * as Keychain from "react-native-keychain";
 
-const SignUp = ({ onSignUp, navigation }) => {
+const SignUp = ({ navigation }) => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
@@ -38,8 +35,14 @@ const SignUp = ({ onSignUp, navigation }) => {
         password,
         name,
       }).unwrap();
-      console.log("Signup Response: ", response);
-      onSignUp();
+      const token = response.token;
+      const newUsername = response.username;
+
+      // Store the token.
+      await Keychain.setGenericPassword(newUsername, token).catch((error) => {
+        console.log("Error storing token in KeyChain: ", error);
+      });
+      dispatch(setIsLoggedIn(true));
     } catch (err) {
       console.log("SignUp Error: ", err);
     }

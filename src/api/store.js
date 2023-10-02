@@ -32,5 +32,4 @@ export function setupStore(preloadedState) {
 }
 
 export { setUsername, setPassword, clearErrors, setName };
-export * from "../features/auth/registerUser";
 export * from "../features/auth/loginUser";
