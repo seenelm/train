@@ -23,7 +23,7 @@ const registerUser = createAsyncThunk(
 
       return response.data;
     } catch (error) {
-      console.log("Error:", error.response.data.errors);
+      console.log("Register User Error:", error.response.data.errors);
       if (error.response.data.errors) {
         return thunkAPI.rejectWithValue(error.response.data.errors);
       }
