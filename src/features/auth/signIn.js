@@ -69,6 +69,7 @@ const SignIn = () => {
   };
 
   const clearErrors = () => {
+    setLoginError("");
     setUsernameError("");
     setPasswordError("");
   };

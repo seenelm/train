@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createSelector } from "@reduxjs/toolkit";
+import Config from "react-native-config";
 
 export const apiSlice = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://192.168.1.59:3000/api" }),
+  baseQuery: fetchBaseQuery({ baseUrl: `${Config.API_URL}/api` }),
   endpoints: (builder) => {
     return {
       registerUser: builder.mutation({
@@ -41,7 +42,6 @@ export const apiSlice = createApi({
   },
 });
 
-// export const selectUserId = (state, userId) => userId;
 const selectUsers = apiSlice.endpoints.registerUser.select();
 
 export const selectUserId = createSelector(selectUsers, (usersData) => {

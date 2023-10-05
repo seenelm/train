@@ -9,8 +9,6 @@ const usersSlice = createSlice({
     name: "",
     errors: {},
     isLoggedIn: false,
-    isCheckingLoginStatus: false,
-    hasToken: false,
   },
   reducers: {
     setUsername: (state, action) => {
@@ -19,14 +17,8 @@ const usersSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload;
     },
-    clearErrors: (state) => {
-      state.errors = {};
-    },
     setName: (state, action) => {
       state.name = action.payload;
-    },
-    setCheckingLoginStatus: (state, action) => {
-      state.isCheckingLoginStatus = action.payload;
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
@@ -42,14 +34,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const {
-  setUsername,
-  setPassword,
-  clearErrors,
-  setName,
-  logout,
-  setIsLoggedIn,
-  setCheckingLoginStatus,
-} = usersSlice.actions;
+export const { setUsername, setPassword, setName, logout, setIsLoggedIn } =
+  usersSlice.actions;
 
 export const usersReducer = usersSlice.reducer;

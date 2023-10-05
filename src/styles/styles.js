@@ -131,9 +131,6 @@ export const dashboardStyles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
   },
-  // listContainer: {
-  //   backgroundColor: "red",
-  // },
   addGroupIcon: {
     width: 24,
     height: 24,
@@ -141,9 +138,9 @@ export const dashboardStyles = StyleSheet.create({
   addGroupButton: {
     backgroundColor: "white",
     borderRadius: 30,
-    width: 60,
-    height: 60,
-    bottom: 11,
+    width: 55,
+    height: 55,
+    bottom: 20,
     right: 15,
     position: "absolute", // Add this line to position it absolutely.
     alignSelf: "flex-end",
