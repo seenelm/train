@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import { setupStore } from './src/api/store';
+import { setupStore } from './src/api/store.js';
 import AppNav from './src/nav/appNav';
 import AppLoading from './src/components/appLoading';
 import { StyleSheet } from 'react-native';

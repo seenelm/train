@@ -1,5 +1,5 @@
 import * as Keychain from "react-native-keychain";
-import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice";
+import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice.js";
 
 export const fetchCredentials = async (dispatch) => {
   try {

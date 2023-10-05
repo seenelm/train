@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import profile from "../assets/icons/profilepic.png";
 import { useDispatch } from "react-redux";
-import { logout } from "../features/auth/usersSlice";
+import { logout } from "../features/auth/usersSlice.js";
 
 function CustomDrawer(props) {
   const { navigation } = props;

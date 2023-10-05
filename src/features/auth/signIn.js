@@ -4,11 +4,11 @@ import { loginStyles } from "../../styles/styles";
 import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsername, setPassword } from "../../api/store";
+import { setUsername, setPassword } from "../../api/store.js";
 import logo from "../../assets/icons/logo3.png";
 
 import { useLoginUserMutation } from "../../api/apiSlice";
-import { setIsLoggedIn } from "./usersSlice";
+import { setIsLoggedIn } from "./usersSlice.js";
 import * as Keychain from "react-native-keychain";
 
 const SignIn = () => {
