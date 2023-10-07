@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, View, Image } from "react-native";
 import {
   SafeAreaView,
@@ -11,16 +11,33 @@ import search from "../../assets/icons/search.png";
 import profile from "../../assets/icons/profilepic.png";
 import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
-
+import { useFetchGroupsQuery } from "../groups/groupsSlice";
+import * as Keychain from "react-native-keychain";
 import { useSelector } from "react-redux";
 import { selectUserId } from "../../api/apiSlice";
-import { useFetchGroupsQuery } from "../groups/groupsSlice";
 
 const Dashboard = ({ navigation }) => {
-  const userId = useSelector(selectUserId);
+  const [userId, setUserId] = useState(null);
+  const [token, setToken] = useState(null);
+  const testUserId = useSelector(selectUserId);
+  console.log("TestUserID:", testUserId);
 
-  const { data } = useFetchGroupsQuery({ userId });
-  const groups = data?.groups;
+  // This effect will fetch the userId and token and update the state
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      const credentials = await Keychain.getGenericPassword();
+
+      if (credentials && credentials.password) {
+        const [fetchedUserId, fetchedToken] = credentials.password.split(":");
+        setUserId(fetchedUserId);
+        setToken(fetchedToken);
+      }
+    };
+    fetchCredentials();
+  }, []);
+
+  const { data: fetchedData } = useFetchGroupsQuery({ userId, token }); // fetch outside of condition
+  const groups = fetchedData ? fetchedData.groups : [];
 
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");

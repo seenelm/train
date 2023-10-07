@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Config from "react-native-config";
 
 const fetchGroups = createAsyncThunk("groups/fetch", async ({ userId }) => {
   try {

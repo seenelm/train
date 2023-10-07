@@ -1,11 +1,12 @@
 import * as Keychain from "react-native-keychain";
-import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice";
+import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice.js";
 
 export const fetchCredentials = async (dispatch) => {
   try {
     const credentials = await Keychain.getGenericPassword();
-    console.log("Credentials: ", credentials.password);
-    if (credentials) {
+
+    if (credentials && credentials.password) {
+      const [userId, token] = credentials.password.split(":");
       dispatch(setUsername(credentials.username));
       dispatch(setIsLoggedIn(true));
     } else {
@@ -16,19 +17,13 @@ export const fetchCredentials = async (dispatch) => {
   }
 };
 
-export const storeToken = async (token, dipatch) => {
-  console.log("Token to be Stored: ", token);
-
-  await Keychain.setGenericPassword("userToken", token).catch((error) => {
-    console.log("Error storing token in KeyChain: ", error);
-  });
-};
-
 export const getToken = async () => {
-  const token = await Keychain.getGenericPassword().catch((error) => {
+  const credentials = await Keychain.getGenericPassword().catch((error) => {
     console.log("Error getting token: ", error);
   });
-  if (token !== null) {
-    return token;
+  if (credentials && credentials.password) {
+    const [userId, token] = credentials.password.split(":");
+    return { userId, token };
   }
+  return null;
 };

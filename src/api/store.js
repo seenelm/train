@@ -4,7 +4,7 @@ import {
   setUsername,
   setPassword,
   setName,
-} from "../features/auth/usersSlice";
+} from "../features/auth/usersSlice.js";
 import { groupsReducer } from "../features/groups/groupsSlice";
 import overlayReducer from "../features/groups/overlaySlice";
 import { apiSlice } from "./apiSlice";

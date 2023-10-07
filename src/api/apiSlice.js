@@ -42,10 +42,13 @@ export const apiSlice = createApi({
   },
 });
 
-const selectUsers = apiSlice.endpoints.registerUser.select();
+// const { data } = apiSlice.endpoints.loginUser.select();
+// console.log("LoginUser Data:", data);
+
+const selectUsers = apiSlice.endpoints.loginUser.select();
 
 export const selectUserId = createSelector(selectUsers, (usersData) => {
-  usersData.userId;
+  return usersData.userId;
 });
 
 export const { useRegisterUserMutation, useLoginUserMutation } = apiSlice;
