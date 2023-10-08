@@ -3,5 +3,5 @@ module.exports = {
   transform: {
     "^.+\\.js$": "babel-jest", // Use babel-jest for JavaScript files
   },
-  setupFilesAfterEnv: ["./setup-jest.js"],
+  setupFilesAfterEnv: ["./setup-jest.js", "./src/setupTests.js"],
 };

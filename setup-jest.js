@@ -34,4 +34,9 @@ jest.mock("@gorhom/bottom-sheet", () => ({
   BottomSheet: jest.fn(),
 }));
 
-jest.mock("react-native-gesture-handler");
+jest.mock("react-native-gesture-handler", () => {
+  return {
+    Swipeable: jest.fn().mockReturnValue(null), // Mock Swipeable component
+    Direction: { RIGHT: "RIGHT", LEFT: "LEFT" }, // Mock Direction object
+  };
+});

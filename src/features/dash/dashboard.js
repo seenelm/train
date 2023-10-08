@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { FlatList, View, Image } from "react-native";
 import {
   SafeAreaView,
@@ -13,12 +13,13 @@ import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
 
 import { useSelector } from "react-redux";
-import { selectUserId } from "../../api/apiSlice";
 import { useFetchGroupsQuery } from "../groups/groupsSlice";
+import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
-  const userId = useSelector(selectUserId);
+  const userId = useSelector(selectUserById);
 
+  console.log("Dashboard UserId: ", userId);
   const { data } = useFetchGroupsQuery({ userId });
   const groups = data?.groups;
 

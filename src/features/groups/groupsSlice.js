@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { addGroup } from "./addGroup";
 import { fetchGroups } from "./fetchGroups";
 import { apiSlice } from "../../api/apiSlice";
-import { getToken } from "../../api/actions";
 import { createSelector } from "@reduxjs/toolkit";
 
 export const extendedGroupsSlice = apiSlice.injectEndpoints({
@@ -13,15 +12,8 @@ export const extendedGroupsSlice = apiSlice.injectEndpoints({
           return {
             url: `/users/${userId}`,
             method: "GET",
-            headers: {
-              Authorization: `bearer ${getToken()}`,
-            },
           };
         },
-        // transformResponse: (response) => {
-        //   console.log("Groups: ", response);
-        //   return response.groups;
-        // },
       }),
     };
   },
