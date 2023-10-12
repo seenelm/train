@@ -20,7 +20,6 @@ const Dashboard = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(null);
   const testUserId = useSelector(selectUserId);
-  console.log("TestUserID:", testUserId);
 
   // This effect will fetch the userId and token and update the state
   useEffect(() => {
@@ -38,7 +37,7 @@ const Dashboard = ({ navigation }) => {
 
   const { data: fetchedData } = useFetchGroupsQuery({ userId, token }); // fetch outside of condition
   const groups = fetchedData ? fetchedData.groups : [];
-
+  console.log("Fetched Groups:", fetchedData);
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
   };
