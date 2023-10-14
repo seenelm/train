@@ -40,8 +40,3 @@ jest.mock("react-native-gesture-handler", () => {
     Direction: { RIGHT: "RIGHT", LEFT: "LEFT" }, // Mock Direction object
   };
 });
-
-// Mock Config
-jest.mock("react-native-config", () => ({
-  Config: jest.fn(),
-}));

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FlatList, View, Image } from "react-native";
 import {
   SafeAreaView,
@@ -11,33 +11,16 @@ import search from "../../assets/icons/search.png";
 import profile from "../../assets/icons/profilepic.png";
 import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
-import { useFetchGroupsQuery } from "../groups/groupsSlice";
-import * as Keychain from "react-native-keychain";
+
 import { useSelector } from "react-redux";
-import { selectUserId } from "../../api/apiSlice";
+import { useFetchGroupsQuery } from "../../api/usersApi";
+import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
-  const [userId, setUserId] = useState(null);
-  const [token, setToken] = useState(null);
-  const testUserId = useSelector(selectUserId);
-
-  // This effect will fetch the userId and token and update the state
-  useEffect(() => {
-    const fetchCredentials = async () => {
-      const credentials = await Keychain.getGenericPassword();
-
-      if (credentials && credentials.password) {
-        const [fetchedUserId, fetchedToken] = credentials.password.split(":");
-        setUserId(fetchedUserId);
-        setToken(fetchedToken);
-      }
-    };
-    fetchCredentials();
-  }, []);
-
-  const { data: fetchedData } = useFetchGroupsQuery({ userId, token }); // fetch outside of condition
-  const groups = fetchedData ? fetchedData.groups : [];
-  console.log("Fetched Groups:", fetchedData);
+  const userId = useSelector(selectUserById);
+  const { data } = useFetchGroupsQuery({ userId });
+  const groups = data?.groups;
+  console.log("Groups:", groups);
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
   };
@@ -46,8 +29,8 @@ const Dashboard = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  const handleGroupTap = (groupName) => {
-    navigation.navigate("Group", { groupName });
+  const handleGroupTap = (groupName, groupId) => {
+    navigation.navigate("Group", { groupName, groupId });
   };
 
   const handleAddGroupTap = () => {
@@ -59,7 +42,7 @@ const Dashboard = ({ navigation }) => {
       <Card
         fitspaceName={item.name}
         imageSource={require("../../assets/trainer.jpg")}
-        onPress={() => handleGroupTap(item.name)}
+        onPress={() => handleGroupTap(item.name, item.id)}
       />
     </View>
   );
@@ -95,7 +78,7 @@ const Dashboard = ({ navigation }) => {
         <FlatList
           data={groups}
           renderItem={renderItem}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => item.id}
           numColumns={groups?.length === 1 ? 1 : 2}
           key={groups?.length === 1 ? "singleColumn" : "doubleColumn"}
         />

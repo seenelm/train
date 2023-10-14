@@ -4,14 +4,16 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import profile from "../../assets/icons/profilepic.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/button";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const name = useSelector((state) => state.users.username);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileSection}>
         <Image style={styles.profileImg} source={profile} />
         <View style={styles.profileDetails}>
-          <Text style={styles.name}>Yassine Elmellouki</Text>
+          <Text style={styles.name}>{name}</Text>
           <Text style={styles.role}>Personal Trainer</Text>
         </View>
       </View>

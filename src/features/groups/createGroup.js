@@ -11,27 +11,25 @@ import Button from "../../components/button";
 import uploadImage from "../../assets/icons/uploadimg.png";
 import { Dimensions } from "react-native";
 
-import { useDispatch, useSelector } from "react-redux";
-import { setGroupName } from "./groupsSlice";
-import { addGroup } from "./addGroup";
+import { useSelector } from "react-redux";
+import { useAddGroupMutation } from "../../api/groupsApi"; // Import the useAddGroupQuery hook
+import { selectUserById } from "../auth/usersSlice";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const CreateGroup = ({ navigation }) => {
   const [image, setImage] = useState(null);
+  const [name, setName] = useState("");
+  const userId = useSelector(selectUserById);
+  const [addGroup] = useAddGroupMutation();
 
-  const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.groups);
-  const { userId } = useSelector((state) => state.users);
-
-  const handleAddGroup = async (e) => {
-    e.preventDefault();
+  const handleAddGroup = async () => {
     try {
-      const response = await dispatch(addGroup({ name, userId })).unwrap();
+      await addGroup({ name, userId });
       navigation.replace("Group", { groupName: name });
     } catch (err) {
-      console.log("Error: ", err);
+      console.log("Add Group Error: ", err);
     }
   };
 
@@ -51,7 +49,7 @@ const CreateGroup = ({ navigation }) => {
         <TextInput
           style={styles.input}
           value={name}
-          onChangeText={(value) => dispatch(setGroupName(value))}
+          onChangeText={(name) => setName(name)}
           placeholder="Enter Fitspace Name"
           autoCorrect={false}
           spellCheck={false}

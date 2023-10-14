@@ -10,6 +10,8 @@ export const fetchCredentials = async (dispatch) => {
       dispatch(setUsername(credentials.username));
       dispatch(setIsLoggedIn(true));
     } else {
+      dispatch(setIsLoggedIn(false));
+      // Navigate back to login screen
       console.log("No credentials are stored");
     }
   } catch (error) {
@@ -17,13 +19,21 @@ export const fetchCredentials = async (dispatch) => {
   }
 };
 
+export const storeToken = async (username, token) => {
+  console.log("Token to be Stored: ", token);
+
+  await Keychain.setGenericPassword(username, token).catch((error) => {
+    console.log("Error storing token in KeyChain: ", error);
+  });
+};
+
 export const getToken = async () => {
-  const credentials = await Keychain.getGenericPassword().catch((error) => {
+  const keychainToken = await Keychain.getGenericPassword().catch((error) => {
     console.log("Error getting token: ", error);
   });
-  if (credentials && credentials.password) {
-    const [userId, token] = credentials.password.split(":");
-    return { userId, token };
+  let token = keychainToken.password;
+  if (token !== null) {
+    return token;
   }
   return null;
 };

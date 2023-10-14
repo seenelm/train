@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
-import { setupStore } from './src/api/store.js';
 import AppNav from './src/nav/appNav';
 import AppLoading from './src/components/appLoading';
 import { StyleSheet } from 'react-native';
+import { store, persistor } from './src/api/store.js';
+import { PersistGate } from 'redux-persist/integration/react';
 
-const store = setupStore(); // Move store setup outside the App component
 
 function App(): JSX.Element {
   const [appLoaded, setAppLoaded] = useState(false);
 
   return (
     <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
       <SafeAreaProvider style={styles.container}>
         {appLoaded ? <AppNav /> : <AppLoading />}
       </SafeAreaProvider>
+      </PersistGate>
     </Provider>
   );
 }

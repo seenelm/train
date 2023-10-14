@@ -13,11 +13,24 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import { showOverlay, hideOverlay } from "./overlaySlice";
 import Close from "../../assets/icons/close.png";
+import { useAddGroupMutation } from "../../api/groupsApi";
+import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
+  const userId = useSelector(selectUserById);
+  console.log("editgroup userid:", userId);
+  const [deleteGroup] = useAddGroupMutation();
   const { groupName } = route.params;
   const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
 
+  const handleDeleteGroup = async () => {
+    try {
+      await deleteGroup({ name, userId });
+      navigation.replace("Group", { groupName: name });
+    } catch (err) {
+      console.log("Add Group Error: ", err);
+    }
+  };
   const isOverlayVisible = useSelector((state) => state.overlay.isVisible);
   useEffect(() => {
     navigation.setOptions({
