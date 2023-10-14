@@ -20,7 +20,6 @@ const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   const { data } = useFetchGroupsQuery({ userId });
   const groups = data?.groups;
-  console.log("Groups:", groups);
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
   };

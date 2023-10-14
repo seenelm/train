@@ -22,6 +22,7 @@ const CreateGroup = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const userId = useSelector(selectUserById);
+
   const [addGroup] = useAddGroupMutation();
 
   const handleAddGroup = async () => {
