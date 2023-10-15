@@ -18,8 +18,11 @@ import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
-  const { data } = useFetchGroupsQuery({ userId });
+  const { data } = useFetchGroupsQuery(userId);
   const groups = data?.groups;
+  // const groups = useSelector(selectUserGroupsById(userId));
+  console.log("Groups: ", groups);
+
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
   };

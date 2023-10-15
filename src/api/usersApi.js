@@ -5,25 +5,29 @@ export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
       fetchGroups: builder.query({
-        query: ({ userId, token }) => {
+        query: (userId) => {
           return {
             url: `/users/${userId}`,
             method: "GET",
           };
         },
-        providesTags: (result, error, args) => [
-          { type: "Groups", id: args.userId },
-        ],
       }),
     };
   },
 });
 
 const selectGroups = usersApi.endpoints.fetchGroups.select();
+console.log("Select Groups: ", selectGroups);
 
-export const selectUserGroups = createSelector(
-  selectGroups,
-  (user) => user.groups
-);
+export const selectUserGroups = createSelector(selectGroups, (user) => {
+  console.log("User Selector: ", user);
+  return user?.groups;
+});
+
+// export const selectUserGroupsById = (userId) =>
+//   createSelector(
+//     [(state) => usersApi.endpoints.fetchGroups.select(userId)(state)],
+//     (user) => user?.groups
+//   );
 
 export const { useFetchGroupsQuery } = usersApi;

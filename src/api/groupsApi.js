@@ -5,17 +5,29 @@ export const groupsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
       addGroup: builder.mutation({
-        query: ({ name, userId }) => {
-          return {
-            url: `/groups`,
-            method: "POST",
-            body: { name, userId },
-          };
+        query: ({ name, userId }) => ({
+          url: `/groups`,
+          method: "POST",
+          body: { name, userId },
+        }),
+        async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
+          try {
+            const { data: createdGroup } = await queryFulfilled;
+            console.log("Mutation successful:", createdGroup);
+
+            dispatch(
+              apiSlice.util.updateQueryData("fetchGroups", userId, (data) => {
+                if (data && data.groups) {
+                  data.groups.push(createdGroup);
+                }
+              })
+            );
+          } catch (error) {
+            console.log(error);
+          }
         },
-        invalidatesTags: (result, error, { userId }) => [
-          { type: "Groups", id: userId },
-        ],
       }),
+
       deleteGroup: builder.mutation({
         query: ({ groupId, roleId, userId }) => {
           return {

@@ -1,10 +1,6 @@
 import { apiSlice } from "../../api/apiSlice";
 import { storeToken } from "../../api/actions";
-import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
 import { setIsLoggedIn, setUserId } from "./usersSlice";
-
-// const usersAdapter = createEntityAdapter();
-// const initialState = usersAdapter.getInitialState();
 
 export const usersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => {
