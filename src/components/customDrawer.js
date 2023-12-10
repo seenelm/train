@@ -34,7 +34,7 @@ function CustomDrawer(props) {
         <TouchableOpacity
           onPress={() => navigation.navigate("Main", { screen: "Request" })}
         >
-          <Text style={styles.page}>Requests</Text>
+          <Text style={styles.page}>Notifications</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {}}>
           <Text style={styles.page}>Settings</Text>

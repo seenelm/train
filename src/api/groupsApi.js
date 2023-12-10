@@ -16,9 +16,10 @@ export const groupsApi = apiSlice.injectEndpoints({
             console.log("Mutation successful:", createdGroup);
 
             dispatch(
-              apiSlice.util.updateQueryData("fetchGroups", userId, (data) => {
-                if (data && data.groups) {
-                  data.groups.push(createdGroup);
+              apiSlice.util.updateQueryData("fetchGroups", userId, (groups) => {
+                console.log("cached groups:", groups);
+                if (groups) {
+                  groups.push(createdGroup);
                 }
               })
             );
@@ -36,9 +37,6 @@ export const groupsApi = apiSlice.injectEndpoints({
             body: { roleId, userId },
           };
         },
-        invalidatesTags: (result, error, { userId }) => [
-          { type: "Groups", id: userId },
-        ],
       }),
     };
   },

@@ -8,15 +8,18 @@ import TopNav from "./topNav";
 import AddGroup from "../features/groups/createGroup";
 import Search from "../features/search/search";
 import Profile from "../features/profile/profile";
+import UserProfile from "../features/profile/userProfile";
 import { BottomNav } from "./bottomNav";
 import Chat from "../features/chat/chat";
 import Back from "../assets/icons/back.png";
 import EditGroup from "../features/groups/editGroup";
+import EditGroupMembers from "../features/groups/editGroupMembers";
 import Button from "../components/button";
 import { appIcons } from "../styles/styles";
 import ConnectedHeader from "../features/groups/editGroupHeader";
 
 import Request from "../features/requests/request";
+import EditingGroup from "../features/groups/editingGroup";
 
 const MainStack = createStackNavigator();
 
@@ -40,6 +43,11 @@ const MainNav = () => {
           options={{ headerShown: false }}
         />
         <MainStack.Screen
+          name="EditMembers"
+          component={EditGroupMembers}
+          options={{ headerShown: false }}
+        />
+        <MainStack.Screen
           name="Fitspace Info"
           component={EditGroup}
           options={({ navigation }) => {
@@ -50,15 +58,13 @@ const MainNav = () => {
                 elevation: 0,
                 shadowOpacity: 0,
               },
-              header: (props) => (
-                <ConnectedHeader {...props}>
-                  <Button
-                    onPress={() => navigation.goBack()}
-                    imgSource={Back}
-                    imgStyle={appIcons.icon}
-                    style={appIcons.button}
-                  />
-                </ConnectedHeader>
+              headerLeft: () => (
+                <Button
+                  onPress={() => navigation.goBack()}
+                  imgSource={Back}
+                  imgStyle={appIcons.icon}
+                  style={appIcons.button}
+                />
               ),
             };
           }}
@@ -82,7 +88,9 @@ const MainNav = () => {
                     navigation.navigate("Fitspace Info", { groupName })
                   }
                 >
-                  <Text>{groupName}</Text>
+                  <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                    {groupName}
+                  </Text>
                 </TouchableOpacity>
               ),
               headerLeft: () => (
@@ -104,8 +112,20 @@ const MainNav = () => {
             headerShown: false,
             cardStyleInterpolator:
               CardStyleInterpolators.forModalPresentationIOS,
+            gestureDirection: "vertical",
           }}
         />
+        <MainStack.Screen
+          name="EditingGroup"
+          component={EditingGroup}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forModalPresentationIOS,
+            gestureDirection: "vertical",
+          }}
+        />
+
         <MainStack.Screen
           name="ChatScreen"
           component={Chat}
@@ -119,6 +139,11 @@ const MainNav = () => {
         <MainStack.Screen
           name="Profile"
           component={Profile}
+          options={{ headerShown: false }}
+        />
+        <MainStack.Screen
+          name="UserProfile"
+          component={UserProfile}
           options={{ headerShown: false }}
         />
       </MainStack.Navigator>

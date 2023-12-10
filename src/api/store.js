@@ -14,8 +14,6 @@ import {
 } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const flipperDebugger = require("redux-flipper").default;
-
 const rootReducer = combineReducers({
   [apiSlice.reducerPath]: apiSlice.reducer,
   users: usersReducer,

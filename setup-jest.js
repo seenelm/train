@@ -40,3 +40,26 @@ jest.mock("react-native-gesture-handler", () => {
     Direction: { RIGHT: "RIGHT", LEFT: "LEFT" }, // Mock Direction object
   };
 });
+
+// Mock react-native-config
+jest.mock("react-native-config", () => ({
+  API_URL: "http://localhost:3000",
+}));
+
+// Mock flipper
+jest.mock("react-native-flipper", () => ({
+  addPlugin: jest.fn(),
+}));
+
+// mock async storage
+jest.mock("@react-native-async-storage/async-storage", () => ({
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+  removeItem: jest.fn(),
+}));
+
+// mock redux persist
+jest.mock("redux-persist", () => ({
+  persistReducer: jest.fn(),
+  persistStore: jest.fn(),
+}));

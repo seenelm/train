@@ -3,17 +3,17 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import ProfilePic from "../assets/icons/profilepic.png";
 import forward from "../assets/icons/forward.png";
 
-const Profile = ({ name, content, onPress, showForwardIcon = false }) => {
+const Profile = ({ name, username, onPress, showForwardIcon = false }) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.messageContainer}>
         <View style={styles.messageContainer}>
           <Image source={ProfilePic} style={styles.image} />
           <View style={styles.message}>
-            <Text style={styles.name}>{name}</Text>
             <Text style={styles.content} numberOfLines={2} ellipsizeMode="tail">
-              {content}
+              {username}
             </Text>
+            <Text style={styles.name}>{name}</Text>
           </View>
         </View>
         {showForwardIcon && (
@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   content: {
-    fontSize: 16,
     flexShrink: 1,
+    fontWeight: "bold",
   },
   image: {
     width: 50,

@@ -1,4 +1,5 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
+
 import {
   Animated,
   Text,
@@ -11,11 +12,26 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Profile from "../../components/profile";
 import searchicon from "../../assets/icons/search.png";
+import { useFindUsersQuery } from "../../api/searchApi";
 
 import { athletes } from "../../assets/Data";
+import { useIsFocused } from "@react-navigation/native";
 
-const Search = () => {
+const Search = ({ navigation }) => {
   const [search, setSearch] = useState("");
+  const isFocused = useIsFocused();
+  const textInputRef = useRef(null);
+
+  const { data } = useFindUsersQuery(search);
+  console.log("data:", data);
+
+  useEffect(() => {
+    if (isFocused) {
+      // This will run when the screen comes into focus
+      setSearch("");
+      textInputRef.current.focus(); // Focus the text input
+    }
+  }, [isFocused]);
 
   // create animated value
   const animation = useRef(new Animated.Value(0)).current;
@@ -49,6 +65,7 @@ const Search = () => {
   });
 
   const handleTap = () => {
+    navigation.navigate("UserProfile");
     console.log("Item tapped");
   };
 
@@ -76,6 +93,7 @@ const Search = () => {
             style={{ width: 20, height: 20, marginRight: 10 }}
           />
           <TextInput
+            ref={textInputRef}
             placeholder="Jump to..."
             style={searchStyles.textInput}
             onChangeText={(text) => setSearch(text)}
@@ -89,36 +107,38 @@ const Search = () => {
           />
         </View>
       </Animated.View>
-      {search.length > 0 && filteredAthletes.length > 0 && (
-        <View style={{ alignSelf: "stretch" }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              marginBottom: 10,
-              marginLeft: 15,
-            }}
-          >
-            Profiles
-          </Text>
-          <FlatList
-            contentContainerStyle={{ paddingLeft: 15 }}
-            data={filteredAthletes}
-            renderItem={({ item }) => (
-              <View style={searchStyles.searchContainer}>
-                <Profile
-                  name={item.name}
-                  content={item.content}
-                  showForwardIcon={true}
-                  onPress={handleTap}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      )}
+
+      <View style={{ alignSelf: "stretch" }}>
+        <Text
+          style={{
+            fontSize: 18,
+            fontWeight: "bold",
+            marginBottom: 10,
+            marginLeft: 15,
+          }}
+        >
+          Profiles
+        </Text>
+        <FlatList
+          contentContainerStyle={{ paddingLeft: 15 }}
+          data={data ? data.usersList : []}
+          renderItem={({ item }) => (
+            <View style={searchStyles.searchContainer}>
+              <Profile
+                name={item.name}
+                username={item.username}
+                showForwardIcon={true}
+                onPress={() =>
+                  navigation.navigate("UserProfile", { userId: item.id })
+                }
+              />
+            </View>
+          )}
+          // keyExtractor={(item) => item.id.toString()}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -154,8 +174,7 @@ const searchStyles = StyleSheet.create({
     height: "100%",
   },
   searchContainer: {
-    backgroundColor: "#F6F6F8",
-    paddingHorizontal: 20,
+    paddingRight: 10,
     borderRadius: 10,
     marginBottom: 5,
   },

@@ -5,12 +5,13 @@ import { getToken } from "./actions";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://192.168.1.24:3000/api",
+    // baseUrl: `${Config.API_URL}/api`,
+    baseUrl: "http://192.168.1.24/api",
     prepareHeaders: async (headers, { getState }) => {
       const token = await getToken();
 
       if (token) {
-        headers.set("Authorization", `bearer ${token}`);
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
