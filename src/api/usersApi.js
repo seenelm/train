@@ -7,9 +7,12 @@ export const usersApi = apiSlice.injectEndpoints({
       fetchGroups: builder.query({
         query: (userId) => {
           return {
-            url: `/users/${userId}`,
+            url: `/users/${userId}/groups`,
             method: "GET",
           };
+        },
+        transformResponse: (response) => {
+          return response;
         },
       }),
     };

@@ -20,15 +20,15 @@ const screenHeight = Dimensions.get("window").height;
 
 const CreateGroup = ({ navigation }) => {
   const [image, setImage] = useState(null);
-  const [name, setName] = useState("");
+  const [groupName, setGroupName] = useState("");
   const userId = useSelector(selectUserById);
 
   const [addGroup] = useAddGroupMutation();
 
   const handleAddGroup = async () => {
     try {
-      await addGroup({ name, userId });
-      navigation.replace("Group", { groupName: name });
+      await addGroup({ groupName, userId });
+      navigation.replace("Group", { groupName });
     } catch (err) {
       console.log("Add Group Error: ", err);
     }
@@ -51,8 +51,8 @@ const CreateGroup = ({ navigation }) => {
           <Text style={styles.inputLabel}>Fitspace Name</Text>
           <TextInput
             style={[styles.input, styles.inputWithBorder]}
-            value={name}
-            onChangeText={(name) => setName(name)}
+            value={groupName}
+            onChangeText={(name) => setGroupName(name)}
             placeholder="Enter Fitspace Name"
             autoCorrect={false}
             spellCheck={false}
@@ -64,8 +64,8 @@ const CreateGroup = ({ navigation }) => {
           <Text style={styles.inputLabel}>Fitspace Bio</Text>
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={(name) => setName(name)}
+            value={groupName}
+            onChangeText={(name) => setGroupName(name)}
             placeholder="Enter Fitspace Bio"
             autoCorrect={false}
             spellCheck={false}

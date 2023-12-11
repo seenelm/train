@@ -6,7 +6,7 @@ export const searchApi = apiSlice.injectEndpoints({
       findUsers: builder.query({
         query: (search) => {
           return {
-            url: `/users?search=${search}`,
+            url: `/search/query?query=${search}`,
             method: "GET",
           };
         },

@@ -16,26 +16,41 @@ import { useSelector } from "react-redux";
 import { useAddGroupMutation } from "../../api/groupsApi";
 import { selectUserById } from "../auth/usersSlice";
 import edit from "../../assets/icons/editimg.png";
+import { apiSlice } from "../../api/apiSlice";
+import {
+  useUpdateGroupBioMutation,
+  useFetchGroupQuery,
+} from "../../api/groupsApi";
+
+import { useDispatch } from "react-redux";
+import { groupsApi } from "../../api/groupsApi";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const EditingGroup = ({ navigation }) => {
+const EditingGroup = ({ navigation, route }) => {
   const [image, setImage] = useState(null);
   const [isSelected, setSelection] = useState(false);
   const [name, setName] = useState("");
+  const [groupBio, setGroupBio] = useState("");
   const userId = useSelector(selectUserById);
+  const { groupId } = route.params;
 
-  const [addGroup] = useAddGroupMutation();
+  const dispatch = useDispatch();
+
+  const [updateGroupBio, { isSuccess }] = useUpdateGroupBioMutation();
+  const { data: groupProfile, refetch } = useFetchGroupQuery(groupId);
+  // console.log("GroupProfile 1", groupProfile);
 
   const handlePriacy = () => {
     setSelection(isSelected === false ? true : false);
   };
 
-  const handleAddGroup = async () => {
+  const handleUpdateGroupBio = async () => {
     try {
-      await addGroup({ name, userId });
-      navigation.replace("Group", { groupName: name });
+      await updateGroupBio({ groupBio, groupId });
+      refetch();
+      navigation.goBack();
     } catch (err) {
       console.log("Add Group Error: ", err);
     }
@@ -55,7 +70,7 @@ const EditingGroup = ({ navigation }) => {
         <Button
           style={styles.cancelButton}
           textStyle={styles.cancelButtonText}
-          onPress={() => navigation.goBack()}
+          onPress={handleUpdateGroupBio}
         >
           Save
         </Button>
@@ -77,7 +92,7 @@ const EditingGroup = ({ navigation }) => {
           <Text style={styles.inputLabel}>Fitspace Name</Text>
           <TextInput
             style={[styles.input, styles.inputWithBorder]}
-            value={name}
+            value={groupProfile.bio}
             onChangeText={(name) => setName(name)}
             placeholder="Enter Fitspace Name"
             autoCorrect={false}
@@ -90,8 +105,8 @@ const EditingGroup = ({ navigation }) => {
           <Text style={styles.inputLabel}>Fitspace Bio</Text>
           <TextInput
             style={styles.input}
-            value={name}
-            onChangeText={(name) => setName(name)}
+            value={groupBio}
+            onChangeText={(groupBio) => setGroupBio(groupBio)}
             placeholder="Enter Fitspace Bio"
             autoCorrect={false}
             spellCheck={false}

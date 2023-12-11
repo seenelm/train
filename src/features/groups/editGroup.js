@@ -9,20 +9,23 @@ import Close from "../../assets/icons/close.png";
 import EditIcon from "../../assets/icons/setting.png";
 import MembersIcon from "../../assets/icons/people.png";
 import CategoriesIcon from "../../assets/icons/categories.png";
-import { useAddGroupMutation } from "../../api/groupsApi";
+import { useAddGroupMutation, useFetchGroupQuery } from "../../api/groupsApi";
 import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
   const userId = useSelector(selectUserById);
-  console.log("editgroup userid:", userId);
-  const [deleteGroup] = useAddGroupMutation();
+
   const { groupName } = route.params;
+  const { groupId } = route.params;
   const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
+
+  const { data: groupProfile, refetch } = useFetchGroupQuery(groupId);
+  console.log("GroupProfile", groupProfile);
+  const [deleteGroup] = useAddGroupMutation();
 
   // Define the onPress handlers
   const handleEditGroup = () => {
-    navigation.navigate("EditingGroup");
-    // Add your logic here
+    navigation.navigate("EditingGroup", { groupId: groupId });
   };
 
   const handleManageMembers = () => {
@@ -101,6 +104,7 @@ function EditGroup({ route, navigation }) {
           </View>
           <Text style={styles.groupName}>{groupName}</Text>
           <Text style={styles.groupMembers}>fitspace • 10 people</Text>
+          <Text style={styles.groupMembers}>{groupProfile.bio}</Text>
           <View style={styles.optionsContainer}>
             {options.map((option, index) => (
               <Option

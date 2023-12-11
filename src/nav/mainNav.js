@@ -50,7 +50,8 @@ const MainNav = () => {
         <MainStack.Screen
           name="Fitspace Info"
           component={EditGroup}
-          options={({ navigation }) => {
+          options={({ route, navigation }) => {
+            const { groupId } = route.params;
             return {
               headerShown: true,
               headerStyle: {
@@ -85,7 +86,7 @@ const MainNav = () => {
               headerTitle: () => (
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate("Fitspace Info", { groupName })
+                    navigation.navigate("Fitspace Info", { groupName, groupId })
                   }
                 >
                   <Text style={{ fontWeight: "bold", fontSize: 18 }}>

@@ -4,11 +4,24 @@ import { createSelector } from "@reduxjs/toolkit";
 export const groupsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
+      fetchGroup: builder.query({
+        query: (groupId) => {
+          return {
+            url: `/groups/${groupId}`,
+            method: "GET",
+          };
+        },
+
+        transformResponse: (response) => {
+          console.log("Fetch Group Response: ", response);
+          return response;
+        },
+      }),
       addGroup: builder.mutation({
-        query: ({ name, userId }) => ({
+        query: ({ groupName, userId }) => ({
           url: `/groups`,
           method: "POST",
-          body: { name, userId },
+          body: { groupName, userId },
         }),
         async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
           try {
@@ -26,6 +39,15 @@ export const groupsApi = apiSlice.injectEndpoints({
           } catch (error) {
             console.log(error);
           }
+        },
+      }),
+      updateGroupBio: builder.mutation({
+        query: ({ groupId, groupBio }) => {
+          return {
+            url: `/groups/${groupId}/bio`,
+            method: "PUT",
+            body: { groupBio },
+          };
         },
       }),
 
@@ -51,4 +73,9 @@ export const selectAddGroup = createSelector(
 
 // Optionally, you can create a selector for deleteGroup as well, if needed.
 
-export const { useAddGroupMutation, useDeleteGroupMutation } = groupsApi;
+export const {
+  useAddGroupMutation,
+  useDeleteGroupMutation,
+  useUpdateGroupBioMutation,
+  useFetchGroupQuery,
+} = groupsApi;

@@ -27,7 +27,8 @@ const SignIn = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await loginUser({ username, password }).unwrap();
+      const response = await loginUser({ username, password }).unwrap();
+      console.log("Login Response: ", response);
     } catch (err) {
       console.log("Error: ", err);
     }

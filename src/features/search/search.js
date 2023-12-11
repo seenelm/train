@@ -23,7 +23,7 @@ const Search = ({ navigation }) => {
   const textInputRef = useRef(null);
 
   const { data } = useFindUsersQuery(search);
-  console.log("data:", data);
+  console.log("Search:", data);
 
   useEffect(() => {
     if (isFocused) {
@@ -121,7 +121,7 @@ const Search = ({ navigation }) => {
         </Text>
         <FlatList
           contentContainerStyle={{ paddingLeft: 15 }}
-          data={data ? data.usersList : []}
+          data={data}
           renderItem={({ item }) => (
             <View style={searchStyles.searchContainer}>
               <Profile

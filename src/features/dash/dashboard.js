@@ -19,6 +19,7 @@ import { selectUserById } from "../auth/usersSlice";
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   const { data: groups } = useFetchGroupsQuery(userId);
+  console.log("Dashboard Groups: ", groups);
 
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
@@ -39,9 +40,9 @@ const Dashboard = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View style={{ flex: 1 }}>
       <Card
-        fitspaceName={item.name}
+        fitspaceName={item.groupName}
         imageSource={require("../../assets/trainer.jpg")}
-        onPress={() => handleGroupTap(item.name, item.id)}
+        onPress={() => handleGroupTap(item.groupName, item._id)}
       />
     </View>
   );

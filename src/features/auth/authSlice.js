@@ -45,7 +45,8 @@ export const usersApiSlice = apiSlice.injectEndpoints({
           }
         },
         transformErrorResponse: (response, meta, arg) => {
-          return response.data.errors;
+          console.log("Login Error Response: ", response);
+          return response.data;
         },
       }),
     };
