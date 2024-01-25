@@ -1,11 +1,8 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Button from "../../components/button";
 import Option from "../../components/option";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { useDispatch, useSelector } from "react-redux";
-import { showOverlay, hideOverlay } from "./overlaySlice";
-import Close from "../../assets/icons/close.png";
+import { useSelector } from "react-redux";
 import EditIcon from "../../assets/icons/setting.png";
 import MembersIcon from "../../assets/icons/people.png";
 import CategoriesIcon from "../../assets/icons/categories.png";
@@ -14,12 +11,8 @@ import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
   const userId = useSelector(selectUserById);
-
-  const { groupName } = route.params;
   const { groupId } = route.params;
-  const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
-
-  const { data: groupProfile, refetch } = useFetchGroupQuery(groupId);
+  const { data: groupProfile } = useFetchGroupQuery(groupId);
   console.log("GroupProfile", groupProfile);
   const [deleteGroup] = useAddGroupMutation();
 
@@ -29,13 +22,11 @@ function EditGroup({ route, navigation }) {
   };
 
   const handleManageMembers = () => {
-    console.log("Manage Members pressed");
     navigation.navigate("EditMembers");
   };
 
   const handleManageCategories = () => {
     console.log("Manage Categories pressed");
-    // Add your logic here
   };
   const handleDeleteGroup = async () => {
     try {
@@ -45,24 +36,6 @@ function EditGroup({ route, navigation }) {
       console.log("Add Group Error: ", err);
     }
   };
-  const handleProfilePress = () => {
-    setMainScrollEnabled(false);
-    bottomSheetRef.current?.expand();
-    dispatch(showOverlay());
-  };
-
-  const isOverlayVisible = useSelector((state) => state.overlay.isVisible);
-  useEffect(() => {
-    navigation.setOptions({
-      gestureEnabled: !isOverlayVisible,
-    });
-  }, [isOverlayVisible, navigation]);
-  useEffect(() => {
-    navigation.setParams({ isOverlayVisible });
-  }, [isOverlayVisible]);
-
-  const bottomSheetRef = useRef(null);
-  const dispatch = useDispatch();
 
   const options = [
     {
@@ -82,17 +55,10 @@ function EditGroup({ route, navigation }) {
     },
   ];
 
-  const handleClose = () => {
-    setMainScrollEnabled(true);
-    bottomSheetRef.current?.close();
-    dispatch(hideOverlay());
-  };
-
   return (
     <View style={styles.parentContainer}>
       <ScrollView
         style={{ flex: 1, backgroundColor: "white" }}
-        scrollEnabled={mainScrollEnabled}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
@@ -102,9 +68,14 @@ function EditGroup({ route, navigation }) {
               style={styles.groupImage}
             />
           </View>
-          <Text style={styles.groupName}>{groupName}</Text>
+          {groupProfile && (
+            <Text style={styles.groupName}>{groupProfile.groupName}</Text>
+          )}
           <Text style={styles.groupMembers}>fitspace • 10 people</Text>
-          <Text style={styles.groupMembers}>{groupProfile.bio}</Text>
+          {groupProfile && (
+            <Text style={styles.groupMembers}>{groupProfile.bio}</Text>
+          )}
+
           <View style={styles.optionsContainer}>
             {options.map((option, index) => (
               <Option
@@ -119,25 +90,7 @@ function EditGroup({ route, navigation }) {
             <Button style={styles.deleteBtn}>Delete Fitspace</Button>
           </View>
         </View>
-        {isOverlayVisible && <View style={styles.overlay}></View>}
       </ScrollView>
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={["110%"]}
-        handleIndicatorStyle={styles.handleIndicator}
-        backgroundStyle={styles.bottomSheet}
-      >
-        <View style={styles.bottomSheetHeader}>
-          <Button
-            onPress={handleClose}
-            imgSource={Close}
-            imgStyle={styles.icon}
-            style={styles.closeButton}
-          />
-        </View>
-      </BottomSheet>
     </View>
   );
 }

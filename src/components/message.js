@@ -1,11 +1,12 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
-const Message = ({name, content, profilePic, navigation}) => {
+const Message = ({ name, content, profilePic, navigation, route }) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('ChatScreen')}
-      style={styles.container}>
+      onPress={() => navigation.navigate("ChatScreen", route.params)}
+      style={styles.container}
+    >
       <View style={styles.messageContainer}>
         <Image source={profilePic} style={styles.image} />
         <View style={styles.message}>
@@ -20,20 +21,20 @@ const Message = ({name, content, profilePic, navigation}) => {
 };
 const styles = StyleSheet.create({
   messageContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     marginRight: 30,
     borderRadius: 10,
     marginBottom: 15,
-    alignItems: 'flex-start',
-    maxWidth: '90%',
+    alignItems: "flex-start",
+    maxWidth: "90%",
     paddingHorizontal: 10,
   },
   message: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginLeft: 10,
     flexShrink: 1,
-    justifyContent: 'flex-start',
+    justifyContent: "flex-start",
   },
   name: {
     // fontWeight: 'bold',

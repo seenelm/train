@@ -15,6 +15,51 @@ export const usersApi = apiSlice.injectEndpoints({
           return response;
         },
       }),
+
+      fetchUserProfile: builder.query({
+        query: (userId) => {
+          return {
+            url: `users/${userId}`,
+            method: "GET",
+          };
+        },
+        transformResponse: (response) => {
+          return response;
+        },
+      }),
+      fetchUserData: builder.query({
+        query: (userId) => {
+          return {
+            url: `${userId}/profile-data`,
+            method: "GET",
+          };
+        },
+        transformResponse: (response) => {
+          return response;
+        },
+      }),
+
+      fetchFollowData: builder.query({
+        query: (userId) => {
+          return {
+            url: `users/${userId}/followData`,
+            method: "GET",
+          };
+        },
+        transformResponse: (response) => {
+          return response;
+        },
+      }),
+
+      updateUserProfile: builder.mutation({
+        query: ({ userId, userBio, name, accountType }) => {
+          return {
+            url: `users/${userId}/profile`,
+            method: "PUT",
+            body: { userBio, name, accountType },
+          };
+        },
+      }),
     };
   },
 });
@@ -25,4 +70,10 @@ export const selectUserGroups = createSelector(selectGroups, (user) => {
   return user?.groups;
 });
 
-export const { useFetchGroupsQuery } = usersApi;
+export const {
+  useFetchGroupsQuery,
+  useFetchUserProfileQuery,
+  useUpdateUserProfileMutation,
+  useFetchUserDataQuery,
+  useFetchFollowDataQuery,
+} = usersApi;

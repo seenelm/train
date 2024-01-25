@@ -41,12 +41,39 @@ export const groupsApi = apiSlice.injectEndpoints({
           }
         },
       }),
-      updateGroupBio: builder.mutation({
-        query: ({ groupId, groupBio }) => {
+      updateGroupProfile: builder.mutation({
+        query: ({ groupId, groupBio, groupName, accountType }) => {
           return {
-            url: `/groups/${groupId}/bio`,
+            url: `/groups/${groupId}/profile`,
             method: "PUT",
-            body: { groupBio },
+            body: { groupBio, groupName, accountType },
+          };
+        },
+      }),
+
+      joinGroup: builder.mutation({
+        query: ({ groupId }) => {
+          return {
+            url: `/groups/${groupId}/join`,
+            method: "PUT",
+          };
+        },
+      }),
+
+      requestGroup: builder.mutation({
+        query: ({ groupId }) => {
+          return {
+            url: `/groups/${groupId}/request`,
+            method: "POST",
+          };
+        },
+      }),
+
+      groupRequests: builder.query({
+        query: ({ userId }) => {
+          return {
+            url: `/groups/${userId}/requests`,
+            method: "GET",
           };
         },
       }),
@@ -76,6 +103,9 @@ export const selectAddGroup = createSelector(
 export const {
   useAddGroupMutation,
   useDeleteGroupMutation,
-  useUpdateGroupBioMutation,
+  useUpdateGroupProfileMutation,
   useFetchGroupQuery,
+  useJoinGroupMutation,
+  useRequestGroupMutation,
+  useGroupRequestsQuery,
 } = groupsApi;

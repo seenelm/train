@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   TouchableOpacity,
   View,
@@ -9,63 +9,35 @@ import {
 import ContextMenu from "react-native-context-menu-view";
 import { useNavigation } from "@react-navigation/native";
 
-const Card = ({ fitspaceName, imageSource, onPress }) => {
+const Card = ({ fitspaceName, imageSource, onPress, groupId }) => {
   const navigation = useNavigation();
-  const [timer, setTimer] = useState(null);
-  const [longPressed, setLongPressed] = useState(false);
-
-  const handlePress = () => {
-    // Avoid triggering if it is a long press
-    if (!longPressed) onPress();
-  };
-
-  const handleLongPress = () => {
-    setLongPressed(true); // Indicate that it was a long press
-  };
-
-  const handlePressIn = () => {
-    // Start a timer on press in
-    setTimer(
-      setTimeout(() => {
-        handleLongPress();
-      }, 300)
-    ); // 500ms delay
-  };
-
-  const handlePressOut = () => {
-    // Clear timer on press out, and reset the long press state
-    clearTimeout(timer);
-    setLongPressed(false);
-  };
 
   const handleEditFitspace = ({ nativeEvent }) => {
     if (nativeEvent.name === "Edit Fitspace") {
-      // Navigate to the "Fitspace Info" screen only when "Edit Fitspace" is pressed
-      navigation.navigate("Fitspace Info", { groupName: fitspaceName });
+      navigation.navigate("Fitspace Info", {
+        groupName: fitspaceName,
+        groupId,
+      });
     }
   };
-
-  // console.log("isLongpress?", );
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={handlePress}
-        onLongPress={handleLongPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
+        onPress={onPress}
+        onLongPress={() => {}}
+        delayPressIn={500} // delay in ms
         style={styles.touchableArea}
         activeOpacity={0.6}
       >
         <ContextMenu
           actions={[
             { title: "Edit Fitspace", systemIcon: "pencil" },
-            { title: "Leave Fitspace", systemIcon: "trash" },
+            { title: "Leave Fitspace", systemIcon: "trash", destructive: true },
           ]}
           onPress={handleEditFitspace}
         >
           <ImageBackground
-            defaultSource={require("../assets/trainer.jpg")}
             source={imageSource}
             style={styles.imageBackground}
             resizeMode="cover"
@@ -107,11 +79,11 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   fitspaceName: {
-    fontSize: 22,
+    fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
     color: "#000",
   },
 });
 
-export default Card;
+export default React.memo(Card);

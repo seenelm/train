@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList, View, Image } from "react-native";
+import React, { useState } from "react";
+import { FlatList, View, Image, RefreshControl } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -18,8 +18,15 @@ import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
-  const { data: groups } = useFetchGroupsQuery(userId);
+  const { data: groups, refetch } = useFetchGroupsQuery(userId);
   console.log("Dashboard Groups: ", groups);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  };
 
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
@@ -43,6 +50,7 @@ const Dashboard = ({ navigation }) => {
         fitspaceName={item.groupName}
         imageSource={require("../../assets/trainer.jpg")}
         onPress={() => handleGroupTap(item.groupName, item._id)}
+        groupId={item._id}
       />
     </View>
   );
@@ -78,9 +86,12 @@ const Dashboard = ({ navigation }) => {
         <FlatList
           data={groups}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
           numColumns={groups?.length === 1 ? 1 : 2}
           key={groups?.length === 1 ? "singleColumn" : "doubleColumn"}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
 
         <Button

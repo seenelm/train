@@ -10,49 +10,52 @@ import {
   Dimensions,
 } from "react-native";
 import Button from "../../components/button";
+
+import { useSelector } from "react-redux";
+import {
+  useFetchUserProfileQuery,
+  useUpdateUserProfileMutation,
+} from "../../api/usersApi";
+import { selectUserById } from "../auth/usersSlice";
 import edit from "../../assets/icons/editimg.png";
 import PrivacyMenu from "../../components/privacyMenu";
-
-import {
-  useUpdateGroupProfileMutation,
-  useFetchGroupQuery,
-} from "../../api/groupsApi";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const EditingGroup = ({ navigation, route }) => {
+const EditingProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [accountType, setAccountType] = useState("");
-  const [groupName, setGroupName] = useState("");
-  const [groupBio, setGroupBio] = useState("");
-  const { groupId } = route.params;
+  const [name, setName] = useState("");
+  const [userBio, setUserBio] = useState("");
+  const userId = useSelector(selectUserById);
+
+  const [updateUserProfile] = useUpdateUserProfileMutation();
 
   useEffect(() => {
-    if (groupProfile && groupProfile.bio && groupProfile.groupName) {
-      setGroupBio(groupProfile.bio);
-      setGroupName(groupProfile.groupName);
-      setAccountType(groupProfile.accountType);
+    if (userData) {
+      setName(userData.name);
+      setUserBio(userData.bio);
+      setAccountType(userData.accountType);
     }
-  }, [groupProfile]);
+  }, [userData]);
 
-  const [updateGroupProfile] = useUpdateGroupProfileMutation();
+  console.log("accountType", accountType);
 
-  const { data: groupProfile, refetch } = useFetchGroupQuery(groupId);
+  const { data: userData, refetch } = useFetchUserProfileQuery(userId);
 
-  const handlePrivacy = (type) => {
-    setAccountType(type);
-    console.log("accountType", accountType);
-  };
-
-  const handleUpdateGroupProfile = async () => {
+  const handleUpdateUserProfile = async () => {
     try {
-      await updateGroupProfile({ groupBio, groupName, accountType, groupId });
+      await updateUserProfile({ userBio, name, accountType, userId });
       refetch();
       navigation.goBack();
     } catch (err) {
       console.log("Add Group Error: ", err);
     }
+  };
+  const handlePrivacy = (type) => {
+    setAccountType(type);
+    console.log("accountType", accountType);
   };
 
   return (
@@ -65,17 +68,17 @@ const EditingGroup = ({ navigation, route }) => {
         >
           Cancel
         </Button>
-        <Text style={styles.title}>Edit Fitspace</Text>
+        <Text style={styles.title}>Edit Profile</Text>
         <Button
           style={styles.cancelButton}
           textStyle={styles.cancelButtonText}
-          onPress={handleUpdateGroupProfile}
+          onPress={handleUpdateUserProfile}
         >
           Save
         </Button>
       </View>
       <ImageBackground
-        source={require("../../assets/trainer.jpg")}
+        source={require("../../assets/icons/profilepic.png")}
         style={styles.groupImageContainer}
       >
         <TouchableOpacity style={styles.overlay}>
@@ -88,23 +91,24 @@ const EditingGroup = ({ navigation, route }) => {
       )}
       <View style={styles.inputContainer}>
         <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>Fitspace Name</Text>
+          <Text style={styles.inputLabel}>Name</Text>
           <TextInput
             style={[styles.input, styles.inputWithBorder]}
-            value={groupName}
-            onChangeText={(groupName) => setGroupName(groupName)}
+            value={name}
+            onChangeText={(name) => setName(name)}
             placeholder="Enter Fitspace Name"
             autoCorrect={false}
             spellCheck={false}
             keyboardAppearance="dark"
           />
         </View>
-        <View style={styles.inputRow1}>
-          <Text style={styles.inputLabel}>Fitspace Bio</Text>
+
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>Bio</Text>
           <TextInput
             style={styles.input}
-            value={groupBio}
-            onChangeText={(groupBio) => setGroupBio(groupBio)}
+            value={userBio}
+            onChangeText={(userBio) => setUserBio(userBio)}
             placeholder="Enter Fitspace Bio"
             autoCorrect={false}
             spellCheck={false}
@@ -112,7 +116,7 @@ const EditingGroup = ({ navigation, route }) => {
           />
         </View>
       </View>
-      <PrivacyMenu accountType={accountType} handlePrivacy={handlePrivacy} />
+      <PrivacyMenu handlePrivacy={handlePrivacy} />
     </View>
   );
 };
@@ -128,11 +132,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingVertical: screenHeight * 0.02,
-    paddingHorizontal: screenWidth * 0.05,
+    padding: 20,
   },
   title: {
-    fontSize: screenHeight * 0.022,
+    fontSize: 18,
     fontWeight: "bold",
   },
   cancelButton: {
@@ -142,49 +145,44 @@ const styles = StyleSheet.create({
     color: "black",
   },
   inputContainer: {
-    flexDirection: "column",
     borderTopWidth: 1,
     borderTopColor: "#e8e8e8",
     borderBottomWidth: 1,
     borderBottomColor: "#e8e8e8",
     width: "100%",
-    marginTop: screenHeight * 0.02,
+    marginTop: 20,
   },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    paddingHorizontal: screenWidth * 0.025,
-  },
-  inputRow1: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: screenWidth * 0.025,
+    paddingHorizontal: 10,
+    paddingTop: 5,
   },
   inputLabel: {
-    width: screenWidth * 0.3,
-    fontSize: screenHeight * 0.017,
+    width: 120,
+    fontSize: 14,
     fontWeight: "bold",
-    marginRight: screenWidth * 0.02,
+    marginRight: 10,
   },
   input: {
     flex: 1,
-    height: screenHeight * 0.05,
+    height: 40,
     justifyContent: "center",
-  },
-  touchableArea: {
-    width: "100%",
-    padding: 10,
   },
   inputWithBorder: {
     borderBottomWidth: 1,
-    height: screenHeight * 0.05,
     borderBottomColor: "#e8e8e8",
   },
+  image: {
+    resizeMode: "cover",
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.2,
+    marginBottom: 10,
+  },
   groupImageContainer: {
-    width: screenWidth * 0.3,
-    height: screenWidth * 0.3,
+    width: screenWidth * 0.25,
+    height: screenWidth * 0.25,
     borderRadius: 18,
     overflow: "hidden",
     alignItems: "center",
@@ -192,16 +190,16 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    borderRadius: 18,
+    backgroundColor: "rgba(0, 0, 0, 0.2)", // Semi-transparent overlay
+    borderRadius: 18, // Match the border radius of the container
     justifyContent: "center",
   },
   iconStyle: {
     alignSelf: "center",
-    width: screenWidth * 0.08,
-    height: screenWidth * 0.08,
+    width: 30,
+    height: 30,
     tintColor: "white",
   },
 });
 
-export default EditingGroup;
+export default EditingProfile;

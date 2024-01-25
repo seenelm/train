@@ -1,20 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-
-import {
-  Animated,
-  Text,
-  TextInput,
-  FlatList,
-  View,
-  StyleSheet,
-  Image,
-} from "react-native";
+import { TextInput, FlatList, View, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Profile from "../../components/profile";
+import GroupProfile from "../../components/groupProfile";
 import searchicon from "../../assets/icons/search.png";
 import { useFindUsersQuery } from "../../api/searchApi";
-
-import { athletes } from "../../assets/Data";
 import { useIsFocused } from "@react-navigation/native";
 
 const Search = ({ navigation }) => {
@@ -22,8 +12,14 @@ const Search = ({ navigation }) => {
   const isFocused = useIsFocused();
   const textInputRef = useRef(null);
 
-  const { data } = useFindUsersQuery(search);
-  console.log("Search:", data);
+  const { data, refetch } = useFindUsersQuery(search);
+  console.log("Search Data: ", data);
+
+  useEffect(() => {
+    if (search !== "") {
+      refetch();
+    }
+  }, [search]);
 
   useEffect(() => {
     if (isFocused) {
@@ -33,60 +29,70 @@ const Search = ({ navigation }) => {
     }
   }, [isFocused]);
 
-  // create animated value
-  const animation = useRef(new Animated.Value(0)).current;
-
-  // run animation
-  const handleFocus = () => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
+  const renderItem = ({ item }) => {
+    if (item.username) {
+      return (
+        <View style={searchStyles.searchContainer}>
+          <Profile
+            name={item.name}
+            username={item.username}
+            showForwardIcon={true}
+            onPress={() =>
+              navigation.navigate("UserProfile", { userId: item._id })
+            }
+          />
+        </View>
+      );
+    } else if (
+      item.groupName &&
+      item.isMember === false &&
+      item.accountType === 1
+    ) {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("JoinGroup", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    } else if (
+      item.groupName &&
+      item.isMember === false &&
+      item.accountType === 2
+    ) {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("RequestGroup", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    } else {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("Group", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    }
   };
-
-  const handleBlur = () => {
-    Animated.timing(animation, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  // interpolate animated value
-  const textTranslate = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -30],
-  });
-
-  const textOpacity = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
-  });
-
-  const handleTap = () => {
-    navigation.navigate("UserProfile");
-    console.log("Item tapped");
-  };
-
-  // Filter the athletes array based on search input
-  const filteredAthletes = athletes.filter(
-    (athlete) =>
-      athlete.name.toLowerCase().includes(search.toLowerCase()) ||
-      athlete.content.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <SafeAreaView style={searchStyles.container}>
-      <Animated.Text
-        style={[
-          searchStyles.text,
-          { transform: [{ translateY: textTranslate }], opacity: textOpacity },
-        ]}
-      >
-        Search
-      </Animated.Text>
-      <Animated.View style={{ transform: [{ translateY: textTranslate }] }}>
+      <View>
         <View style={searchStyles.searchBar}>
           <Image
             source={searchicon}
@@ -98,43 +104,19 @@ const Search = ({ navigation }) => {
             style={searchStyles.textInput}
             onChangeText={(text) => setSearch(text)}
             value={search}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             autoCorrect={false}
             spellCheck={false}
             keyboardAppearance="dark"
             autoFocus={true}
           />
         </View>
-      </Animated.View>
+      </View>
 
       <View style={{ alignSelf: "stretch" }}>
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "bold",
-            marginBottom: 10,
-            marginLeft: 15,
-          }}
-        >
-          Profiles
-        </Text>
         <FlatList
           contentContainerStyle={{ paddingLeft: 15 }}
           data={data}
-          renderItem={({ item }) => (
-            <View style={searchStyles.searchContainer}>
-              <Profile
-                name={item.name}
-                username={item.username}
-                showForwardIcon={true}
-                onPress={() =>
-                  navigation.navigate("UserProfile", { userId: item.id })
-                }
-              />
-            </View>
-          )}
-          // keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         />
@@ -151,9 +133,11 @@ const searchStyles = StyleSheet.create({
     backgroundColor: "white",
   },
   text: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   searchBar: {
     flexDirection: "row",

@@ -16,10 +16,12 @@ import EditGroup from "../features/groups/editGroup";
 import EditGroupMembers from "../features/groups/editGroupMembers";
 import Button from "../components/button";
 import { appIcons } from "../styles/styles";
-import ConnectedHeader from "../features/groups/editGroupHeader";
 
-import Request from "../features/requests/request";
+import Requests from "../features/requests/requests";
 import EditingGroup from "../features/groups/editingGroup";
+import EditingProfile from "../features/profile/editingProfile";
+import JoinGroup from "../features/groups/joinGroup";
+import RequestGroup from "../features/groups/requestGroup";
 
 const MainStack = createStackNavigator();
 
@@ -128,15 +130,51 @@ const MainNav = () => {
         />
 
         <MainStack.Screen
+          name="JoinGroup"
+          component={JoinGroup}
+          options={{ headerShown: false }}
+        />
+
+        <MainStack.Screen
+          name="RequestGroup"
+          component={RequestGroup}
+          options={{ headerShown: false }}
+        />
+
+        <MainStack.Screen
           name="ChatScreen"
           component={Chat}
           options={{ headerShown: false }}
         />
+
         <MainStack.Screen
           name="Request"
-          component={Request}
-          options={{ headerShown: false }}
+          component={Requests}
+          options={({ route, navigation }) => {
+            return {
+              headerShown: true,
+              headerStyle: {
+                borderBottomColor: "white",
+                elevation: 0,
+                shadowOpacity: 0,
+              },
+              headerTitle: () => (
+                <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+                  Notifications
+                </Text>
+              ),
+              headerLeft: () => (
+                <Button
+                  onPress={() => navigation.goBack()}
+                  imgSource={Back}
+                  imgStyle={appIcons.icon}
+                  style={appIcons.button}
+                />
+              ),
+            };
+          }}
         />
+
         <MainStack.Screen
           name="Profile"
           component={Profile}
@@ -146,6 +184,16 @@ const MainNav = () => {
           name="UserProfile"
           component={UserProfile}
           options={{ headerShown: false }}
+        />
+        <MainStack.Screen
+          name="EditingProfile"
+          component={EditingProfile}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forModalPresentationIOS,
+            gestureDirection: "vertical",
+          }}
         />
       </MainStack.Navigator>
     </View>

@@ -1,15 +1,31 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useFetchUserProfileQuery,
+  useFetchFollowDataQuery,
+} from "../../api/usersApi";
+import { selectUserById } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
 
-const Profile = () => {
-  const name = useSelector((state) => state.users.username);
-  const bio = "15 years certified trainer";
-  const followers = "210";
-  const following = "402";
+const Profile = ({ navigation }) => {
+  const userId = useSelector(selectUserById);
+  const { data: userData, refetch } = useFetchUserProfileQuery(userId);
+  const { data: followData } = useFetchFollowDataQuery(userId);
+  const name = userData?.username;
+  const bio = userData?.bio;
+  let followers = 0;
+  let following = 0;
+  if (followData !== undefined) {
+    followers = followData[0].followersCount;
+    following = followData[0].followingCount;
+  }
+
+  const handleEditProfile = () => {
+    navigation.navigate("EditingProfile");
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
@@ -33,7 +49,9 @@ const Profile = () => {
         </View>
         <Text style={styles.bio}>{bio}</Text>
         <View style={styles.buttonContainer}>
-          <Button style={styles.buttonStyle}>Edit Profile</Button>
+          <Button style={styles.buttonStyle} onPress={handleEditProfile}>
+            Edit Profile
+          </Button>
         </View>
       </View>
     </SafeAreaView>
