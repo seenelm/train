@@ -86,7 +86,7 @@ export const dashboardStyles = StyleSheet.create({
   },
   text: {
     fontSize: 25,
-    // fontWeight: 'bold',
+    fontWeight: "bold",
     color: "black",
   },
   image: {
@@ -104,13 +104,24 @@ export const dashboardStyles = StyleSheet.create({
     width: 45,
     height: 45,
     marginRight: 15,
+  },
+  profileImage2: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+    marginBottom: 10,
+  },
+  profileImage3: {
+    backgroundColor: "transparent",
+    width: 45,
+    height: 45,
+
     marginBottom: 10,
   },
   logoHeader: {
     backgroundColor: "transparent",
     width: 30,
     height: 30,
-    // marginRight: 15,
   },
   iconContainer: {
     flex: 1,

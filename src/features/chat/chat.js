@@ -6,16 +6,26 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
+  KeyboardAvoidingView,
+  Image,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
+import groupProfile from "../../assets/icons/groupProfile.png";
 
 const Chat = ({ route }) => {
+  const inNavigator = route.params?.inNavigator ?? false;
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [socket, setSocket] = useState(null);
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState(null);
-  const currentRoom = route.params;
+  const { currentRoom, id } = route.params;
+
+  const createChat = {
+    chat_name: currentRoom,
+    group_id: id,
+  };
 
   useEffect(() => {
     setMessages([]);
@@ -23,7 +33,7 @@ const Chat = ({ route }) => {
   }, [currentRoom]);
 
   useEffect(() => {
-    const socket = io("ws://192.168.0.107:3001");
+    const socket = io("ws://127.0.0.1:3001");
     setSocket(socket);
 
     socket.on("connect", () => {
@@ -31,6 +41,8 @@ const Chat = ({ route }) => {
       setName(`anon-${socket.id}`);
       setConnected(true);
       console.log("joining room", currentRoom);
+
+      socket.emit("create-chat", createChat);
 
       socket.emit("join", currentRoom);
     });
@@ -41,12 +53,21 @@ const Chat = ({ route }) => {
       setMessages((messages) => [...messages, msg]);
     });
 
-    socket.on("messages", (msgs) => {
-      console.log("Messages received", msgs);
-      let messages = msgs.messages.map((msg) => {
+    // socket.on("messages", (msgs) => {
+    //   console.log("Messages received", msgs);
+    //   let messages = msgs.messages.map((msg) => {
+    //     msg.date = new Date(msg.date);
+    //     return msg;
+    //   });
+    //   setMessages(messages);
+    // });
+
+    socket.on("create-chat", (msgs) => {
+      console.log("Chat Created", msgs);
+      let chatName = (msg) => {
         msg.date = new Date(msg.date);
         return msg;
-      });
+      };
       setMessages(messages);
     });
 
@@ -72,25 +93,35 @@ const Chat = ({ route }) => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Image source={groupProfile} style={styles.profilePic} />
+        <Text style={styles.name}>{currentRoom}</Text>
+      </View>
       <FlatList
         data={messages}
         renderItem={renderMessage}
         keyExtractor={(item, index) => index.toString()}
-        // additional FlatList props
       />
-      <View style={styles.inputWrapper}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Type a message"
-          value={input}
-          onChangeText={setInput}
-        />
-        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-          <Text>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={
+          Platform.OS === "ios" ? (inNavigator ? -80 : 0) : 0
+        }
+      >
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.textInput}
+            placeholder="Type a message"
+            value={input}
+            onChangeText={setInput}
+          />
+          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+            <Text>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -100,6 +131,21 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     backgroundColor: "white",
+  },
+  header: {
+    flexDirection: "column",
+    alignItems: "center",
+    padding: 10,
+  },
+  profilePic: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    marginBottom: 5,
+  },
+  name: {
+    fontSize: 18,
+    fontWeight: "bold",
   },
   chatArea: {
     flex: 1,
@@ -143,10 +189,10 @@ const styles = StyleSheet.create({
   message: {
     backgroundColor: "#e1e1e1",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 16,
     marginVertical: 5,
     marginHorizontal: 10,
-    alignSelf: "flex-start",
+    alignSelf: "flex-end",
   },
 });
 

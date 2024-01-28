@@ -66,12 +66,12 @@ const Dashboard = ({ navigation }) => {
           <Button
             onPress={handleProfileTap}
             imgSource={profile}
-            style={dashboardStyles.profileImage1}
+            style={dashboardStyles.profileImage2}
             imgStyle={dashboardStyles.profileImage}
           />
         </View>
         <View style={dashboardStyles.iconGroup}>
-          <Image source={logo} style={dashboardStyles.profileImage1} />
+          <Image source={logo} style={dashboardStyles.profileImage3} />
         </View>
         <View style={dashboardStyles.iconGroup}>
           <Button

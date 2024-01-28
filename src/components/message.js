@@ -37,18 +37,19 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   name: {
-    // fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    fontSize: 17,
+    fontSize: 15,
   },
   content: {
-    fontSize: 16,
+    fontSize: 14,
     flexShrink: 1,
+    color: "#666",
   },
   image: {
     width: 50,
     height: 50,
-    borderRadius: 25,
+    borderRadius: 13,
     marginRight: 10,
   },
 });

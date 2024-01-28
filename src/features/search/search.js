@@ -6,6 +6,7 @@ import GroupProfile from "../../components/groupProfile";
 import searchicon from "../../assets/icons/search.png";
 import { useFindUsersQuery } from "../../api/searchApi";
 import { useIsFocused } from "@react-navigation/native";
+import back from "../../assets/icons/back.png";
 
 const Search = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -92,7 +93,8 @@ const Search = ({ navigation }) => {
 
   return (
     <SafeAreaView style={searchStyles.container}>
-      <View>
+      <View style={searchStyles.header}>
+        <Image source={back} style={searchStyles.back} />
         <View style={searchStyles.searchBar}>
           <Image
             source={searchicon}
@@ -141,12 +143,10 @@ const searchStyles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
     borderRadius: 10,
     paddingHorizontal: 10,
     marginLeft: 10,
-    marginRight: 10,
     height: 40,
     backgroundColor: "#F6F6F8",
   },
@@ -154,13 +154,23 @@ const searchStyles = StyleSheet.create({
     padding: 10,
   },
   textInput: {
-    width: "100%",
+    width: "80%",
     height: "100%",
   },
   searchContainer: {
     paddingRight: 10,
     borderRadius: 10,
     marginBottom: 5,
+  },
+  back: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
+    marginTop: 3,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 
