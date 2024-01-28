@@ -6,7 +6,7 @@ export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
     baseUrl: `${Config.API_URL}/api`,
-    // baseUrl: "http://192.168.1.24:3000/api",
+
     prepareHeaders: async (headers, { getState }) => {
       const token = await getToken();
 
