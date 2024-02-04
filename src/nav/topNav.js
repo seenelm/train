@@ -45,7 +45,7 @@ const TopNav = ({ route, navigation }) => {
       <Tab.Screen
         name="Payments"
         component={PaymentScreen}
-        options={{ tabBarLabel: "Payments" }}
+        options={{ tabBarLabel: "Docs" }}
       />
     </Tab.Navigator>
   );

@@ -1,28 +1,20 @@
 import React, { useRef, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import Button from "../../components/button";
 import Profile from "../../components/profile";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import { showOverlay, hideOverlay } from "./overlaySlice";
 import Close from "../../assets/icons/close.png";
-import { useAddGroupMutation } from "../../api/groupsApi";
+
 import { selectUserById } from "../auth/usersSlice";
+import back from "../../assets/icons/back.png";
 
 function EditGroup({ route, navigation }) {
   const userId = useSelector(selectUserById);
-  console.log("editgroup userid:", userId);
-  const [deleteGroup] = useAddGroupMutation();
+
   const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
 
-  const handleDeleteGroup = async () => {
-    try {
-      await deleteGroup({ name, userId });
-      navigation.replace("Group", { groupName: name });
-    } catch (err) {
-      console.log("Add Group Error: ", err);
-    }
-  };
   const isOverlayVisible = useSelector((state) => state.overlay.isVisible);
   useEffect(() => {
     navigation.setOptions({
@@ -71,7 +63,15 @@ function EditGroup({ route, navigation }) {
       >
         <View style={styles.container}>
           <View style={styles.members}>
-            <Text style={styles.membersTitle}>10 People</Text>
+            <View style={styles.header}>
+              <Button
+                imgSource={back}
+                imgStyle={styles.back}
+                style={styles.back}
+                onPress={() => navigation.goBack()}
+              />
+              <Text style={styles.membersTitle}>10 People</Text>
+            </View>
             <View style={styles.membersContainer}>
               {members.map((item) => (
                 <Profile
@@ -115,6 +115,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
+  header: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -122,39 +128,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 50,
   },
-  groupImageContainer: {
-    width: "100%",
-    alignItems: "center",
-  },
-  groupImage: {
-    width: 150,
-    height: 150,
-    aspectRatio: 1,
-    borderRadius: 18,
-    overflow: "hidden",
-  },
-  groupName: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  groupMembers: {
-    fontSize: 18,
-    marginTop: 10,
-    color: "gray",
-  },
   members: {
     width: "90%",
   },
-  membersContainer: {
-    paddingHorizontal: 10,
-    marginTop: 10,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
   membersTitle: {
     fontSize: 20,
-    marginTop: 10,
+
     fontWeight: "bold",
   },
   memberItem: {
@@ -209,6 +188,13 @@ const styles = StyleSheet.create({
     width: "90%",
     height: 60,
     marginTop: 30,
+  },
+  back: {
+    position: "absolute",
+    left: 0,
+    width: 23,
+    height: 23,
+    backgroundColor: "transparent",
   },
 });
 

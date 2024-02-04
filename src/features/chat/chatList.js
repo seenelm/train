@@ -136,6 +136,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 10,
     marginLeft: 10,
     marginRight: 10,
+    marginBottom: 10,
     height: 40,
     backgroundColor: "#F6F6F8",
   },

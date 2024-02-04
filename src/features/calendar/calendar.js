@@ -246,7 +246,6 @@ const Calendar = ({ navigation }) => {
           ))}
         </View>
       </View>
-
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.panel, animatedStyles]}>
           <View style={styles.dragHandle} />
