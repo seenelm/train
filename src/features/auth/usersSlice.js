@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createSelector } from "@reduxjs/toolkit";
 import * as Keychain from "react-native-keychain";
 
 const usersSlice = createSlice({
@@ -7,10 +7,9 @@ const usersSlice = createSlice({
     username: "",
     password: "",
     name: "",
+    userId: null,
     errors: {},
     isLoggedIn: false,
-    isCheckingLoginStatus: false,
-    hasToken: false,
   },
   reducers: {
     setUsername: (state, action) => {
@@ -19,14 +18,12 @@ const usersSlice = createSlice({
     setPassword: (state, action) => {
       state.password = action.payload;
     },
-    clearErrors: (state) => {
-      state.errors = {};
-    },
     setName: (state, action) => {
       state.name = action.payload;
     },
-    setCheckingLoginStatus: (state, action) => {
-      state.isCheckingLoginStatus = action.payload;
+    setUserId: (state, action) => {
+      state.userId = action.payload;
+      console.log("UserId: ", state.userId);
     },
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
@@ -49,7 +46,12 @@ export const {
   setName,
   logout,
   setIsLoggedIn,
-  setCheckingLoginStatus,
+  setUserId,
 } = usersSlice.actions;
+
+export const selectUserById = createSelector(
+  (state) => state.users,
+  (users) => users.userId
+);
 
 export const usersReducer = usersSlice.reducer;

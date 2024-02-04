@@ -11,27 +11,26 @@ import Button from "../../components/button";
 import uploadImage from "../../assets/icons/uploadimg.png";
 import { Dimensions } from "react-native";
 
-import { useDispatch, useSelector } from "react-redux";
-import { setGroupName } from "./groupsSlice";
-import { addGroup } from "./addGroup";
+import { useSelector } from "react-redux";
+import { useAddGroupMutation } from "../../api/groupsApi";
+import { selectUserById } from "../auth/usersSlice";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const CreateGroup = ({ navigation }) => {
   const [image, setImage] = useState(null);
+  const [groupName, setGroupName] = useState("");
+  const userId = useSelector(selectUserById);
 
-  const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.groups);
-  const { userId } = useSelector((state) => state.users);
+  const [addGroup] = useAddGroupMutation();
 
-  const handleAddGroup = async (e) => {
-    e.preventDefault();
+  const handleAddGroup = async () => {
     try {
-      const response = await dispatch(addGroup({ name, userId })).unwrap();
-      navigation.replace("Group", { groupName: name });
+      await addGroup({ groupName, userId });
+      navigation.replace("Group", { groupName });
     } catch (err) {
-      console.log("Error: ", err);
+      console.log("Add Group Error: ", err);
     }
   };
 
@@ -46,17 +45,41 @@ const CreateGroup = ({ navigation }) => {
       {image && (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
       )}
-      <Text style={styles.inputLabel}>Fitspace Name</Text>
+
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={(value) => dispatch(setGroupName(value))}
-          placeholder="Enter Fitspace Name"
-          autoCorrect={false}
-          spellCheck={false}
-          keyboardAppearance="dark"
-        />
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>Fitspace Name</Text>
+          <TextInput
+            style={[styles.input, styles.inputWithBorder]}
+            value={groupName}
+            onChangeText={(name) => setGroupName(name)}
+            placeholder="Enter Fitspace Name"
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardAppearance="dark"
+          />
+        </View>
+
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>Fitspace Bio</Text>
+          <TextInput
+            style={styles.input}
+            value={groupName}
+            onChangeText={(name) => setGroupName(name)}
+            placeholder="Enter Fitspace Bio"
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardAppearance="dark"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <View style={styles.inputRow}>
+            <Text style={styles.inputLabel}>Fitspace Privacy</Text>
+            <TouchableOpacity style={styles.input}>
+              <Text>Public</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       <Button
@@ -90,22 +113,33 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   inputContainer: {
-    borderColor: "lightgray",
-    borderWidth: 1,
-    borderRadius: 5,
+    borderTopWidth: 1,
+    borderTopColor: "#e8e8e8",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8e8e8",
     width: "100%",
-    marginBottom: 15,
   },
-  input: {
-    height: 40,
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
     paddingHorizontal: 10,
+    paddingTop: 5,
   },
   inputLabel: {
-    alignSelf: "flex-start",
-    fontSize: 16,
+    width: 120,
+    fontSize: 14,
     fontWeight: "bold",
-    marginBottom: 5,
-    marginTop: 15,
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    justifyContent: "center",
+  },
+  inputWithBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8e8e8",
   },
   cancelButton: {
     backgroundColor: "transparent",
@@ -119,6 +153,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "100%",
     height: 40,
+    marginTop: 20,
   },
   continueButtonText: {
     color: "white",
@@ -128,7 +163,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     width: screenWidth * 0.6,
     height: screenHeight * 0.2,
-    marginBottom: 5,
+    marginBottom: 20,
   },
 });
 

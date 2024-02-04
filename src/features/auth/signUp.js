@@ -6,10 +6,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import logo from "../../assets/icons/logo3.png";
 import * as Keychain from "react-native-keychain";
 
-import { setUsername, setPassword, setName } from "../../api/store";
-import { setIsLoggedIn } from "./usersSlice";
+import {
+  setUsername,
+  setPassword,
+  setName,
+  setIsLoggedIn,
+} from "./usersSlice.js";
 import { useSelector, useDispatch } from "react-redux";
-import { useRegisterUserMutation } from "../../api/apiSlice";
+import { useRegisterUserMutation } from "./authSlice";
 import * as Keychain from "react-native-keychain";
 
 const SignUp = ({ navigation }) => {
@@ -35,6 +39,7 @@ const SignUp = ({ navigation }) => {
         password,
         name,
       }).unwrap();
+
       const token = response.token;
       const newUsername = response.username;
 

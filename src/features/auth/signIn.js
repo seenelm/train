@@ -4,12 +4,10 @@ import { loginStyles } from "../../styles/styles";
 import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { setUsername, setPassword } from "../../api/store";
+import { setUsername, setPassword } from "./usersSlice";
 import logo from "../../assets/icons/logo3.png";
 
-import { useLoginUserMutation } from "../../api/apiSlice";
-import { setIsLoggedIn } from "./usersSlice";
-import * as Keychain from "react-native-keychain";
+import { useLoginUserMutation } from "./authSlice";
 
 const SignIn = () => {
   const dispatch = useDispatch();
@@ -31,14 +29,6 @@ const SignIn = () => {
     try {
       const response = await loginUser({ username, password }).unwrap();
       console.log("Login Response: ", response);
-      const token = response.token;
-      const newUsername = response.username;
-
-      // Store the token.
-      await Keychain.setGenericPassword(newUsername, token).catch((error) => {
-        console.log("Error storing token in KeyChain: ", error);
-      });
-      dispatch(setIsLoggedIn(true));
     } catch (err) {
       console.log("Error: ", err);
     }
@@ -69,6 +59,7 @@ const SignIn = () => {
   };
 
   const clearErrors = () => {
+    setLoginError("");
     setUsernameError("");
     setPasswordError("");
   };

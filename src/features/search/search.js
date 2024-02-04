@@ -1,124 +1,128 @@
-import React, { useState, useRef } from "react";
-import {
-  Animated,
-  Text,
-  TextInput,
-  FlatList,
-  View,
-  StyleSheet,
-  Image,
-} from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { TextInput, FlatList, View, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Profile from "../../components/profile";
+import GroupProfile from "../../components/groupProfile";
 import searchicon from "../../assets/icons/search.png";
+import { useFindUsersQuery } from "../../api/searchApi";
+import { useIsFocused } from "@react-navigation/native";
+import back from "../../assets/icons/back.png";
 
-import { athletes } from "../../assets/Data";
-
-const Search = () => {
+const Search = ({ navigation }) => {
   const [search, setSearch] = useState("");
+  const isFocused = useIsFocused();
+  const textInputRef = useRef(null);
 
-  // create animated value
-  const animation = useRef(new Animated.Value(0)).current;
+  const { data, refetch } = useFindUsersQuery(search);
+  console.log("Search Data: ", data);
 
-  // run animation
-  const handleFocus = () => {
-    Animated.timing(animation, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
+  useEffect(() => {
+    if (search !== "") {
+      refetch();
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (isFocused) {
+      // This will run when the screen comes into focus
+      setSearch("");
+      textInputRef.current.focus(); // Focus the text input
+    }
+  }, [isFocused]);
+
+  const renderItem = ({ item }) => {
+    if (item.username) {
+      return (
+        <View style={searchStyles.searchContainer}>
+          <Profile
+            name={item.name}
+            username={item.username}
+            showForwardIcon={true}
+            onPress={() =>
+              navigation.navigate("UserProfile", { userId: item._id })
+            }
+          />
+        </View>
+      );
+    } else if (
+      item.groupName &&
+      item.isMember === false &&
+      item.accountType === 1
+    ) {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("JoinGroup", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    } else if (
+      item.groupName &&
+      item.isMember === false &&
+      item.accountType === 2
+    ) {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("RequestGroup", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    } else {
+      return (
+        <GroupProfile
+          groupName={item.groupName}
+          onPress={() =>
+            navigation.navigate("Group", {
+              groupName: item.groupName,
+              groupId: item._id,
+            })
+          }
+        />
+      );
+    }
   };
-
-  const handleBlur = () => {
-    Animated.timing(animation, {
-      toValue: 0,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  // interpolate animated value
-  const textTranslate = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -30],
-  });
-
-  const textOpacity = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 0],
-  });
-
-  const handleTap = () => {
-    console.log("Item tapped");
-  };
-
-  // Filter the athletes array based on search input
-  const filteredAthletes = athletes.filter(
-    (athlete) =>
-      athlete.name.toLowerCase().includes(search.toLowerCase()) ||
-      athlete.content.toLowerCase().includes(search.toLowerCase())
-  );
 
   return (
     <SafeAreaView style={searchStyles.container}>
-      <Animated.Text
-        style={[
-          searchStyles.text,
-          { transform: [{ translateY: textTranslate }], opacity: textOpacity },
-        ]}
-      >
-        Search
-      </Animated.Text>
-      <Animated.View style={{ transform: [{ translateY: textTranslate }] }}>
+      <View style={searchStyles.header}>
+        <Image source={back} style={searchStyles.back} />
         <View style={searchStyles.searchBar}>
           <Image
             source={searchicon}
             style={{ width: 20, height: 20, marginRight: 10 }}
           />
           <TextInput
+            ref={textInputRef}
             placeholder="Jump to..."
             style={searchStyles.textInput}
             onChangeText={(text) => setSearch(text)}
             value={search}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             autoCorrect={false}
             spellCheck={false}
             keyboardAppearance="dark"
             autoFocus={true}
           />
         </View>
-      </Animated.View>
-      {search.length > 0 && filteredAthletes.length > 0 && (
-        <View style={{ alignSelf: "stretch" }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "bold",
-              marginBottom: 10,
-              marginLeft: 15,
-            }}
-          >
-            Profiles
-          </Text>
-          <FlatList
-            contentContainerStyle={{ paddingLeft: 15 }}
-            data={filteredAthletes}
-            renderItem={({ item }) => (
-              <View style={searchStyles.searchContainer}>
-                <Profile
-                  name={item.name}
-                  content={item.content}
-                  showForwardIcon={true}
-                  onPress={handleTap}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-          />
-        </View>
-      )}
+      </View>
+
+      <View style={{ alignSelf: "stretch" }}>
+        <FlatList
+          contentContainerStyle={{ paddingLeft: 15 }}
+          data={data}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -131,18 +135,18 @@ const searchStyles = StyleSheet.create({
     backgroundColor: "white",
   },
   text: {
-    fontSize: 40,
+    fontSize: 30,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   searchBar: {
     flexDirection: "row",
-    justifyContent: "flex-start",
     alignItems: "center",
     borderRadius: 10,
     paddingHorizontal: 10,
     marginLeft: 10,
-    marginRight: 10,
     height: 40,
     backgroundColor: "#F6F6F8",
   },
@@ -150,14 +154,23 @@ const searchStyles = StyleSheet.create({
     padding: 10,
   },
   textInput: {
-    width: "100%",
+    width: "80%",
     height: "100%",
   },
   searchContainer: {
-    backgroundColor: "#F6F6F8",
-    paddingHorizontal: 20,
+    paddingRight: 10,
     borderRadius: 10,
     marginBottom: 5,
+  },
+  back: {
+    width: 20,
+    height: 20,
+    marginLeft: 5,
+    marginTop: 3,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
 

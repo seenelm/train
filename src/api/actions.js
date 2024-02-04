@@ -1,27 +1,17 @@
 import * as Keychain from "react-native-keychain";
-<<<<<<< HEAD
-import {
-  setUserId,
-  setIsLoggedIn,
-  setCheckingLoginStatus,
-} from "../features/auth/usersSlice";
-
-// Define the checkLoginStatus function
-export const checkLoginStatus = () => async (dispatch) => {
-  try {
-    const credentials = await Keychain.getGenericPassword();
-=======
-import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice";
+import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice.js";
 
 export const fetchCredentials = async (dispatch) => {
   try {
     const credentials = await Keychain.getGenericPassword();
-    console.log("Credentials: ", credentials.password);
->>>>>>> origin/TRAIN-56/feature/rtk-query
-    if (credentials) {
+
+    if (credentials && credentials.password) {
+      const [userId, token] = credentials.password.split(":");
       dispatch(setUsername(credentials.username));
       dispatch(setIsLoggedIn(true));
     } else {
+      dispatch(setIsLoggedIn(false));
+      // Navigate back to login screen
       console.log("No credentials are stored");
     }
   } catch (error) {
@@ -29,27 +19,21 @@ export const fetchCredentials = async (dispatch) => {
   }
 };
 
-<<<<<<< HEAD
-export const storeToken = async (token) => {
-  await Keychain.setGenericPassword(token).catch((error) => {
-    console.log("Error storing token in KeyChain: ", error);
-  });
-};
-=======
-export const storeToken = async (token, dipatch) => {
+export const storeToken = async (username, token) => {
   console.log("Token to be Stored: ", token);
 
-  await Keychain.setGenericPassword("userToken", token).catch((error) => {
+  await Keychain.setGenericPassword(username, token).catch((error) => {
     console.log("Error storing token in KeyChain: ", error);
   });
 };
 
 export const getToken = async () => {
-  const token = await Keychain.getGenericPassword().catch((error) => {
+  const keychainToken = await Keychain.getGenericPassword().catch((error) => {
     console.log("Error getting token: ", error);
   });
+  let token = keychainToken.password;
   if (token !== null) {
     return token;
   }
+  return null;
 };
->>>>>>> origin/TRAIN-56/feature/rtk-query

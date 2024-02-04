@@ -1,37 +1,59 @@
 import React from "react";
-
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import profile from "../../assets/icons/profilepic.png";
+import { View, Text, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useFetchUserProfileQuery,
+  useFetchFollowDataQuery,
+} from "../../api/usersApi";
+import { selectUserById } from "../auth/usersSlice";
+import { useSelector } from "react-redux";
 import Button from "../../components/button";
+import profile from "../../assets/icons/profilepic.png";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
+  const userId = useSelector(selectUserById);
+  const { data: userData, refetch } = useFetchUserProfileQuery(userId);
+  const { data: followData } = useFetchFollowDataQuery(userId);
+  const name = userData?.username;
+  const bio = userData?.bio;
+  let followers = 0;
+  let following = 0;
+  if (followData !== undefined) {
+    followers = followData[0].followersCount;
+    following = followData[0].followingCount;
+  }
+
+  const handleEditProfile = () => {
+    navigation.navigate("EditingProfile");
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
+      <View style={styles.banner}></View>
       <View style={styles.profileSection}>
         <Image style={styles.profileImg} source={profile} />
-        <View style={styles.profileDetails}>
-          <Text style={styles.name}>Yassine Elmellouki</Text>
-          <Text style={styles.role}>Personal Trainer</Text>
+      </View>
+      <View style={styles.infoSection}>
+        <View style={styles.userInfo}>
+          <Text style={styles.username}>@{name}</Text>
+          <View style={styles.followInfo}>
+            <View style={styles.followItem}>
+              <Text style={styles.followNumber}>{followers}</Text>
+              <Text style={styles.followLabel}>Followers</Text>
+            </View>
+            <View style={styles.followItem}>
+              <Text style={styles.followNumber}>{following}</Text>
+              <Text style={styles.followLabel}>Following</Text>
+            </View>
+          </View>
+        </View>
+        <Text style={styles.bio}>{bio}</Text>
+        <View style={styles.buttonContainer}>
+          <Button style={styles.buttonStyle} onPress={handleEditProfile}>
+            Edit Profile
+          </Button>
         </View>
       </View>
-      <View style={styles.followSection}>
-        <View style={styles.fButton}>
-          <TouchableOpacity>
-            <Text style={styles.count}>210</Text>
-          </TouchableOpacity>
-          <Text style={styles.fTitle}>Followers</Text>
-        </View>
-        <Text style={styles.spacer}>|</Text>
-        <View style={styles.fButton}>
-          <TouchableOpacity>
-            <Text style={styles.count}>402</Text>
-          </TouchableOpacity>
-          <Text style={styles.fTitle}>Following</Text>
-        </View>
-      </View>
-
-      <Button style={styles.editBtn}>Edit Profile</Button>
     </SafeAreaView>
   );
 };
@@ -40,72 +62,79 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-  },
-  centerItems: {
-    alignItems: "center",
-    marginBottom: 30,
+    paddingTop: 0,
   },
   profileSection: {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
+    marginTop: 75,
   },
-  followSection: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 30,
-    marginBottom: 50,
+  banner: {
+    position: "absolute",
+    top: 0,
+    width: "100%",
+    height: 150,
+    backgroundColor: "black",
   },
   profileImg: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    marginBottom: 20,
-  },
-  profileDetails: {
-    flexDirection: "column",
-    marginLeft: 10,
+    zIndex: 1,
   },
   username: {
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 2,
   },
-  name: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 2,
-    textAlign: "center",
+  infoSection: {
+    padding: 20,
   },
-  role: {
-    fontSize: 15,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  fButton: {
-    padding: 10,
+  userInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  fTitle: {
-    fontSize: 15,
-    marginBottom: 2,
-  },
-  count: {
-    fontSize: 24,
+  username: {
+    fontSize: 18,
     fontWeight: "bold",
   },
-  editBtn: {
-    borderRadius: 10,
-    marginBottom: 20,
-    height: 50,
+  followInfo: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  spacer: {
-    fontSize: 20,
-    margin: 10,
+  followItem: {
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  followNumber: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  followLabel: {
+    fontSize: 14,
+    color: "gray",
+  },
+  followText: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  bio: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  buttonStyle: {
+    padding: 10,
+    width: "100%",
+    height: 40,
+    borderRadius: 8,
   },
 });
 

@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { FlatList, View, Image } from "react-native";
+import React, { useState } from "react";
+import { FlatList, View, Image, RefreshControl } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -13,14 +13,20 @@ import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
 
 import { useSelector } from "react-redux";
-import { selectUserId } from "../../api/apiSlice";
-import { useFetchGroupsQuery } from "../groups/groupsSlice";
+import { useFetchGroupsQuery } from "../../api/usersApi";
+import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
-  const userId = useSelector(selectUserId);
+  const userId = useSelector(selectUserById);
+  const { data: groups, refetch } = useFetchGroupsQuery(userId);
+  console.log("Dashboard Groups: ", groups);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const { data } = useFetchGroupsQuery({ userId });
-  const groups = data?.groups;
+  const onRefresh = () => {
+    setRefreshing(true);
+    refetch();
+    setRefreshing(false);
+  };
 
   const handleSearchTap = () => {
     navigation.navigate("SearchScreen");
@@ -30,8 +36,8 @@ const Dashboard = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  const handleGroupTap = (groupName) => {
-    navigation.navigate("Group", { groupName });
+  const handleGroupTap = (groupName, groupId) => {
+    navigation.navigate("Group", { groupName, groupId });
   };
 
   const handleAddGroupTap = () => {
@@ -41,9 +47,10 @@ const Dashboard = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <View style={{ flex: 1 }}>
       <Card
-        fitspaceName={item.name}
+        fitspaceName={item.groupName}
         imageSource={require("../../assets/trainer.jpg")}
-        onPress={() => handleGroupTap(item.name)}
+        onPress={() => handleGroupTap(item.groupName, item._id)}
+        groupId={item._id}
       />
     </View>
   );
@@ -59,12 +66,12 @@ const Dashboard = ({ navigation }) => {
           <Button
             onPress={handleProfileTap}
             imgSource={profile}
-            style={dashboardStyles.profileImage1}
+            style={dashboardStyles.profileImage2}
             imgStyle={dashboardStyles.profileImage}
           />
         </View>
         <View style={dashboardStyles.iconGroup}>
-          <Image source={logo} style={dashboardStyles.profileImage1} />
+          <Image source={logo} style={dashboardStyles.profileImage3} />
         </View>
         <View style={dashboardStyles.iconGroup}>
           <Button
@@ -82,6 +89,9 @@ const Dashboard = ({ navigation }) => {
           keyExtractor={(item) => item._id}
           numColumns={groups?.length === 1 ? 1 : 2}
           key={groups?.length === 1 ? "singleColumn" : "doubleColumn"}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
 
         <Button

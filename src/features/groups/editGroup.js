@@ -1,62 +1,64 @@
-import React, { useRef, useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Button from "../../components/button";
-import Profile from "../../components/profile";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { useDispatch, useSelector } from "react-redux";
-import { showOverlay, hideOverlay } from "./overlaySlice";
-import Close from "../../assets/icons/close.png";
+import Option from "../../components/option";
+import { useSelector } from "react-redux";
+import EditIcon from "../../assets/icons/setting.png";
+import MembersIcon from "../../assets/icons/people.png";
+import CategoriesIcon from "../../assets/icons/categories.png";
+import { useAddGroupMutation, useFetchGroupQuery } from "../../api/groupsApi";
+import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
-  const { groupName } = route.params;
-  const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
+  const userId = useSelector(selectUserById);
+  const { groupId } = route.params;
+  const { data: groupProfile } = useFetchGroupQuery(groupId);
+  console.log("GroupProfile", groupProfile);
+  const [deleteGroup] = useAddGroupMutation();
 
-  const isOverlayVisible = useSelector((state) => state.overlay.isVisible);
-  useEffect(() => {
-    navigation.setOptions({
-      gestureEnabled: !isOverlayVisible,
-    });
-  }, [isOverlayVisible, navigation]);
-  useEffect(() => {
-    navigation.setParams({ isOverlayVisible });
-  }, [isOverlayVisible]);
+  // Define the onPress handlers
+  const handleEditGroup = () => {
+    navigation.navigate("EditingGroup", { groupId: groupId });
+  };
 
-  const bottomSheetRef = useRef(null);
-  const dispatch = useDispatch();
+  const handleManageMembers = () => {
+    navigation.navigate("EditMembers");
+  };
 
-  // Sample list of members
-  const members = [
-    { id: "1", name: "Seen Elm" },
-    { id: "2", name: "Noah Gross" },
-    { id: "3", name: "Myah Gross" },
-    { id: "4", name: "Badr Elm" },
-    { id: "5", name: "Mouad Elm" },
+  const handleManageCategories = () => {
+    console.log("Manage Categories pressed");
+  };
+  const handleDeleteGroup = async () => {
+    try {
+      await deleteGroup({ name, userId });
+      navigation.replace("Group", { groupName: name });
+    } catch (err) {
+      console.log("Add Group Error: ", err);
+    }
+  };
+
+  const options = [
+    {
+      setting: "Edit Group",
+      imageSource: EditIcon,
+      onPress: handleEditGroup,
+    },
+    {
+      setting: "Manage Members",
+      imageSource: MembersIcon,
+      onPress: handleManageMembers,
+    },
+    {
+      setting: "Manage Categories",
+      imageSource: CategoriesIcon,
+      onPress: handleManageCategories,
+    },
   ];
-
-  const handleProfilePress = () => {
-    setMainScrollEnabled(false);
-    bottomSheetRef.current?.expand();
-    dispatch(showOverlay());
-  };
-
-  const handleClose = () => {
-    setMainScrollEnabled(true);
-    bottomSheetRef.current?.close();
-    dispatch(hideOverlay());
-  };
 
   return (
     <View style={styles.parentContainer}>
       <ScrollView
         style={{ flex: 1, backgroundColor: "white" }}
-        scrollEnabled={mainScrollEnabled}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.container}>
@@ -66,51 +68,29 @@ function EditGroup({ route, navigation }) {
               style={styles.groupImage}
             />
           </View>
-          <Text style={styles.groupName}>{groupName}</Text>
-          <Text style={styles.groupMembers}>fitspace • 5 people</Text>
+          {groupProfile && (
+            <Text style={styles.groupName}>{groupProfile.groupName}</Text>
+          )}
+          <Text style={styles.groupMembers}>fitspace • 10 people</Text>
+          {groupProfile && (
+            <Text style={styles.groupMembers}>{groupProfile.bio}</Text>
+          )}
 
+          <View style={styles.optionsContainer}>
+            {options.map((option, index) => (
+              <Option
+                key={index}
+                setting={option.setting}
+                imageSource={option.imageSource}
+                onPress={option.onPress}
+              />
+            ))}
+          </View>
           <View style={styles.members}>
-            <Text style={styles.membersTitle}>5 People</Text>
-            <View style={styles.membersContainer}>
-              {members.map((item) => (
-                <Profile
-                  key={item.id}
-                  name={item.name}
-                  content="Last message content here"
-                  onPress={handleProfilePress}
-                  showForwardIcon={true}
-                />
-              ))}
-              <TouchableOpacity style={styles.seeAllButton} onPress={() => {}}>
-                <Text>Add Members</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.seeAllButton} onPress={() => {}}>
-                <Text>See All Members</Text>
-              </TouchableOpacity>
-            </View>
-
             <Button style={styles.deleteBtn}>Delete Fitspace</Button>
           </View>
         </View>
-        {isOverlayVisible && <View style={styles.overlay}></View>}
       </ScrollView>
-
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        snapPoints={["35%"]}
-        handleIndicatorStyle={styles.handleIndicator}
-        backgroundStyle={styles.bottomSheet}
-      >
-        <View style={styles.bottomSheetHeader}>
-          <Button
-            onPress={handleClose}
-            imgSource={Close}
-            imgStyle={styles.icon}
-            style={styles.closeButton}
-          />
-        </View>
-      </BottomSheet>
     </View>
   );
 }
@@ -124,6 +104,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 20,
     backgroundColor: "white",
+  },
+  optionsContainer: {
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    margin: 20,
   },
   groupImageContainer: {
     width: "100%",
@@ -172,6 +157,7 @@ const styles = StyleSheet.create({
   },
   deleteBtn: {
     borderRadius: 10,
+    height: 50,
     marginBottom: 20,
   },
   closeButton: {
