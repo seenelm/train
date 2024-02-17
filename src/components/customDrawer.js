@@ -5,6 +5,10 @@ import { DrawerContentScrollView } from "@react-navigation/drawer";
 import profile from "../assets/icons/profilepic.png";
 import { useDispatch } from "react-redux";
 import { logout } from "../features/auth/usersSlice.js";
+import ProfileIcon from "../assets/icons/profileIcon.png";
+import NotificationsIcon from "../assets/icons/notificationsIcon.png";
+import SettingsIcon from "../assets/icons/settingsIcon.png";
+import LogoutIcon from "../assets/icons/logoutIcon.png";
 
 function CustomDrawer(props) {
   const { navigation } = props;
@@ -14,6 +18,13 @@ function CustomDrawer(props) {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const DrawerItem = ({ icon, label, onPress }) => (
+    <TouchableOpacity style={styles.drawerItem} onPress={onPress}>
+      <Image source={icon} style={styles.icon} />
+      <Text style={styles.page}>{label}</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <DrawerContentScrollView {...props} scrollEnabled={false}>
@@ -26,35 +37,31 @@ function CustomDrawer(props) {
           </TouchableOpacity>
         </View>
         <Text style={styles.name}>{name}</Text>
-        <TouchableOpacity
+        <DrawerItem
+          icon={ProfileIcon}
+          label="Profile"
           onPress={() => navigation.navigate("Main", { screen: "Profile" })}
-        >
-          <Text style={styles.page}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+        />
+        <DrawerItem
+          icon={NotificationsIcon}
+          label="Notifications"
           onPress={() => navigation.navigate("Main", { screen: "Request" })}
-        >
-          <Text style={styles.page}>Notifications</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
-          <Text style={styles.page}>Settings</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleLogout}>
-          <Text style={styles.logout}>Log Out</Text>
-        </TouchableOpacity>
+        />
+        <DrawerItem icon={SettingsIcon} label="Settings" onPress={() => {}} />
+        <DrawerItem icon={LogoutIcon} label="Log Out" onPress={handleLogout} />
       </View>
-
-      {/* You can add other DrawerItems below if needed */}
     </DrawerContentScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   profileContainer: {
-    alignItems: "center",
+    alignItems: "flex-start",
     paddingVertical: 20,
+    paddingHorizontal: 15,
   },
   circularContainer: {
+    alignSelf: "center",
     width: 100,
     height: 100,
     borderRadius: 50,
@@ -66,14 +73,24 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   name: {
-    fontSize: 16,
+    alignSelf: "center",
+    fontSize: 17,
     fontWeight: "bold",
     marginTop: 10,
   },
-  page: {
-    fontSize: 24,
-    fontWeight: "bold",
+  drawerItem: {
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+    marginRight: 10,
+  },
+  page: {
+    fontSize: 21,
+    fontWeight: "bold",
   },
   logout: {
     fontSize: 24,

@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import groupProfile from "../../assets/icons/groupProfile.png";
 
+// changes for messages feature on frontend
 const Chat = ({ route }) => {
   const inNavigator = route.params?.inNavigator ?? false;
   const [messages, setMessages] = useState([]);
@@ -33,7 +34,7 @@ const Chat = ({ route }) => {
   }, [currentRoom]);
 
   useEffect(() => {
-    const socket = io("ws://127.0.0.1:3001");
+    const socket = io("ws://192.168.0.107:3001");
     setSocket(socket);
 
     socket.on("connect", () => {

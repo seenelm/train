@@ -14,7 +14,6 @@ import {
 } from "./usersSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "./authSlice";
-import * as Keychain from "react-native-keychain";
 
 const SignUp = ({ navigation }) => {
   const [usernameError, setUsernameError] = useState("");
