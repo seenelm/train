@@ -8,7 +8,7 @@ import { logout } from "../features/auth/usersSlice.js";
 import ProfileIcon from "../assets/icons/profileIcon.png";
 import NotificationsIcon from "../assets/icons/notificationsIcon.png";
 import SettingsIcon from "../assets/icons/settingsIcon.png";
-import LogoutIcon from "../assets/icons/logoutIcon.png";
+import LogoutIcon from "../assets/icons/logout.png";
 
 function CustomDrawer(props) {
   const { navigation } = props;

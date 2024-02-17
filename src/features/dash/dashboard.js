@@ -19,8 +19,14 @@ import { selectUserById } from "../auth/usersSlice";
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   const { data: groups, refetch } = useFetchGroupsQuery(userId);
-  console.log("Dashboard Groups: ", groups);
   const [refreshing, setRefreshing] = useState(false);
+  const simplifiedGroups = groups.map(({ groupName, bio, users }) => ({
+    groupName,
+    bio,
+    numberOfUsers: users.length,
+  }));
+
+  console.log(JSON.stringify(simplifiedGroups, null, 2));
 
   const onRefresh = () => {
     setRefreshing(true);

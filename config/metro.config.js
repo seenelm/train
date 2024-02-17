@@ -10,8 +10,31 @@ module.exports = {
     getTransformOptions: async () => ({
       transform: {
         experimentalImportSupport: false,
-        inlineRequires: true,
+        inlineRequires: false,
       },
     }),
+    babelTransformerPath: require.resolve('react-native-svg-transformer'),
+  },
+  resolver: {
+    assetExts: [
+      'bin',
+      'txt',
+      'jpg',
+      'png',
+      'ttf',
+      'gif',
+      'otf',
+      'mp4',
+      'webm',
+      'wav',
+      'mp3',
+      'm4a',
+      'aac',
+      'oga',
+      'xml',
+      'webp',
+      'html',
+      'pdf',
+    ],
   },
 };

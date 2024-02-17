@@ -29,9 +29,15 @@ const HEADER_HEIGHT = 60;
 const ChatList = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   const { data: groups, refetch } = useFetchGroupsQuery(userId);
-  console.log("Dashboard Groups: ", groups);
   const [search, setSearch] = useState("");
   const scrollY = useRef(new Animated.Value(0)).current;
+  const simplifiedGroups = groups.map(({ groupName, bio, users }) => ({
+    groupName,
+    bio,
+    numberOfUsers: users.length,
+  }));
+
+  console.log(JSON.stringify(simplifiedGroups, null, 2));
 
   const renderItem = ({ item }) => {
     return (
