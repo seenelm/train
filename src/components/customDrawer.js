@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 23,
+    height: 23,
     marginRight: 10,
   },
   page: {

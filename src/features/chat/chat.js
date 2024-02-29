@@ -38,13 +38,12 @@ const Chat = ({ route }) => {
     setSocket(socket);
 
     socket.on("connect", () => {
-      console.log("Connected to socket server");
+      console.log("Connected to socket server:", socket.id);
       setName(`anon-${socket.id}`);
       setConnected(true);
       console.log("joining room", currentRoom);
 
       socket.emit("create-chat", createChat);
-
       socket.emit("join", currentRoom);
     });
 
@@ -54,24 +53,6 @@ const Chat = ({ route }) => {
       setMessages((messages) => [...messages, msg]);
     });
 
-    // socket.on("messages", (msgs) => {
-    //   console.log("Messages received", msgs);
-    //   let messages = msgs.messages.map((msg) => {
-    //     msg.date = new Date(msg.date);
-    //     return msg;
-    //   });
-    //   setMessages(messages);
-    // });
-
-    socket.on("create-chat", (msgs) => {
-      console.log("Chat Created", msgs);
-      let chatName = (msg) => {
-        msg.date = new Date(msg.date);
-        return msg;
-      };
-      setMessages(messages);
-    });
-
     return () => socket.close();
   }, []);
 
@@ -79,12 +60,11 @@ const Chat = ({ route }) => {
     if (input.trim()) {
       socket?.emit("message", {
         text: input,
-        room: currentRoom, // Specify the room
+        room: currentRoom,
       });
       setInput("");
     }
   };
-  console.log("messages", messages);
 
   const renderMessage = ({ item }) => (
     <View style={styles.message}>
