@@ -96,7 +96,6 @@ const EditingGroup = ({ navigation, route }) => {
             placeholder="Enter Fitspace Name"
             autoCorrect={false}
             spellCheck={false}
-            keyboardAppearance="dark"
           />
         </View>
         <View style={styles.inputRow1}>

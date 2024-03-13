@@ -9,6 +9,7 @@ import { selectUserById } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
+import edit from "../../assets/icons/edit.webp";
 
 const Profile = ({ navigation }) => {
   const userId = useSelector(selectUserById);
@@ -27,9 +28,20 @@ const Profile = ({ navigation }) => {
     navigation.navigate("EditingProfile");
   };
 
+  const handleNotification = () => {
+    navigation.navigate("Request");
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
-      <View style={styles.banner}></View>
+      <View style={styles.banner}>
+        <Button
+          imgSource={edit}
+          style={styles.editButton}
+          imgStyle={styles.editIcon}
+          onPress={() => {}}
+        />
+      </View>
       <View style={styles.profileSection}>
         <Image style={styles.profileImg} source={profile} />
       </View>
@@ -51,6 +63,12 @@ const Profile = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <Button style={styles.buttonStyle} onPress={handleEditProfile}>
             Edit Profile
+          </Button>
+          <Button
+            style={[styles.buttonStyle, styles.notificationButtonStyle]}
+            onPress={handleNotification}
+          >
+            N
           </Button>
         </View>
       </View>
@@ -128,13 +146,35 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
+    alignItems: "center", // Changed to center items vertically
   },
   buttonStyle: {
     padding: 10,
-    width: "100%",
+    height: 40,
+    width: "75%",
+    borderRadius: 8,
+    flexGrow: 1, // Make the button expand to fill available space
+  },
+  notificationButtonStyle: {
+    padding: 5,
     height: 40,
     borderRadius: 8,
+    width: "1%",
+    marginLeft: 10, // Add some space between the two buttons
+  },
+  editButton: {
+    position: "absolute",
+    top: 75, // Adjust top and right as needed
+    right: 20,
+    padding: 10, // Makes it easier to tap
+    backgroundColor: "rgba(128, 128, 128, 0.5)", // See-through gray
+    height: 30,
+    width: 30,
+  },
+  editIcon: {
+    width: 20, // Adjust size as needed
+    height: 20,
   },
 });
 

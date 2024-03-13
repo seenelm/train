@@ -95,8 +95,8 @@ export const dashboardStyles = StyleSheet.create({
     marginTop: 2,
   },
   profileImage: {
-    width: 45,
-    height: 45,
+    width: 35,
+    height: 35,
     borderRadius: 25,
   },
   profileImage1: {
@@ -106,8 +106,8 @@ export const dashboardStyles = StyleSheet.create({
     marginRight: 15,
   },
   profileImage2: {
-    width: 45,
-    height: 45,
+    width: 35,
+    height: 35,
     borderRadius: 25,
     marginBottom: 10,
   },

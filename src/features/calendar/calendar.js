@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  Fragment,
+  useMemo,
+} from "react";
 import {
   View,
   Text,
@@ -14,85 +21,69 @@ import Animated, {
   withSpring,
   runOnJS,
 } from "react-native-reanimated";
+import {
+  daysOfWeek,
+  getMonthName,
+  getCurrentWeek,
+  getAllWeeksInYear,
+} from "./dateUtils";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
-import { dashboardStyles } from "../../styles/styles";
 import addEvent from "../../assets/icons/addevent.png";
+import Header from "../../components/header";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
-const { height } = Dimensions.get("window");
-const START_HEIGHT = height * 0.05;
-const END_HEIGHT = height * 0.24;
+const START_HEIGHT = Dimensions.get("window").height * 0.05;
+const END_HEIGHT = Dimensions.get("window").height * 0.24;
 
-const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
+const Week = React.memo(({ week, selectedDate, onSelectDate }) => (
+  <View style={styles.weekContainer}>
+    {week.map((date, index) => {
+      // Check if the date is the first of the month
+      const isFirstDayOfMonth = date.getDate() === 1;
+      const monthAbbreviation = isFirstDayOfMonth
+        ? date.toLocaleDateString("default", { month: "short" })
+        : "";
 
-const getCurrentWeek = (date) => {
-  const weekStart = date.getDate() - date.getDay();
-  const week = Array.from(
-    { length: 7 },
-    (v, i) => new Date(date.getFullYear(), date.getMonth(), weekStart + i)
-  );
-  return week;
-};
+      return (
+        <TouchableOpacity
+          key={index}
+          style={styles.cell}
+          onPress={() => onSelectDate(date)}
+        >
+          {/* Conditionally render the month abbreviation if it's the first day of the month */}
+          {isFirstDayOfMonth && (
+            <Text style={styles.monthAbbreviationText}>
+              {monthAbbreviation}
+            </Text>
+          )}
+          <Text
+            style={[
+              styles.dateText,
+              date.getTime() === selectedDate.getTime() && styles.selectedDate,
+            ]}
+          >
+            {date.getDate()}
+          </Text>
+        </TouchableOpacity>
+      );
+    })}
+  </View>
+));
 
 const Calendar = ({ navigation }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [allWeeks, setAllWeeks] = useState([]);
   const [isScrollable, setIsScrollable] = useState(false);
   const panelHeight = useSharedValue(START_HEIGHT);
   const [viewMode, setViewMode] = useState("week");
-  const [selectedWeek, setSelectedWeek] = useState(
-    getCurrentWeek(selectedDate)
+  const allWeeks = useMemo(
+    () => getAllWeeksInYear(selectedDate.getFullYear()),
+    [selectedDate]
   );
-
-  const getMonthName = (date) => {
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return monthNames[date.getMonth()];
-  };
-
-  const getAllWeeksInYear = (year) => {
-    const dateInFirstWeek = new Date(year, 0, 1);
-    while (dateInFirstWeek.getDay() !== 0) {
-      dateInFirstWeek.setDate(dateInFirstWeek.getDate() - 1);
-    }
-
-    const weeksInYear = [];
-    while (dateInFirstWeek.getFullYear() <= year) {
-      const week = [];
-      for (let i = 0; i < 7; i++) {
-        week.push(new Date(dateInFirstWeek));
-        dateInFirstWeek.setDate(dateInFirstWeek.getDate() + 1);
-      }
-      weeksInYear.push(week);
-    }
-
-    return weeksInYear;
-  };
-
-  useEffect(() => {
-    const weeks = getAllWeeksInYear(selectedDate.getFullYear());
-    setAllWeeks(weeks);
-    const index = findCurrentWeekIndex(weeks);
-    setInitialScrollIndex(index); // Set initial index
-  }, [selectedDate]);
-
-  useEffect(() => {
-    setSelectedWeek(getCurrentWeek(selectedDate)); // Add this line
-  }, [selectedDate]);
 
   useEffect(() => {
     scrollToSelectedWeek(allWeeks);
@@ -104,9 +95,9 @@ const Calendar = ({ navigation }) => {
     const index = weeks.findIndex((week) =>
       week.some(
         (d) =>
-          d.getFullYear() === currentDate.getFullYear() &&
-          d.getMonth() === currentDate.getMonth() &&
-          d.getDate() === currentDate.getDate()
+          d.getFullYear() === selectedDate.getFullYear() &&
+          d.getMonth() === selectedDate.getMonth() &&
+          d.getDate() === selectedDate.getDate()
       )
     );
     return index;
@@ -114,77 +105,26 @@ const Calendar = ({ navigation }) => {
 
   const scrollToSelectedWeek = useCallback(
     (weeks) => {
-      if (weeks.length === 0) return;
-
-      const index = weeks.findIndex((week) =>
-        week.some(
-          (d) =>
-            d.getMonth() === selectedWeek[0].getMonth() &&
-            d.getDate() === selectedWeek[0].getDate()
-        )
-      );
-
+      const index = findCurrentWeekIndex(weeks);
       if (index !== -1 && flatListRef.current) {
         flatListRef.current.scrollToIndex({
-          index: index,
+          index,
           animated: true,
           viewPosition: 0,
         });
       }
     },
-    [selectedWeek]
+    [findCurrentWeekIndex]
   );
 
-  const selectDate = useCallback((date) => {
+  const initialScrollIndex = useMemo(
+    () => findCurrentWeekIndex(allWeeks),
+    [allWeeks, findCurrentWeekIndex]
+  );
+
+  const onSelectDate = useCallback((date) => {
     setSelectedDate(date);
-    setCurrentDate(date);
   }, []);
-
-  const [initialScrollIndex, setInitialScrollIndex] = useState(
-    findCurrentWeekIndex(allWeeks)
-  );
-
-  const Week = ({ week, selectedDate }) => (
-    <View style={styles.weekContainer}>
-      {week.map((date, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.cell}
-          onPress={() => selectDate(date)}
-        >
-          <Text
-            style={[
-              styles.dateText,
-              date.getTime() === selectedDate.getTime() && styles.selectedDate,
-            ]}
-          >
-            {date.getDate()}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-
-  const WeekView = ({ week, selectedDate }) => (
-    <View style={styles.weekContainer}>
-      {week.map((date, index) => (
-        <TouchableOpacity
-          key={index}
-          style={styles.cell}
-          onPress={() => selectDate(date)}
-        >
-          <Text
-            style={[
-              styles.dateText,
-              date.getTime() === selectedDate.getTime() && styles.selectedDate,
-            ]}
-          >
-            {date.getDate()}
-          </Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
 
   // Pan gesture handler
   const gestureHandler = useAnimatedGestureHandler({
@@ -225,26 +165,30 @@ const Calendar = ({ navigation }) => {
       height: panelHeight.value,
     };
   });
-
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.monthlyContainer}>
-          <Button
-            onPress={() => navigation.openDrawer()}
-            imgSource={profile}
-            style={styles.profileImage1}
-            imgStyle={dashboardStyles.profileImage}
-          />
-          <Text style={styles.monthText}>{getMonthName(selectedDate)}</Text>
-        </View>
-        <View style={styles.dayContainer}>
-          {daysOfWeek.map((day, index) => (
-            <View key={index} style={styles.cell}>
-              <Text style={styles.dayText}>{day}</Text>
-            </View>
-          ))}
-        </View>
+    <SafeAreaView style={{ ...styles.container, marginBottom: -insets.bottom }}>
+      <Header
+        leftComponent={
+          <Fragment>
+            <Button
+              onPress={() => navigation.navigate("ProfileScreen")}
+              imgSource={profile}
+              style={styles.iconContainer}
+              imgStyle={styles.profileImage}
+            />
+            <Text style={styles.monthText}>{getMonthName(selectedDate)}</Text>
+          </Fragment>
+        }
+        middleComponent={null}
+        rightComponent={null}
+      />
+      <View style={styles.dayContainer}>
+        {daysOfWeek.map((day, index) => (
+          <View key={index} style={styles.cell}>
+            <Text style={styles.dayText}>{day}</Text>
+          </View>
+        ))}
       </View>
       <PanGestureHandler onGestureEvent={gestureHandler}>
         <Animated.View style={[styles.panel, animatedStyles]}>
@@ -255,7 +199,11 @@ const Calendar = ({ navigation }) => {
                 ref={flatListRef}
                 data={allWeeks}
                 renderItem={({ item }) => (
-                  <Week week={item} selectedDate={selectedDate} />
+                  <Week
+                    week={item}
+                    selectedDate={selectedDate}
+                    onSelectDate={onSelectDate}
+                  />
                 )}
                 keyExtractor={(item, index) => index.toString()}
                 scrollEnabled={isScrollable}
@@ -278,33 +226,31 @@ const Calendar = ({ navigation }) => {
                 }}
               />
             ) : (
-              <WeekView
-                week={getCurrentWeek(currentDate)}
+              <Week
+                week={getCurrentWeek(selectedDate)}
                 selectedDate={selectedDate}
+                onSelectDate={onSelectDate}
               />
             )}
           </View>
         </Animated.View>
       </PanGestureHandler>
-      <Button
-        onPress={() => {}}
-        style={dashboardStyles.addGroupButton}
-        imgSource={addEvent}
-        imgStyle={dashboardStyles.addGroupIcon}
-      />
-    </View>
+      <View style={styles.container}>
+        <Button
+          onPress={() => {}}
+          style={styles.addGroupButton}
+          imgSource={addEvent}
+          imgStyle={styles.addGroupIcon}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    height: 150,
-    width: "100%",
     backgroundColor: "white",
-    justifyContent: "flex-end",
   },
   monthlyContainer: {
     flexDirection: "row",
@@ -313,7 +259,8 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     color: "black",
-    marginTop: 6,
+    marginBottom: 10,
+    marginLeft: 10,
   },
   dayContainer: {
     flexDirection: "row",
@@ -323,7 +270,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "black",
-    marginBottom: 10,
   },
   monthContainer: {
     alignItems: "center",
@@ -348,9 +294,15 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 20,
     color: "black",
-    marginBottom: 14,
     height: 25,
   },
+  monthAbbreviationText: {
+    fontSize: 10,
+    color: "black",
+    height: 10,
+    marginTop: -10,
+  },
+
   selectedDate: {
     color: "red",
     fontWeight: "bold",
@@ -358,10 +310,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
     marginTop: 10,
-  },
-  icon: {
-    width: 20,
-    height: 12,
   },
   greyText: {
     color: "grey",
@@ -371,6 +319,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     overflow: "hidden",
+    borderColor: "lightgray",
+    borderWidth: 0.5,
+    borderTopWidth: 0,
   },
   dragHandle: {
     position: "absolute",
@@ -385,35 +336,40 @@ const styles = StyleSheet.create({
   containerCal: {
     height: 180,
   },
-  profileImage1: {
+  profileImage: {
+    width: 35,
+    height: 35,
+    borderRadius: 25,
+  },
+  addGroupIcon: {
+    width: 24,
+    height: 24,
+  },
+  addGroupButton: {
+    backgroundColor: "white",
+    borderRadius: 30,
+    width: 55,
+    height: 55,
+    bottom: 20,
+    right: 15,
+    position: "absolute", // Add this line to position it absolutely.
+    alignSelf: "flex-end",
+    shadowColor: "#000", // For iOS
+    shadowOffset: {
+      width: 0,
+      height: 2, // Shadow position
+    },
+    shadowOpacity: 0.3, // Shadow opacity
+    shadowRadius: 4.65, // Blur radius
+  },
+  iconContainer: {
+    flex: 1,
+    aspectRatio: 1,
+    maxHeight: 45,
+    maxWidth: 45,
     backgroundColor: "transparent",
-    width: 45,
-    height: 45,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 6,
+    marginBottom: 10,
   },
 });
 
 export default Calendar;
-
-// import React from "react";
-// import { View, Text, StyleSheet } from "react-native";
-
-// function Chat() {
-//   return (
-//     <View style={styles.container}>
-//       <Text>Chat</Text>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
-
-// export default Chat;

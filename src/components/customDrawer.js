@@ -84,9 +84,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   icon: {
-    width: 23,
-    height: 23,
-    marginRight: 10,
+    width: 25,
+    height: 25,
+    marginRight: 15,
+    marginLeft: 10,
   },
   page: {
     fontSize: 21,

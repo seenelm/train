@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Fragment } from "react";
 import Message from "../../components/message";
 import {
   Text,
@@ -12,8 +12,8 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { chatListStyles, dashboardStyles } from "../../styles/styles";
-import { messages } from "../../assets/Data";
+import Header from "../../components/header";
+
 import compose from "../../assets/icons/compose.png";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
@@ -68,28 +68,28 @@ const ChatList = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <SafeAreaView
-        style={{ ...chatListStyles.container, marginBottom: -insets.bottom }}
+        style={{ ...style.container, marginBottom: -insets.bottom }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: 10,
-          }}
-        >
-          <Button
-            onPress={() => {}}
-            imgSource={profile}
-            style={dashboardStyles.profileImage1}
-            imgStyle={dashboardStyles.profileImage}
-          />
-          <Text style={dashboardStyles.text}>Chats</Text>
-        </View>
+        <Header
+          leftComponent={
+            <Fragment>
+              <Button
+                onPress={() => navigation.navigate("ProfileScreen")}
+                imgSource={profile}
+                style={style.iconContainer}
+                imgStyle={style.profileImage}
+              />
+              <Text style={style.text}>Chats</Text>
+            </Fragment>
+          }
+          middleComponent={null}
+          rightComponent={null}
+        />
         <Animated.FlatList
           data={filteredMessages}
           renderItem={renderItem}
           keyExtractor={(item) => item._id.toString()}
-          contentContainerStyle={chatListStyles.messageContainer}
+          contentContainerStyle={style.messageContainer}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
             { useNativeDriver: true }
@@ -111,7 +111,6 @@ const ChatList = ({ navigation }) => {
                   onChangeText={setSearch}
                   autoCorrect={false}
                   spellCheck={false}
-                  keyboardAppearance="dark"
                 />
               </View>
             </Animated.View>
@@ -125,15 +124,43 @@ const ChatList = ({ navigation }) => {
       </SafeAreaView>
       <Button
         onPress={() => {}}
-        style={dashboardStyles.addGroupButton}
+        style={style.addGroupButton}
         imgSource={compose}
-        imgStyle={dashboardStyles.addGroupIcon}
+        imgStyle={style.addGroupIcon}
       />
     </View>
   );
 };
 
 const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white",
+  },
+  iconContainer: {
+    flex: 1,
+    aspectRatio: 1,
+    maxHeight: 45,
+    maxWidth: 45,
+    backgroundColor: "transparent",
+    marginBottom: 10,
+  },
+  messageContainer: {
+    flex: 0,
+  },
+
+  TextInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    height: 40,
+  },
   searchBar: {
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -148,6 +175,45 @@ const style = StyleSheet.create({
   },
   searchIcon: {
     padding: 10,
+  },
+  profileImage: {
+    width: 35,
+    height: 35,
+    borderRadius: 25,
+  },
+  profileImage1: {
+    backgroundColor: "transparent",
+    width: 45,
+    height: 45,
+    marginRight: 15,
+  },
+  text: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "black",
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  addGroupIcon: {
+    width: 24,
+    height: 24,
+  },
+  addGroupButton: {
+    backgroundColor: "white",
+    borderRadius: 30,
+    width: 55,
+    height: 55,
+    bottom: 20,
+    right: 15,
+    position: "absolute", // Add this line to position it absolutely.
+    alignSelf: "flex-end",
+    shadowColor: "#000", // For iOS
+    shadowOffset: {
+      width: 0,
+      height: 2, // Shadow position
+    },
+    shadowOpacity: 0.3, // Shadow opacity
+    shadowRadius: 4.65, // Blur radius
   },
 });
 
