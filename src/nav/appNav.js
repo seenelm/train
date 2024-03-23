@@ -1,6 +1,6 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import MyDrawer from "./drawerNav";
+import MainNav from "./mainNav";
 import AuthNav from "./authNav";
 import { useSelector } from "react-redux";
 
@@ -9,7 +9,7 @@ const AppNav = () => {
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <MyDrawer /> : <AuthNav />}
+      {isLoggedIn ? <MainNav /> : <AuthNav />}
     </NavigationContainer>
   );
 };

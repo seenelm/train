@@ -12,7 +12,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import groupProfile from "../../assets/icons/groupProfile.png";
-
+import Config from "react-native-config";
+// changes for messages feature on frontend
 const Chat = ({ route }) => {
   const inNavigator = route.params?.inNavigator ?? false;
   const [messages, setMessages] = useState([]);
@@ -33,17 +34,16 @@ const Chat = ({ route }) => {
   }, [currentRoom]);
 
   useEffect(() => {
-    const socket = io("ws://127.0.0.1:3001");
+    const socket = io(`${Config.SOCKET_URL}`);
     setSocket(socket);
 
     socket.on("connect", () => {
-      console.log("Connected to socket server");
+      console.log("Connected to socket server:", socket.id);
       setName(`anon-${socket.id}`);
       setConnected(true);
       console.log("joining room", currentRoom);
 
       socket.emit("create-chat", createChat);
-
       socket.emit("join", currentRoom);
     });
 
@@ -53,24 +53,6 @@ const Chat = ({ route }) => {
       setMessages((messages) => [...messages, msg]);
     });
 
-    // socket.on("messages", (msgs) => {
-    //   console.log("Messages received", msgs);
-    //   let messages = msgs.messages.map((msg) => {
-    //     msg.date = new Date(msg.date);
-    //     return msg;
-    //   });
-    //   setMessages(messages);
-    // });
-
-    socket.on("create-chat", (msgs) => {
-      console.log("Chat Created", msgs);
-      let chatName = (msg) => {
-        msg.date = new Date(msg.date);
-        return msg;
-      };
-      setMessages(messages);
-    });
-
     return () => socket.close();
   }, []);
 
@@ -78,12 +60,11 @@ const Chat = ({ route }) => {
     if (input.trim()) {
       socket?.emit("message", {
         text: input,
-        room: currentRoom, // Specify the room
+        room: currentRoom,
       });
       setInput("");
     }
   };
-  console.log("messages", messages);
 
   const renderMessage = ({ item }) => (
     <View style={styles.message}>
@@ -167,16 +148,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
-    paddingBottom: 5,
-    paddingTop: 5,
+
+    paddingTop: 4.9,
     backgroundColor: "white",
-    borderTopWidth: 1,
+    borderTopWidth: 0.2,
     borderTopColor: "#e1e1e1",
   },
   textInput: {
     flex: 1,
     height: 40,
     borderWidth: 1,
+    borderColor: "#e1e1e1",
     borderRadius: 20,
     paddingHorizontal: 10,
     alignSelf: "center",

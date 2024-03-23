@@ -1,7 +1,14 @@
-import React from 'react';
-import {TouchableOpacity, Text, Image, StyleSheet} from 'react-native';
+import React from "react";
+import { TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 
-const Button = ({onPress, children, imgSource, imgStyle, style, textStyle}) => {
+const Button = ({
+  onPress,
+  children,
+  imgSource,
+  imgStyle,
+  style,
+  textStyle,
+}) => {
   return (
     <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
       {children && (
@@ -14,17 +21,17 @@ const Button = ({onPress, children, imgSource, imgStyle, style, textStyle}) => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     height: 60,
     paddingVertical: 10,
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   image: {
     // empty now

@@ -1,7 +1,8 @@
 import * as Keychain from "react-native-keychain";
-import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice.js";
+import { Dispatch } from 'redux';
+import { setUsername, setIsLoggedIn } from "../features/auth/usersSlice";
 
-export const fetchCredentials = async (dispatch) => {
+export const fetchCredentials = async (dispatch: Dispatch) => {
   try {
     const credentials = await Keychain.getGenericPassword();
 
@@ -19,7 +20,7 @@ export const fetchCredentials = async (dispatch) => {
   }
 };
 
-export const storeToken = async (username, token) => {
+export const storeToken = async (username: string, token: string) => {
   console.log("Token to be Stored: ", token);
 
   await Keychain.setGenericPassword(username, token).catch((error) => {
@@ -27,13 +28,17 @@ export const storeToken = async (username, token) => {
   });
 };
 
-export const getToken = async () => {
+export const getToken = async (): Promise<string | null> => {
   const keychainToken = await Keychain.getGenericPassword().catch((error) => {
     console.log("Error getting token: ", error);
   });
-  let token = keychainToken.password;
-  if (token !== null) {
-    return token;
+
+  if (keychainToken) {
+    let token = keychainToken.password;
+    if (token !== null) {
+      return token;
+    }
   }
+
   return null;
 };
