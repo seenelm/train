@@ -23,19 +23,23 @@ import logo from "../../assets/icons/logo3.png";
 
 import { useSelector } from "react-redux";
 import { useFetchGroupsQuery } from "../../api/usersApi";
+import { useFetchGroup } from "../../api/groupAPI";
 import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   // Use RTK Query hook
-  const {
-    data: groups,
-    isFetching: isFetchingGroups,
-    refetch,
-  } = useFetchGroupsQuery(userId);
+  // const {
+  //   data: groupData,
+  //   isFetching: isFetchingGroups,
+  //   refetch,
+  // } = useFetchGroupsQuery(userId);
+
+  const { data: groups, isFetching: isFetchingGroups } = useFetchGroup(userId);
+  console.log("groupData", groups);
+
   const [placeholderImage, setPlaceholderImage] = useState(null);
 
-  // Determine if we are still loading anything
   const isLoading = !placeholderImage || isFetchingGroups;
 
   useEffect(() => {

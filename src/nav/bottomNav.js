@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Animated, StyleSheet, Image, View } from "react-native";
+import { Animated, StyleSheet, Image, View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import message from "../assets/icons/message.png";
@@ -48,7 +48,11 @@ export const BottomNav = () => {
         name="Home"
         component={ChatList}
         options={{
-          tabBarLabel: "Chat",
+          tabBarLabel: ({ focused }) => (
+            <Text style={focused ? styles.labelFocused : styles.labelUnfocused}>
+              Chat
+            </Text>
+          ),
           tabBarIcon: ({ size, focused }) => (
             <View style={[styles.icon, focused]}>
               <Animated.View style={{ transform: [{ scale: messageValue }] }}>
@@ -72,7 +76,11 @@ export const BottomNav = () => {
         name="Search"
         component={Dashboard}
         options={{
-          tabBarLabel: "Fitspaces",
+          tabBarLabel: ({ focused }) => (
+            <Text style={focused ? styles.labelFocused : styles.labelUnfocused}>
+              Fitspaces
+            </Text>
+          ),
           tabBarIcon: ({ size, focused }) => (
             <View style={[styles.icon, focused]}>
               <Animated.View style={{ transform: [{ scale: groupValue }] }}>
@@ -95,7 +103,11 @@ export const BottomNav = () => {
         name="Profile"
         component={Calendar}
         options={{
-          tabBarLabel: "Calendar",
+          tabBarLabel: ({ focused }) => (
+            <Text style={focused ? styles.labelFocused : styles.labelUnfocused}>
+              Calendar
+            </Text>
+          ),
           tabBarIcon: ({ size, focused }) => (
             <View style={[styles.icon, focused && styles.iconFocused]}>
               <Animated.View style={{ transform: [{ scale: calendarValue }] }}>
@@ -123,6 +135,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 0,
-    marginBottom: -10,
+    marginBottom: -8,
+  },
+  labelFocused: {
+    color: "black",
+    fontSize: 11,
+  },
+  labelUnfocused: {
+    color: "gray",
+    fontSize: 11,
   },
 });

@@ -1,11 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
+import { useDispatch } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   useFetchUserProfileQuery,
   useFetchFollowDataQuery,
 } from "../../api/usersApi";
-import { selectUserById } from "../auth/usersSlice";
+import { selectUserById, logout } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
@@ -13,6 +14,7 @@ import edit from "../../assets/icons/edit.webp";
 
 const Profile = ({ navigation }) => {
   const userId = useSelector(selectUserById);
+  const dispatch = useDispatch();
   const { data: userData, refetch } = useFetchUserProfileQuery(userId);
   const { data: followData } = useFetchFollowDataQuery(userId);
   const name = userData?.username;
@@ -32,6 +34,10 @@ const Profile = ({ navigation }) => {
     navigation.navigate("Request");
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={["left", "right", "bottom"]}>
       <View style={styles.banner}>
@@ -39,7 +45,7 @@ const Profile = ({ navigation }) => {
           imgSource={edit}
           style={styles.editButton}
           imgStyle={styles.editIcon}
-          onPress={() => {}}
+          onPress={handleLogout}
         />
       </View>
       <View style={styles.profileSection}>
@@ -66,7 +72,7 @@ const Profile = ({ navigation }) => {
           </Button>
           <Button
             style={[styles.buttonStyle, styles.notificationButtonStyle]}
-            onPress={handleNotification}
+            onPress={handleLogout}
           >
             N
           </Button>
@@ -169,8 +175,8 @@ const styles = StyleSheet.create({
     right: 20,
     padding: 10, // Makes it easier to tap
     backgroundColor: "rgba(128, 128, 128, 0.5)", // See-through gray
-    height: 30,
-    width: 30,
+    height: 40,
+    width: 40,
   },
   editIcon: {
     width: 20, // Adjust size as needed

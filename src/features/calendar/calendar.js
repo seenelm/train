@@ -20,6 +20,8 @@ import Animated, {
   useAnimatedGestureHandler,
   withSpring,
   runOnJS,
+  interpolate,
+  Extrapolate,
 } from "react-native-reanimated";
 import {
   daysOfWeek,
@@ -135,14 +137,20 @@ const Calendar = ({ navigation }) => {
       let newHeight = ctx.startHeight + event.translationY;
       newHeight = Math.max(START_HEIGHT, newHeight);
       newHeight = Math.min(END_HEIGHT, newHeight);
-      panelHeight.value = newHeight;
+      panelHeight.value = interpolate(
+        newHeight,
+        [START_HEIGHT, END_HEIGHT],
+        [START_HEIGHT, END_HEIGHT],
+        Extrapolate.CLAMP
+      );
+
       if (!isScrollable) {
         runOnJS(setIsScrollable)(true);
         runOnJS(setViewMode)("month");
       }
     },
     onEnd: (_) => {
-      if (panelHeight.value > (START_HEIGHT + END_HEIGHT) / 2) {
+      if (_.velocityY >= 0) {
         panelHeight.value = withSpring(END_HEIGHT, {
           damping: 20,
           stiffness: 100,

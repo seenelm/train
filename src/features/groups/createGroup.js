@@ -14,6 +14,7 @@ import { Dimensions } from "react-native";
 import edit from "../../assets/icons/editimg.png";
 import { useSelector } from "react-redux";
 import { useAddGroupMutation } from "../../api/groupsApi";
+import { useAddGroup } from "../../api/groupAPI";
 import { selectUserById } from "../auth/usersSlice";
 
 const screenWidth = Dimensions.get("window").width;
@@ -23,16 +24,11 @@ const CreateGroup = ({ navigation }) => {
   const [image, setImage] = useState(null);
   const [groupName, setGroupName] = useState("");
   const userId = useSelector(selectUserById);
+  const { mutate: addGroup, isLoading, isError, error } = useAddGroup();
+  const [addGroup1] = useAddGroupMutation();
 
-  const [addGroup] = useAddGroupMutation();
-
-  const handleAddGroup = async () => {
-    try {
-      await addGroup({ groupName, userId });
-      navigation.replace("Group", { groupName });
-    } catch (err) {
-      console.log("Add Group Error: ", err);
-    }
+  const handleAddGroup = () => {
+    addGroup({ groupName, userId });
   };
 
   return (

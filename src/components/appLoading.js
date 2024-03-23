@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Animated, Image, Dimensions } from "react-native";
+import { Animated } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCredentials } from "../api/actions";
 import { NavigationContainer } from "@react-navigation/native";
