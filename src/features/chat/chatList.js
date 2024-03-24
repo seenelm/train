@@ -22,14 +22,14 @@ import searchicon from "../../assets/icons/search.png";
 
 import { useSelector } from "react-redux";
 import { useFetchGroupsQuery } from "../../api/usersApi";
-import { useFetchGroup } from "../../api/groupAPI";
+import { useFetchUserGroups } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 
 const HEADER_HEIGHT = 60;
 
 const ChatList = ({ navigation }) => {
   const userId = useSelector(selectUserById);
-  const { data: groups } = useFetchGroup(userId);
+  const { data: groups } = useFetchUserGroups(userId);
   const [search, setSearch] = useState("");
   const scrollY = useRef(new Animated.Value(0)).current;
   const simplifiedGroups = groups.map(({ groupName, bio, users }) => ({
