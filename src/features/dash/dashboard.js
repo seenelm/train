@@ -23,7 +23,7 @@ import logo from "../../assets/icons/logo3.png";
 
 import { useSelector } from "react-redux";
 import { useFetchGroupsQuery } from "../../api/usersApi";
-import { useFetchGroup } from "../../api/groupAPI";
+import { useFetchUserGroups } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 
 const Dashboard = ({ navigation }) => {
@@ -35,7 +35,8 @@ const Dashboard = ({ navigation }) => {
   //   refetch,
   // } = useFetchGroupsQuery(userId);
 
-  const { data: groups, isFetching: isFetchingGroups } = useFetchGroup(userId);
+  const { data: groups, isFetching: isFetchingGroups } =
+    useFetchUserGroups(userId);
   console.log("groupData", groups);
 
   const [placeholderImage, setPlaceholderImage] = useState(null);

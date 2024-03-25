@@ -14,7 +14,7 @@ import { Dimensions } from "react-native";
 import edit from "../../assets/icons/editimg.png";
 import { useSelector } from "react-redux";
 import { useAddGroupMutation } from "../../api/groupsApi";
-import { useAddGroup } from "../../api/groupAPI";
+import { useAddGroup } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 
 const screenWidth = Dimensions.get("window").width;

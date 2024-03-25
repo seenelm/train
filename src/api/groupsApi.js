@@ -17,30 +17,6 @@ export const groupsApi = apiSlice.injectEndpoints({
           return response;
         },
       }),
-      addGroup: builder.mutation({
-        query: ({ groupName, userId }) => ({
-          url: `/groups`,
-          method: "POST",
-          body: { groupName, userId },
-        }),
-        async onQueryStarted({ userId }, { dispatch, queryFulfilled }) {
-          try {
-            const { data: createdGroup } = await queryFulfilled;
-            console.log("Mutation successful:", createdGroup);
-
-            dispatch(
-              apiSlice.util.updateQueryData("fetchGroups", userId, (groups) => {
-                console.log("cached groups:", groups);
-                if (groups) {
-                  groups.push(createdGroup);
-                }
-              })
-            );
-          } catch (error) {
-            console.log(error);
-          }
-        },
-      }),
       updateGroupProfile: builder.mutation({
         query: ({ groupId, groupBio, groupName, accountType }) => {
           return {
