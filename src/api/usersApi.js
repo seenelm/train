@@ -52,11 +52,11 @@ export const usersApi = apiSlice.injectEndpoints({
   },
 });
 
-const selectGroups = usersApi.endpoints.fetchGroups.select();
+// const selectGroups = usersApi.endpoints.fetchGroups.select();
 
-export const selectUserGroups = createSelector(selectGroups, (user) => {
-  return user?.groups;
-});
+// export const selectUserGroups = createSelector(selectGroups, (user) => {
+//   return user?.groups;
+// });
 
 export const {
   useFetchGroupsQuery,

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { ObjectId } from "mongodb";
-import { addGroup, fetchUserGroups } from "../api/groupApi";
+import { addGroup, fetchUserGroups, fetchGroupRequests } from "../api/groupApi";
 import { GroupType } from "../../types/group";
 
 export const useAddGroup = () => {
@@ -24,3 +24,10 @@ export const useFetchUserGroups = (userId: ObjectId) => {
     queryFn: () => fetchUserGroups(userId),
   });
 };
+
+export const useFetchGroupRequests = (userId: ObjectId) => {
+  return useQuery({
+    queryKey: ["requests", userId],
+    queryFn: () => fetchGroupRequests(userId),
+  });
+}
