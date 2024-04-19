@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   FlatList,
   View,
@@ -14,80 +14,41 @@ import Card from "../../components/card";
 import Button from "../../components/button";
 import Header from "../../components/header";
 import Skeleton from "../../components/skeleton";
+import { useSelector } from "react-redux";
+import {
+  useFetchUserGroups,
+  useFetchGroupImage,
+} from "../../services/actions/groupActions";
+import { selectUserById } from "../auth/usersSlice";
 
+// Icons
 import search from "../../assets/icons/search.png";
 import bell from "../../assets/icons/bell.webp";
 import profile from "../../assets/icons/profilepic.png";
 import addgroup from "../../assets/icons/add.png";
 import logo from "../../assets/icons/logo3.png";
 
-import { useSelector } from "react-redux";
-import { useFetchGroupsQuery } from "../../api/usersApi";
-import { useFetchUserGroups } from "../../services/actions/groupActions";
-import { selectUserById } from "../auth/usersSlice";
-
 const Dashboard = ({ navigation }) => {
   const userId = useSelector(selectUserById);
-  // Use RTK Query hook
-  // const {
-  //   data: groupData,
-  //   isFetching: isFetchingGroups,
-  //   refetch,
-  // } = useFetchGroupsQuery(userId);
-
   const { data: groups, isFetching: isFetchingGroups } =
     useFetchUserGroups(userId);
-  console.log("groupData", groups);
+  const { data: groupImage, isFetching: isFetchingGroupImage } =
+    useFetchGroupImage();
 
-  const [placeholderImage, setPlaceholderImage] = useState(null);
-
-  const isLoading = !placeholderImage || isFetchingGroups;
-
-  useEffect(() => {
-    const fetchPlaceholderImage = async () => {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/photos/26"
-        );
-        const imageData = await response.json();
-        setPlaceholderImage(imageData.url); // Set the fetched image URL as the placeholder
-      } catch (error) {
-        console.error("Failed to fetch placeholder image", error);
-      }
-    };
-
-    fetchPlaceholderImage();
-  }, []); // Dependency array is empty, so this runs once on mount
-
-  const onRefresh = () => {
-    refetch(); // RTK Query refetch for groups data
-  };
-
-  const handleSearchTap = () => {
-    navigation.navigate("SearchScreen");
-  };
-
-  const handleNotification = () => {
-    navigation.navigate("Request");
-  };
-
-  const handleProfileTap = () => {
-    navigation.navigate("ProfileScreen");
-  };
+  const isLoading = isFetchingGroups || isFetchingGroupImage;
 
   const handleGroupTap = (groupName, groupId) => {
     navigation.navigate("Group", { groupName, groupId });
   };
-
-  const handleAddGroupTap = () => {
-    navigation.navigate("AddGroup");
+  const nav = (screen) => {
+    navigation.navigate(screen);
   };
 
   const renderItem = ({ item }) => (
     <View style={{ flex: 1 }}>
       <Card
         fitspaceName={item.groupName}
-        imageSource={{ uri: placeholderImage }}
+        imageSource={{ uri: groupImage?.url }}
         onPress={() => handleGroupTap(item.groupName, item._id)}
         groupId={item._id}
       />
@@ -101,7 +62,7 @@ const Dashboard = ({ navigation }) => {
       <Header
         leftComponent={
           <Button
-            onPress={handleProfileTap}
+            onPress={() => nav("ProfileScreen")}
             imgSource={profile}
             style={style.iconContainer}
             imgStyle={style.profileImage}
@@ -111,13 +72,13 @@ const Dashboard = ({ navigation }) => {
         rightComponent={
           <>
             <Button
-              onPress={handleNotification}
+              onPress={() => nav("Request")}
               style={style.iconContainer}
               imgSource={bell}
               imgStyle={style.image}
             />
             <Button
-              onPress={handleSearchTap}
+              onPress={() => nav("SearchScreen")}
               style={style.iconContainer}
               imgSource={search}
               imgStyle={style.image}
@@ -144,12 +105,12 @@ const Dashboard = ({ navigation }) => {
             keyExtractor={(item) => item._id}
             numColumns={groups?.length === 1 ? 1 : 2}
             key={groups?.length === 1 ? "singleColumn" : "doubleColumn"}
-            refreshControl={<RefreshControl onRefresh={onRefresh} />}
+            refreshControl={<RefreshControl onRefresh={() => {}} />}
           />
         )}
 
         <Button
-          onPress={handleAddGroupTap}
+          onPress={() => nav("AddGroup")}
           style={style.addGroupButton}
           imgSource={addgroup}
           imgStyle={style.addGroupIcon}
@@ -212,7 +173,6 @@ const style = StyleSheet.create({
   imageBackground: {
     justifyContent: "center",
     marginBottom: 10,
-    // width: "100%",
     aspectRatio: 1,
     borderRadius: 15,
     overflow: "hidden",

@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Profile from "../../components/profile";
 import GroupProfile from "../../components/groupProfile";
 import searchicon from "../../assets/icons/search.png";
-import { useFindUsersQuery } from "../../api/searchApi";
+import { useSearchUsers } from "../../services/actions/searchActions";
 import { useIsFocused } from "@react-navigation/native";
 import back from "../../assets/icons/back.png";
 import Button from "../../components/button";
@@ -14,18 +14,11 @@ const Search = ({ navigation }) => {
   const isFocused = useIsFocused();
   const textInputRef = useRef(null);
 
-  const { data, refetch } = useFindUsersQuery(search);
+  const { data } = useSearchUsers(search);
   console.log("Search Data: ", data);
 
   useEffect(() => {
-    if (search !== "") {
-      refetch();
-    }
-  }, [search]);
-
-  useEffect(() => {
     if (isFocused) {
-      // This will run when the screen comes into focus
       setSearch("");
       textInputRef.current.focus(); // Focus the text input
     }

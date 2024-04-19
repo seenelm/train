@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Button from "../../components/button";
 import Option from "../../components/option";
@@ -6,52 +6,33 @@ import { useSelector } from "react-redux";
 import EditIcon from "../../assets/icons/setting.png";
 import MembersIcon from "../../assets/icons/people.png";
 import CategoriesIcon from "../../assets/icons/categories.png";
-import { useAddGroupMutation, useFetchGroupQuery } from "../../api/groupsApi";
+import { useFetchGroup } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
   const userId = useSelector(selectUserById);
   const { groupId } = route.params;
-  const { data: groupProfile } = useFetchGroupQuery(groupId);
-  console.log("GroupProfile", groupProfile);
-  const [deleteGroup] = useAddGroupMutation();
+  const { data: groupProfile } = useFetchGroup(groupId);
 
-  // Define the onPress handlers
-  const handleEditGroup = () => {
-    navigation.navigate("EditingGroup", { groupId: groupId });
-  };
-
-  const handleManageMembers = () => {
-    navigation.navigate("EditMembers");
-  };
-
-  const handleManageCategories = () => {
-    console.log("Manage Categories pressed");
-  };
-  const handleDeleteGroup = async () => {
-    try {
-      await deleteGroup({ name, userId });
-      navigation.replace("Group", { groupName: name });
-    } catch (err) {
-      console.log("Add Group Error: ", err);
-    }
+  const nav = (page, params) => {
+    navigation.navigate(page, params);
   };
 
   const options = [
     {
       setting: "Edit Group",
       imageSource: EditIcon,
-      onPress: handleEditGroup,
+      onPress: () => nav("EditingGroup", { groupId: groupId }),
     },
     {
       setting: "Manage Members",
       imageSource: MembersIcon,
-      onPress: handleManageMembers,
+      onPress: () => nav("EditMembers"),
     },
     {
       setting: "Manage Categories",
       imageSource: CategoriesIcon,
-      onPress: handleManageCategories,
+      onPress: console.log("Manage Categories pressed"),
     },
   ];
 

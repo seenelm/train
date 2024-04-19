@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { ObjectId } from "mongodb";
-import { addGroup, fetchUserGroups, fetchGroupRequests } from "../api/groupApi";
-import { GroupType } from "../../types/group";
+import { addGroup, fetchGroup, fetchUserGroups, fetchGroupRequests, fetchGroupImage, updateGroupProfile } from "../api/groupApi";
+import { GroupProfileType, GroupType } from "../../types/group";
 
 export const useAddGroup = () => {
   const queryClient = useQueryClient();
@@ -18,6 +18,27 @@ export const useAddGroup = () => {
   });
 };
 
+export const useUpdateGroupProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (group: GroupProfileType) => updateGroupProfile(group),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["group"]);
+    },
+    onError: (error) => {
+      console.error("useUpdateGroupProfile mutation error: ", error);
+    },
+  });
+};
+
+export const useFetchGroup = (groupId: ObjectId) => {
+  return useQuery({
+    queryKey: ["group", groupId],
+    queryFn: () => fetchGroup(groupId),
+  });
+};
+
 export const useFetchUserGroups = (userId: ObjectId) => {
   return useQuery({
     queryKey: ["group", userId],
@@ -31,3 +52,11 @@ export const useFetchGroupRequests = (userId: ObjectId) => {
     queryFn: () => fetchGroupRequests(userId),
   });
 }
+
+export const useFetchGroupImage = () => {
+  return useQuery({
+    queryKey: "groupImage",
+    queryFn: () => fetchGroupImage(),
+  });
+}
+

@@ -17,6 +17,10 @@ import {
   useUpdateGroupProfileMutation,
   useFetchGroupQuery,
 } from "../../api/groupsApi";
+import {
+  useFetchGroup,
+  useUpdateGroupProfile,
+} from "../../services/actions/groupActions";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -36,9 +40,9 @@ const EditingGroup = ({ navigation, route }) => {
     }
   }, [groupProfile]);
 
-  const [updateGroupProfile] = useUpdateGroupProfileMutation();
+  const mutation = useUpdateGroupProfile();
 
-  const { data: groupProfile, refetch } = useFetchGroupQuery(groupId);
+  const { data: groupProfile } = useFetchGroup(groupId);
 
   const handlePrivacy = (type) => {
     setAccountType(type);
@@ -47,8 +51,8 @@ const EditingGroup = ({ navigation, route }) => {
 
   const handleUpdateGroupProfile = async () => {
     try {
-      await updateGroupProfile({ groupBio, groupName, accountType, groupId });
-      refetch();
+      console.log("groupId", groupId);
+      mutation.mutate({ groupBio, groupName, accountType, groupId });
       navigation.goBack();
     } catch (err) {
       console.log("Add Group Error: ", err);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,11 +9,9 @@ import {
   ImageBackground,
 } from "react-native";
 import Button from "../../components/button";
-import uploadImage from "../../assets/icons/uploadimg.png";
 import { Dimensions } from "react-native";
 import edit from "../../assets/icons/editimg.png";
 import { useSelector } from "react-redux";
-import { useAddGroupMutation } from "../../api/groupsApi";
 import { useAddGroup } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 
@@ -25,7 +23,6 @@ const CreateGroup = ({ navigation }) => {
   const [groupName, setGroupName] = useState("");
   const userId = useSelector(selectUserById);
   const { mutate: addGroup, isLoading, isError, error } = useAddGroup();
-  const [addGroup1] = useAddGroupMutation();
 
   const handleAddGroup = () => {
     addGroup({ groupName, userId });

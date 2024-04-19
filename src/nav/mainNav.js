@@ -54,6 +54,7 @@ const MainNav = () => {
           component={EditGroup}
           options={({ route, navigation }) => {
             const { groupId } = route.params;
+            console.log("Group ID", groupId);
             return {
               headerShown: true,
               headerStyle: {
