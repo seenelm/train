@@ -7,8 +7,8 @@ export interface GroupType {
 }
 
 export interface GroupProfileType {
-  id: ObjectId;
+  id: string;
   bio: string;
   name: string;
-  type: string;
+  type: 'private' | 'public';  // Example: Using string literals if `type` has specific allowed values
 }

@@ -25,9 +25,9 @@ const PrivacyMenu = ({ accountType, handlePrivacy }) => {
     setPrivacy(accountType === 1 ? "Public" : "Private");
   }, [accountType]);
 
-  console.log("privacy", privacy);
+  // console.log("privacy", privacy);
 
-  console.log("puborpriv", accountType);
+  // console.log("puborpriv", accountType);
 
   return (
     <View style={styles.container}>

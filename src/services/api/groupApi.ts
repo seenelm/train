@@ -13,12 +13,19 @@ export const addGroup = async ( group: GroupType ): Promise<GroupType | undefine
 
 export const updateGroupProfile = async (group: GroupProfileType) => {
   try {
-    const { data } = await api.put(`/groups/${group.id}/profile`, { groupBio: group.bio, groupName: group.name, accountType: group.type });
+    const { data } = await api.put(`/groups/${group.id}/profile`, {
+      groupBio: group.bio,
+      groupName: group.name,
+      accountType: group.type
+    });
+    console.log("API response data:", data);
     return data;
   } catch (error) {
     console.error("updateGroupProfile api error: ", error);
+    return null;
   }
 };
+
 
 export const fetchGroup = async (groupId: ObjectId) => {
   try {

@@ -14,10 +14,6 @@ import edit from "../../assets/icons/editimg.png";
 import PrivacyMenu from "../../components/privacyMenu";
 
 import {
-  useUpdateGroupProfileMutation,
-  useFetchGroupQuery,
-} from "../../api/groupsApi";
-import {
   useFetchGroup,
   useUpdateGroupProfile,
 } from "../../services/actions/groupActions";
@@ -26,36 +22,49 @@ const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const EditingGroup = ({ navigation, route }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [image, setImage] = useState(null);
   const [accountType, setAccountType] = useState("");
   const [groupName, setGroupName] = useState("");
   const [groupBio, setGroupBio] = useState("");
   const { groupId } = route.params;
 
+  const { data: groupProfile } = useFetchGroup(groupId);
+  const { mutate: updateGroupProfile } = useUpdateGroupProfile();
+
   useEffect(() => {
-    if (groupProfile && groupProfile.bio && groupProfile.groupName) {
-      setGroupBio(groupProfile.bio);
+    if (groupProfile) {
+      setGroupBio(groupProfile.bio || "");
       setGroupName(groupProfile.groupName);
       setAccountType(groupProfile.accountType);
+      setIsLoading(false);
     }
   }, [groupProfile]);
 
-  const mutation = useUpdateGroupProfile();
-
-  const { data: groupProfile } = useFetchGroup(groupId);
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   const handlePrivacy = (type) => {
     setAccountType(type);
-    console.log("accountType", accountType);
+    // console.log("accountType", accountType);
   };
 
   const handleUpdateGroupProfile = async () => {
     try {
-      console.log("groupId", groupId);
-      mutation.mutate({ groupBio, groupName, accountType, groupId });
+      const response = await updateGroupProfile({
+        id: groupId,
+        bio: groupBio,
+        name: groupName,
+        type: accountType,
+      });
       navigation.goBack();
-    } catch (err) {
-      console.log("Add Group Error: ", err);
+    } catch (error) {
+      console.error("Direct API call failed:", error);
     }
   };
 

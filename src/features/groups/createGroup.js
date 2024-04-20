@@ -26,6 +26,7 @@ const CreateGroup = ({ navigation }) => {
 
   const handleAddGroup = () => {
     addGroup({ groupName, userId });
+    navigation.replace("Group", { groupName });
   };
 
   return (
