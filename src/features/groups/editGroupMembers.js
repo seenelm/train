@@ -6,11 +6,23 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { useDispatch, useSelector } from "react-redux";
 import { showOverlay, hideOverlay } from "./overlaySlice";
 import Close from "../../assets/icons/close.png";
+import { useFetchGroup } from "../../services/actions/groupActions";
+import { useFetchUser } from "../../services/actions/userActions";
 
 import { selectUserById } from "../auth/usersSlice";
 import back from "../../assets/icons/back.png";
 
 function EditGroup({ route, navigation }) {
+  const { groupId } = route.params;
+  console.log("Group ID:", groupId);
+  const { data: groupProfile } = useFetchGroup(groupId);
+  const {
+    data: members,
+    isLoading,
+    error,
+  } = useFetchUser(groupProfile ? groupProfile.users : []);
+  console.log("Group:", groupProfile);
+
   const userId = useSelector(selectUserById);
 
   const [mainScrollEnabled, setMainScrollEnabled] = useState(true);
@@ -28,20 +40,6 @@ function EditGroup({ route, navigation }) {
   const bottomSheetRef = useRef(null);
   const dispatch = useDispatch();
 
-  // Sample list of members
-  const members = [
-    { id: "1", name: "Seen Elm" },
-    { id: "2", name: "Noah Gross" },
-    { id: "3", name: "Myah Gross" },
-    { id: "4", name: "Badr Elm" },
-    { id: "5", name: "Mouad Elm" },
-    { id: "6", name: "Seen Elm" },
-    { id: "7", name: "Noah Gross" },
-    { id: "8", name: "Myah Gross" },
-    { id: "9", name: "Badr Elm" },
-    { id: "10", name: "Mouad Elm" },
-  ];
-
   const handleProfilePress = () => {
     setMainScrollEnabled(false);
     bottomSheetRef.current?.expand();
@@ -57,7 +55,7 @@ function EditGroup({ route, navigation }) {
   return (
     <View style={styles.parentContainer}>
       <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
+        style={styles.parentContainer}
         scrollEnabled={mainScrollEnabled}
         showsVerticalScrollIndicator={false}
       >
@@ -70,18 +68,21 @@ function EditGroup({ route, navigation }) {
                 style={styles.back}
                 onPress={() => navigation.goBack()}
               />
-              <Text style={styles.membersTitle}>10 People</Text>
+              <Text style={styles.membersTitle}>
+                {members ? `${members.length} People` : "Loading members..."}
+              </Text>
             </View>
             <View style={styles.membersContainer}>
-              {members.map((item) => (
-                <Profile
-                  key={item.id}
-                  name={item.name}
-                  content="Last message content here"
-                  onPress={handleProfilePress}
-                  showForwardIcon={true}
-                />
-              ))}
+              {members &&
+                members.map((item) => (
+                  <Profile
+                    key={item._id}
+                    name={item.username}
+                    content="Last message content here"
+                    onPress={handleProfilePress}
+                    showForwardIcon={true}
+                  />
+                ))}
             </View>
           </View>
         </View>
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: "rgba(0,0,0,0.07)",
-    zIndex: 1,
+    zIndex: 10,
   },
   editMembers: {
     alignSelf: "center",

@@ -2,15 +2,12 @@ import React from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import Button from "../../components/button";
 import Option from "../../components/option";
-import { useSelector } from "react-redux";
 import EditIcon from "../../assets/icons/setting.png";
 import MembersIcon from "../../assets/icons/people.png";
 import CategoriesIcon from "../../assets/icons/categories.png";
 import { useFetchGroup } from "../../services/actions/groupActions";
-import { selectUserById } from "../auth/usersSlice";
 
 function EditGroup({ route, navigation }) {
-  const userId = useSelector(selectUserById);
   const { groupId } = route.params;
   const { data: groupProfile } = useFetchGroup(groupId);
 
@@ -27,7 +24,7 @@ function EditGroup({ route, navigation }) {
     {
       setting: "Manage Members",
       imageSource: MembersIcon,
-      onPress: () => nav("EditMembers"),
+      onPress: () => nav("EditMembers", { groupId: groupId }),
     },
     {
       setting: "Manage Categories",

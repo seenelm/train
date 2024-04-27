@@ -25,8 +25,18 @@ const CreateGroup = ({ navigation }) => {
   const { mutate: addGroup, isLoading, isError, error } = useAddGroup();
 
   const handleAddGroup = () => {
-    addGroup({ groupName, userId });
-    navigation.replace("Group", { groupName });
+    addGroup(
+      { groupName, userId },
+      {
+        onSuccess: (response) => {
+          const groupId = response.groupId; // Assuming the response contains `groupId`
+          navigation.replace("Group", { groupName, groupId });
+        },
+        onError: (error) => {
+          console.error("Failed to create group", error);
+        },
+      }
+    );
   };
 
   return (

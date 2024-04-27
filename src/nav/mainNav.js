@@ -47,14 +47,18 @@ const MainNav = () => {
         <MainStack.Screen
           name="EditMembers"
           component={EditGroupMembers}
-          options={{ headerShown: false }}
+          options={({ route, navigation }) => {
+            const { groupId } = route.params;
+            return {
+              headerShown: false,
+            };
+          }}
         />
         <MainStack.Screen
           name="Fitspace Info"
           component={EditGroup}
           options={({ route, navigation }) => {
             const { groupId } = route.params;
-            console.log("Group ID", groupId);
             return {
               headerShown: true,
               headerStyle: {
