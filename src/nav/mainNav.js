@@ -47,7 +47,12 @@ const MainNav = () => {
         <MainStack.Screen
           name="EditMembers"
           component={EditGroupMembers}
-          options={{ headerShown: false }}
+          options={({ route, navigation }) => {
+            const { groupId } = route.params;
+            return {
+              headerShown: false,
+            };
+          }}
         />
         <MainStack.Screen
           name="Fitspace Info"
