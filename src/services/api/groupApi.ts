@@ -64,3 +64,12 @@ export const fetchGroupImage = async () => {
   }
 }
 
+export const joinGroup = async (groupId: ObjectId) => {
+  try {
+    const { data } = await api.put(`/groups/${groupId}/join`);
+    return data;
+  } catch (error) {
+    console.error("joinGroup api error: ", error);
+  }
+}
+

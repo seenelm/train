@@ -14,7 +14,7 @@ const Card = ({ fitspaceName, imageSource, onPress, groupId }) => {
 
   const handleEditFitspace = ({ nativeEvent }) => {
     if (nativeEvent.name === "Edit Fitspace") {
-      navigation.navigate("EditingGroup", {
+      navigation.navigate("EditGroup", {
         groupName: fitspaceName,
         groupId,
       });

@@ -1,7 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import { ObjectId } from "mongodb";
-import { addGroup, fetchGroup, fetchUserGroups, fetchGroupRequests, fetchGroupImage, updateGroupProfile } from "../api/groupApi";
+import { addGroup, fetchGroup, fetchUserGroups, fetchGroupRequests, fetchGroupImage, updateGroupProfile, joinGroup } from "../api/groupApi";
 import { GroupProfileType, GroupType } from "../../types/group";
+import { useJoinGroupMutation } from "../../api/groupsApi";
 
 export const useAddGroup = () => {
   const queryClient = useQueryClient();
@@ -60,3 +61,16 @@ export const useFetchGroupImage = () => {
   });
 }
 
+export const useJoinGroup = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (groupId: ObjectId) => joinGroup(groupId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["group"]);
+    },
+    onError: (error) => {
+      console.error("useJoinGroupMutation error: ", error);
+    },
+  });
+}

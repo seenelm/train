@@ -4,29 +4,6 @@ import { createSelector } from "@reduxjs/toolkit";
 export const groupsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
-      fetchGroup: builder.query({
-        query: (groupId) => {
-          return {
-            url: `/groups/${groupId}`,
-            method: "GET",
-          };
-        },
-
-        transformResponse: (response) => {
-          console.log("Fetch Group Response: ", response);
-          return response;
-        },
-      }),
-      updateGroupProfile: builder.mutation({
-        query: ({ groupId, groupBio, groupName, accountType }) => {
-          return {
-            url: `/groups/${groupId}/profile`,
-            method: "PUT",
-            body: { groupBio, groupName, accountType },
-          };
-        },
-      }),
-
       joinGroup: builder.mutation({
         query: ({ groupId }) => {
           return {

@@ -1,175 +1,218 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ImageBackground,
+  Dimensions,
+} from "react-native";
 import Button from "../../components/button";
-import Option from "../../components/option";
-import EditIcon from "../../assets/icons/setting.png";
-import MembersIcon from "../../assets/icons/people.png";
-import CategoriesIcon from "../../assets/icons/categories.png";
-import { useFetchGroup } from "../../services/actions/groupActions";
+import edit from "../../assets/icons/editimg.png";
+import PrivacyMenu from "../../components/privacyMenu";
 
-function EditGroup({ route, navigation }) {
+import {
+  useFetchGroup,
+  useUpdateGroupProfile,
+} from "../../services/actions/groupActions";
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
+const EditGroup = ({ navigation, route }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [image, setImage] = useState(null);
+  const [accountType, setAccountType] = useState("");
+  const [groupName, setGroupName] = useState("");
+  const [groupBio, setGroupBio] = useState("");
   const { groupId } = route.params;
-  const { data: groupProfile } = useFetchGroup(groupId);
 
-  const nav = (page, params) => {
-    navigation.navigate(page, params);
+  const { data: groupProfile } = useFetchGroup(groupId);
+  const { mutate: updateGroupProfile } = useUpdateGroupProfile();
+
+  useEffect(() => {
+    if (groupProfile) {
+      setGroupBio(groupProfile.bio || "");
+      setGroupName(groupProfile.groupName);
+      setAccountType(groupProfile.accountType);
+      setIsLoading(false);
+    }
+  }, [groupProfile]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  const handlePrivacy = (type) => {
+    setAccountType(type);
+    // console.log("accountType", accountType);
   };
 
-  const options = [
-    {
-      setting: "Edit Group",
-      imageSource: EditIcon,
-      onPress: () => nav("EditingGroup", { groupId: groupId }),
-    },
-    {
-      setting: "Manage Members",
-      imageSource: MembersIcon,
-      onPress: () => nav("EditMembers", { groupId: groupId }),
-    },
-    {
-      setting: "Manage Categories",
-      imageSource: CategoriesIcon,
-      onPress: console.log("Manage Categories pressed"),
-    },
-  ];
+  const handleUpdateGroupProfile = async () => {
+    try {
+      const response = await updateGroupProfile({
+        id: groupId,
+        bio: groupBio,
+        name: groupName,
+        type: accountType,
+      });
+      navigation.goBack();
+    } catch (error) {
+      console.error("Direct API call failed:", error);
+    }
+  };
 
   return (
-    <View style={styles.parentContainer}>
-      <ScrollView
-        style={{ flex: 1, backgroundColor: "white" }}
-        showsVerticalScrollIndicator={false}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Button
+          style={styles.cancelButton}
+          textStyle={styles.cancelButtonText}
+          onPress={() => navigation.goBack()}
+        >
+          Cancel
+        </Button>
+        <Text style={styles.title}>Edit Fitspace</Text>
+        <Button
+          style={styles.cancelButton}
+          textStyle={styles.cancelButtonText}
+          onPress={handleUpdateGroupProfile}
+        >
+          Save
+        </Button>
+      </View>
+      <ImageBackground
+        source={require("../../assets/trainer.jpg")}
+        style={styles.groupImageContainer}
       >
-        <View style={styles.container}>
-          <View style={styles.groupImageContainer}>
-            <Image
-              source={require("../../assets/trainer.jpg")}
-              style={styles.groupImage}
-            />
-          </View>
-          {groupProfile && (
-            <Text style={styles.groupName}>{groupProfile.groupName}</Text>
-          )}
-          <Text style={styles.groupMembers}>fitspace • 10 people</Text>
-          {groupProfile && (
-            <Text style={styles.groupMembers}>{groupProfile.bio}</Text>
-          )}
+        <TouchableOpacity style={styles.overlay}>
+          <Image style={styles.iconStyle} source={edit}></Image>
+        </TouchableOpacity>
+      </ImageBackground>
 
-          <View style={styles.optionsContainer}>
-            {options.map((option, index) => (
-              <Option
-                key={index}
-                setting={option.setting}
-                imageSource={option.imageSource}
-                onPress={option.onPress}
-              />
-            ))}
-          </View>
-          <View style={styles.members}>
-            <Button style={styles.deleteBtn}>Delete Fitspace</Button>
-          </View>
+      {image && (
+        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+      )}
+      <View style={styles.inputContainer}>
+        <View style={styles.inputRow}>
+          <Text style={styles.inputLabel}>Fitspace Name</Text>
+          <TextInput
+            style={[styles.input, styles.inputWithBorder]}
+            value={groupName}
+            onChangeText={(groupName) => setGroupName(groupName)}
+            placeholder="Enter Fitspace Name"
+            autoCorrect={false}
+            spellCheck={false}
+          />
         </View>
-      </ScrollView>
+        <View style={styles.inputRow1}>
+          <Text style={styles.inputLabel}>Fitspace Bio</Text>
+          <TextInput
+            style={styles.input}
+            value={groupBio}
+            onChangeText={(groupBio) => setGroupBio(groupBio)}
+            placeholder="Enter Fitspace Bio"
+            autoCorrect={false}
+            spellCheck={false}
+            keyboardAppearance="dark"
+          />
+        </View>
+      </View>
+      <PrivacyMenu accountType={accountType} handlePrivacy={handlePrivacy} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  parentContainer: {
-    flex: 1,
-  },
   container: {
     flex: 1,
+    backgroundColor: "#fff",
     alignItems: "center",
-    paddingTop: 20,
-    backgroundColor: "white",
   },
-  optionsContainer: {
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    margin: 20,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    paddingVertical: screenHeight * 0.02,
+    paddingHorizontal: screenWidth * 0.05,
+  },
+  title: {
+    fontSize: screenHeight * 0.022,
+    fontWeight: "bold",
+  },
+  cancelButton: {
+    backgroundColor: "transparent",
+  },
+  cancelButtonText: {
+    color: "black",
+  },
+  inputContainer: {
+    flexDirection: "column",
+    borderTopWidth: 1,
+    borderTopColor: "#e8e8e8",
+    borderBottomWidth: 1,
+    borderBottomColor: "#e8e8e8",
+    width: "100%",
+    marginTop: screenHeight * 0.02,
+  },
+  inputRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: screenWidth * 0.025,
+  },
+  inputRow1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    paddingHorizontal: screenWidth * 0.025,
+  },
+  inputLabel: {
+    width: screenWidth * 0.3,
+    fontSize: screenHeight * 0.017,
+    fontWeight: "bold",
+    marginRight: screenWidth * 0.02,
+  },
+  input: {
+    flex: 1,
+    height: screenHeight * 0.05,
+    justifyContent: "center",
+  },
+  touchableArea: {
+    width: "100%",
+    padding: 10,
+  },
+  inputWithBorder: {
+    borderBottomWidth: 1,
+    height: screenHeight * 0.05,
+    borderBottomColor: "#e8e8e8",
   },
   groupImageContainer: {
-    width: "100%",
-    alignItems: "center",
-  },
-  groupImage: {
-    width: 150,
-    height: 150,
-    aspectRatio: 1,
+    width: screenWidth * 0.3,
+    height: screenWidth * 0.3,
     borderRadius: 18,
     overflow: "hidden",
-  },
-  groupName: {
-    fontSize: 30,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  groupMembers: {
-    fontSize: 18,
-    marginTop: 10,
-    color: "gray",
-  },
-  members: {
-    width: "90%",
-  },
-  membersContainer: {
-    backgroundColor: "#F6F6F8",
-    paddingHorizontal: 20,
-    marginTop: 10,
-    marginBottom: 20,
-    borderRadius: 10,
-  },
-  membersTitle: {
-    fontSize: 20,
-    marginTop: 10,
-    fontWeight: "bold",
-  },
-  memberItem: {
-    fontSize: 18,
-    marginTop: 10,
-  },
-  seeAllButton: {
-    marginTop: 15,
-    marginBottom: 15,
     alignItems: "center",
-  },
-  deleteBtn: {
-    borderRadius: 10,
-    height: 50,
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: "#F6F6F9",
-    borderRadius: 30,
-    height: 35,
-    width: 35,
-  },
-  icon: {
-    height: 20,
-    width: 20,
-  },
-  bottomSheetHeader: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingHorizontal: 15,
-  },
-  bottomSheet: {
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  handleIndicator: {
-    height: 0,
-    opacity: 0,
+    justifyContent: "center",
   },
   overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.07)",
-    zIndex: 1,
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    borderRadius: 18,
+    justifyContent: "center",
+  },
+  iconStyle: {
+    alignSelf: "center",
+    width: screenWidth * 0.08,
+    height: screenWidth * 0.08,
+    tintColor: "white",
   },
 });
 
