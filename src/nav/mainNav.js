@@ -10,6 +10,7 @@ import Search from "../features/search/search";
 import Profile from "../features/profile/profile";
 import UserProfile from "../features/profile/userProfile";
 import { BottomNav } from "./bottomNav";
+import AddChat from "../features/chat/addChat";
 import Chat from "../features/chat/chat";
 import Back from "../assets/icons/back.png";
 import GroupInfo from "../features/groups/info";
@@ -116,6 +117,16 @@ const MainNav = () => {
         <MainStack.Screen
           name="AddGroup"
           component={AddGroup}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forModalPresentationIOS,
+            gestureDirection: "vertical",
+          }}
+        />
+        <MainStack.Screen
+          name="AddChat"
+          component={AddChat}
           options={{
             headerShown: false,
             cardStyleInterpolator:

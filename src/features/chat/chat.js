@@ -10,6 +10,8 @@ import {
   Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Button from "../../components/button";
+import send from "../../assets/icons/send.png";
 import { io } from "socket.io-client";
 import groupProfile from "../../assets/icons/groupProfile.png";
 import Config from "react-native-config";
@@ -87,7 +89,7 @@ const Chat = ({ route }) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={
-          Platform.OS === "ios" ? (inNavigator ? -80 : 0) : 0
+          Platform.OS === "ios" ? (inNavigator ? -80 : 10) : 0
         }
       >
         <View style={styles.inputWrapper}>
@@ -97,9 +99,12 @@ const Chat = ({ route }) => {
             value={input}
             onChangeText={setInput}
           />
-          <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
-            <Text>Send</Text>
-          </TouchableOpacity>
+          <Button
+            onPress={sendMessage}
+            imgSource={send}
+            imgStyle={styles.sendIcon}
+            style={styles.sendButton}
+          />
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -148,25 +153,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 10,
-
-    paddingTop: 4.9,
-    backgroundColor: "white",
-    borderTopWidth: 0.2,
-    borderTopColor: "#e1e1e1",
-  },
-  textInput: {
-    flex: 1,
-    height: 40,
+    marginHorizontal: 10,
     borderWidth: 1,
     borderColor: "#e1e1e1",
     borderRadius: 20,
+  },
+  textInput: {
+    flex: 1,
+    height: 45,
     paddingHorizontal: 10,
     alignSelf: "center",
   },
   sendButton: {
-    position: "absolute",
-    right: 20,
-    zIndex: 1,
+    width: 35,
+    height: 35,
+  },
+  sendIcon: {
+    width: 25,
+    height: 25,
   },
   message: {
     backgroundColor: "#e1e1e1",
