@@ -1,21 +1,32 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { useJoinGroupMutation, useFetchGroupQuery } from "../../api/groupsApi";
+import {
+  useFetchGroup,
+  useJoinGroup,
+} from "../../services/actions/groupActions";
 import Button from "../../components/button";
 
 function JoinGroup({ route, navigation }) {
   const { groupId } = route.params;
-  const { data: groupProfile } = useFetchGroupQuery(groupId);
+  const { data: groupProfile } = useFetchGroup(groupId);
   console.log("GroupProfile", groupProfile);
-  const [joinGroup] = useJoinGroupMutation();
+  //const [joinGroup] = useJoinGroupMutation();
+  const { mutate: joinGroup } = useJoinGroup();
 
   const handleJoinGroup = async () => {
-    try {
-      await joinGroup({ groupId });
-      navigation.replace("Group", { groupName: name, groupId: groupId });
-    } catch (err) {
-      console.log("Add Group Error: ", err);
-    }
+    joinGroup(groupId, {
+      onSuccess: () => {
+        console.log("Joined group successfully");
+        navigation.navigate("Group", {
+          groupName: groupProfile.groupName,
+          groupId: groupId,
+        });
+      },
+      onError: (error) => {
+        console.log("Error joining group", error);
+      },
+    });
   };
 
   return (

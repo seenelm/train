@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, Image, StyleSheet } from "react-native";
 import Button from "../../components/button";
-import uploadImage from "../../assets/icons/uploadimg.png";
 import { Dimensions } from "react-native";
-import edit from "../../assets/icons/editimg.png";
 import { useSelector } from "react-redux";
-import { useAddGroupMutation } from "../../api/groupsApi";
 import { useAddGroup } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
+import down from "../../assets/icons/down.png";
+import pencil from "../../assets/icons/pencil.png";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const CreateGroup = ({ navigation }) => {
-  const [image, setImage] = useState(null);
   const [groupName, setGroupName] = useState("");
   const userId = useSelector(selectUserById);
   const { mutate: addGroup, isLoading, isError, error } = useAddGroup();
-  const [addGroup1] = useAddGroupMutation();
 
   const handleAddGroup = () => {
-    addGroup({ groupName, userId });
+    addGroup(
+      { groupName, userId },
+      {
+        onSuccess: (response) => {
+          const groupId = response.groupId;
+          navigation.replace("Group", { groupName, groupId });
+        },
+        onError: (error) => {
+          console.error("Failed to create group", error);
+        },
+      }
+    );
   };
 
   return (
@@ -36,12 +36,12 @@ const CreateGroup = ({ navigation }) => {
       <View style={styles.header}>
         <Button
           style={styles.cancelButton}
+          imgStyle={{ width: 20, height: 20 }}
+          imgSource={down}
           textStyle={styles.cancelButtonText}
           onPress={() => navigation.goBack()}
-        >
-          Cancel
-        </Button>
-        <Text style={styles.title}>Create Fitspace</Text>
+        />
+        <Text style={styles.title}>Create a Fitspace</Text>
         <Button
           style={styles.cancelButton}
           textStyle={styles.cancelButtonText}
@@ -51,44 +51,17 @@ const CreateGroup = ({ navigation }) => {
         </Button>
       </View>
 
-      <ImageBackground
-        source={require("../../assets/trainer.jpg")}
-        style={styles.groupImageContainer}
-      >
-        <TouchableOpacity style={styles.overlay}>
-          <Image style={styles.iconStyle} source={edit}></Image>
-        </TouchableOpacity>
-      </ImageBackground>
-
-      {image && (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
-
-      <View style={styles.inputContainer}>
-        <View style={styles.inputRow}>
-          <Text style={styles.inputLabel}>Fitspace Name</Text>
-          <TextInput
-            style={[styles.input, styles.inputWithBorder]}
-            value={groupName}
-            onChangeText={(name) => setGroupName(name)}
-            placeholder="Enter Fitspace Name"
-            autoCorrect={false}
-            spellCheck={false}
-          />
-        </View>
-
-        <View style={styles.inputRow1}>
-          <Text style={styles.inputLabel}>Fitspace Bio</Text>
-          <TextInput
-            style={styles.input}
-            value={groupName}
-            onChangeText={(name) => setGroupName(name)}
-            placeholder="Enter Fitspace Bio"
-            autoCorrect={false}
-            spellCheck={false}
-            keyboardAppearance="dark"
-          />
-        </View>
+      <View style={styles.inputRow}>
+        <Image source={pencil} style={{ width: 25, height: 25 }} />
+        <TextInput
+          style={styles.input}
+          value={groupName}
+          onChangeText={(name) => setGroupName(name)}
+          placeholder="Name your Fitspace"
+          autoCorrect={false}
+          spellCheck={false}
+          autoFocus={true}
+        />
       </View>
     </View>
   );
@@ -109,7 +82,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: screenWidth * 0.05,
   },
   title: {
-    fontSize: screenHeight * 0.022,
+    fontSize: screenHeight * 0.025,
     fontWeight: "bold",
   },
   cancelButton: {
@@ -118,66 +91,28 @@ const styles = StyleSheet.create({
   cancelButtonText: {
     color: "black",
   },
-  inputContainer: {
-    flexDirection: "column",
-    borderTopWidth: 1,
-    borderTopColor: "#e8e8e8",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e8e8e8",
-    width: "100%",
-    marginTop: screenHeight * 0.02,
-  },
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
-    width: "100%",
+    marginHorizontal: screenWidth * 0.05,
     paddingHorizontal: screenWidth * 0.025,
-  },
-  inputRow1: {
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: screenWidth * 0.025,
-  },
-  inputLabel: {
-    width: screenWidth * 0.3,
-    fontSize: screenHeight * 0.017,
-    fontWeight: "bold",
-    marginRight: screenWidth * 0.02,
+    borderColor: "lightgrey",
+    borderWidth: 0.2,
+    borderRadius: 10,
+    backgroundColor: "#F6F6F8",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 0.5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 1,
+    elevation: 2,
   },
   input: {
     flex: 1,
-    height: screenHeight * 0.05,
+    paddingHorizontal: screenWidth * 0.03,
+    height: screenHeight * 0.06,
     justifyContent: "center",
-  },
-  touchableArea: {
-    width: "100%",
-    padding: 10,
-  },
-  inputWithBorder: {
-    borderBottomWidth: 1,
-    height: screenHeight * 0.05,
-    borderBottomColor: "#e8e8e8",
-  },
-  groupImageContainer: {
-    width: screenWidth * 0.3,
-    height: screenWidth * 0.3,
-    borderRadius: 18,
-    overflow: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    borderRadius: 18,
-    justifyContent: "center",
-  },
-  iconStyle: {
-    alignSelf: "center",
-    width: screenWidth * 0.08,
-    height: screenWidth * 0.08,
-    tintColor: "white",
+
+    fontSize: screenHeight * 0.02,
   },
 });
 

@@ -14,78 +14,60 @@ import {
 } from "./usersSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import { useRegisterUserMutation } from "./authSlice";
+import { useRegister } from "../../services/actions/authActions";
 
 const SignUp = ({ navigation }) => {
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [nameError, setNameError] = useState("");
   const dispatch = useDispatch();
   const { name, username, password } = useSelector((state) => state.users);
+  const [errors, setErrors] = useState({
+    username: "",
+    password: "",
+    name: "",
+  });
 
   const [registerUser, { isError, error }] = useRegisterUserMutation();
+  //const { isError, error } = useRegister();
 
   useEffect(() => {
-    renderUsernameError();
-    renderPasswordError();
-    renderNameError();
+    if (isError && error) {
+      const newErrors = {
+        username: error.username || "",
+        password: error.password || "",
+        name: error.name || "",
+      };
+      setErrors(newErrors);
+    } else {
+      setErrors({ username: "", password: "", name: "" });
+    }
   }, [isError, error]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
+      // const response = useRegister();
+      // // To call the mutation
+      // response.mutate({ username: username, password: password, name: name });
+      // // To access the response data
+      // console.log(response.data);
+
       const response = await registerUser({
         username,
         password,
         name,
       }).unwrap();
-
-      const token = response.token;
-      const newUsername = response.username;
-
-      // Store the token.
-      await Keychain.setGenericPassword(newUsername, token).catch((error) => {
-        console.log("Error storing token in KeyChain: ", error);
-      });
+      await Keychain.setGenericPassword(response.username, response.token);
       dispatch(setIsLoggedIn(true));
     } catch (err) {
       console.log("SignUp Error: ", err);
     }
   };
 
-  const renderUsernameError = () => {
-    if (isError && error.username !== "") {
-      setUsernameError(error.username);
-    } else {
-      setUsernameError("");
-    }
-  };
-
-  const renderPasswordError = () => {
-    if (isError && error.password !== "") {
-      setPasswordError(error.password);
-    } else {
-      setPasswordError("");
-    }
-  };
-  const renderNameError = () => {
-    if (isError && error.name !== "") {
-      setNameError(error.name);
-    } else {
-      setNameError("");
-    }
-  };
-
-  const clearErrors = () => {
-    setNameError("");
-    setUsernameError("");
-    setPasswordError("");
-  };
-
-  const inputStyleWithError = (hasError) => {
-    return hasError
+  const inputStyleWithError = (fieldName) =>
+    errors[fieldName]
       ? [loginStyles.input, loginStyles.inputError]
       : loginStyles.input;
-  };
+
+  const clearErrors = () => setErrors({ username: "", password: "", name: "" });
 
   const handlePress = () => {
     navigation.replace("Login");
@@ -96,13 +78,6 @@ const SignUp = ({ navigation }) => {
     <SafeAreaView style={loginStyles.container}>
       <View style={loginStyles.headerContainer}>
         <Image source={logo} style={loginStyles.logo} />
-        {/* <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          activeOpacity={0.6}
-          style={signupStyle.icon}
-        >
-          <Ionicons name="chevron-back" size={24} color="black" />
-        </TouchableOpacity> */}
         <Text style={loginStyles.header}>Sign up for Train</Text>
       </View>
       <View style={loginStyles.inputContainer}>
@@ -114,12 +89,12 @@ const SignUp = ({ navigation }) => {
               dispatch(setName(value));
               clearErrors();
             }}
-            style={inputStyleWithError(nameError)}
+            style={inputStyleWithError("name")}
             autoCorrect={false}
           />
-          {nameError && (
+          {errors.name && (
             <View style={signupStyle.errorContainer}>
-              <Text style={signupStyle.error}>{nameError}</Text>
+              <Text style={signupStyle.error}>{errors.name}</Text>
             </View>
           )}
         </View>
@@ -131,17 +106,16 @@ const SignUp = ({ navigation }) => {
               dispatch(setUsername(value));
               clearErrors();
             }}
-            style={inputStyleWithError(usernameError)}
+            style={inputStyleWithError("username")}
             textContentType="oneTimeCode"
             autoCorrect={false}
           />
-          {usernameError && (
+          {errors.username && (
             <View style={signupStyle.errorContainer}>
-              <Text style={signupStyle.error}>{usernameError}</Text>
+              <Text style={signupStyle.error}>{errors.username}</Text>
             </View>
           )}
         </View>
-
         <View style={signupStyle.inputWithErrorContainer}>
           <TextInput
             placeholder="Password"
@@ -151,12 +125,12 @@ const SignUp = ({ navigation }) => {
               clearErrors();
             }}
             secureTextEntry
-            style={inputStyleWithError(passwordError)}
+            style={inputStyleWithError("password")}
             textContentType="oneTimeCode"
           />
-          {passwordError && (
+          {errors.password && (
             <View style={signupStyle.errorContainer}>
-              <Text style={signupStyle.error}>{passwordError}</Text>
+              <Text style={signupStyle.error}>{errors.password}</Text>
             </View>
           )}
         </View>

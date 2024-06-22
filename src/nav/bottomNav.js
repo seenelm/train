@@ -12,6 +12,7 @@ import calendarFocused from "../assets/icons/calendar-focus.png";
 import Dashboard from "../features/dash/dashboard";
 import ChatList from "../features/chat/chatList";
 import Calendar from "../features/calendar/calendar";
+import HapticFeedback from "react-native-haptic-feedback";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,6 +34,10 @@ export const BottomNav = () => {
         useNativeDriver: false,
       }),
     ]).start();
+    HapticFeedback.trigger("impactLight", {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    });
   };
 
   return (

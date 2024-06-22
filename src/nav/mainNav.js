@@ -10,15 +10,16 @@ import Search from "../features/search/search";
 import Profile from "../features/profile/profile";
 import UserProfile from "../features/profile/userProfile";
 import { BottomNav } from "./bottomNav";
+import AddChat from "../features/chat/addChat";
 import Chat from "../features/chat/chat";
 import Back from "../assets/icons/back.png";
-import EditGroup from "../features/groups/editGroup";
+import GroupInfo from "../features/groups/info";
 import EditGroupMembers from "../features/groups/editGroupMembers";
 import Button from "../components/button";
 import { appIcons } from "../styles/styles";
 
 import Requests from "../features/requests/requests";
-import EditingGroup from "../features/groups/editingGroup";
+import EditGroup from "../features/groups/editGroup";
 import EditingProfile from "../features/profile/editingProfile";
 import JoinGroup from "../features/groups/joinGroup";
 import RequestGroup from "../features/groups/requestGroup";
@@ -47,11 +48,16 @@ const MainNav = () => {
         <MainStack.Screen
           name="EditMembers"
           component={EditGroupMembers}
-          options={{ headerShown: false }}
+          options={({ route, navigation }) => {
+            const { groupId } = route.params;
+            return {
+              headerShown: false,
+            };
+          }}
         />
         <MainStack.Screen
           name="Fitspace Info"
-          component={EditGroup}
+          component={GroupInfo}
           options={({ route, navigation }) => {
             const { groupId } = route.params;
             return {
@@ -119,8 +125,18 @@ const MainNav = () => {
           }}
         />
         <MainStack.Screen
-          name="EditingGroup"
-          component={EditingGroup}
+          name="AddChat"
+          component={AddChat}
+          options={{
+            headerShown: false,
+            cardStyleInterpolator:
+              CardStyleInterpolators.forModalPresentationIOS,
+            gestureDirection: "vertical",
+          }}
+        />
+        <MainStack.Screen
+          name="EditGroup"
+          component={EditGroup}
           options={{
             headerShown: false,
             cardStyleInterpolator:

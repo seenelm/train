@@ -38,6 +38,10 @@ const ChatList = ({ navigation }) => {
     numberOfUsers: users.length,
   }));
 
+  const nav = (screen) => {
+    navigation.navigate(screen);
+  };
+
   console.log(JSON.stringify(simplifiedGroups, null, 2));
 
   const renderItem = ({ item }) => {
@@ -124,7 +128,7 @@ const ChatList = ({ navigation }) => {
         />
       </SafeAreaView>
       <Button
-        onPress={() => {}}
+        onPress={() => nav("AddChat")}
         style={style.addGroupButton}
         imgSource={compose}
         imgStyle={style.addGroupIcon}
