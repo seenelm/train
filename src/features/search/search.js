@@ -20,7 +20,7 @@ const Search = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       setSearch("");
-      textInputRef.current.focus(); // Focus the text input
+      textInputRef.current.focus();
     }
   }, [isFocused]);
 
