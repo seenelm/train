@@ -1,20 +1,22 @@
 import React from "react";
 import { TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 
-const Button = ({
-  onPress,
-  children,
-  imgSource,
-  imgStyle,
-  style,
-  textStyle,
-}) => {
+interface ButtonProps {
+  onPress?: () => void;
+  children?: any;
+  imgSource?: any;
+  imgStyle?: any;
+  style?: any;
+  textStyle?: any;
+}
+
+const Button = (props: ButtonProps) => {
   return (
-    <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
-      {children && (
-        <Text style={[styles.buttonText, textStyle]}>{children}</Text>
+    <TouchableOpacity style={[styles.button, props.style]} onPress={props.onPress}>
+      {props.children && (
+        <Text style={[styles.buttonText, props.textStyle]}>{props.children}</Text>
       )}
-      <Image source={imgSource} style={[styles.image, imgStyle]} />
+      <Image source={props.imgSource} style={[styles.image, props.imgStyle]} />
     </TouchableOpacity>
   );
 };
