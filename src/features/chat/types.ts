@@ -7,21 +7,27 @@ export interface User {
 
 export interface ConversationRequest {
   name?: string;
-  ownerId: ObjectId;
+  owner_id: ObjectId;
   members: User[];
-  createdAt: Date;
+  created_at: Date;
 }
 
 export interface MessageRequest {
-  senderId: ObjectId;
-  conversationId?: ObjectId;
+  sender_id: ObjectId;
+  conversation_id: ObjectId;
   text: string;
-  createdAt: Date;
+  created_at: Date;
+}
+
+export interface InitMessageRequest {
+    sender_id: ObjectId;
+    text: string;
+    created_at: Date;
 }
 
 export interface CreateConversation {
-  conversationRequest: ConversationRequest;
-  messageRequest: MessageRequest;
+  conversation_request: ConversationRequest;
+  init_message_request: InitMessageRequest;
 }
 
 export interface MessageResponse {

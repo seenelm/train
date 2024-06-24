@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { CreateConversation } from "./types";
-import Config from "react-native-config";
+import { socketUrl } from "../../common/config";
 
-export const socket = io("http://10.0.0.203:3001");
+export const socket = io(socketUrl);
 export const useSocket = () => {
     useEffect(() => {
         socket.on('connect', () => {

@@ -10,12 +10,11 @@ import {
   Platform
 } from "react-native";
 import send from "../../assets/icons/send.png";
-// import Button from "../../components/button.tsx";
 import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSearchUsers } from "../../services/actions/searchActions";
 import Profile from "../../components/profile";
-import groupProfile from "../../assets/icons/groupProfile.png";
+// import groupProfile from "../../assets/icons/groupProfile.png";
 import { RouteProp } from "@react-navigation/native";
 import { selectUserById } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
@@ -24,6 +23,7 @@ import {
   ConversationRequest,
   MessageRequest,
   MessageResponse,
+  InitMessageRequest,
   User
 } from "./types";
 import { socket, createConversation } from "./socketClient";
@@ -48,7 +48,7 @@ const AddChat = ({ route }: Props ) => {
   const [input, setInput] = useState("");
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState(null);
-  const [recipient, setRecipient] = "Ryan Reynolds";
+  const [recipient, setRecipient] = useState<string>("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showProfiles, setShowProfiles] = useState(true);
 
@@ -63,23 +63,23 @@ const AddChat = ({ route }: Props ) => {
     setShowProfiles(false);
   };
   
-  const handleCreateChat = async () => {
-    const messageRequest: MessageRequest = {
-      senderId: userId,
+  const handleCreateChat = () => {
+    const init_message_request: InitMessageRequest = {
+      sender_id: userId,
       text: input,
-      createdAt: new Date(),
+      created_at: new Date(),
     };
 
-    const conversationRequest: ConversationRequest = {
+    const conversation_request: ConversationRequest = {
       name: recipient,
-      ownerId: userId,
+      owner_id: userId,
       members: selectedUser ? [selectedUser] : [],
-      createdAt: new Date(),
+      created_at: new Date(),
     }
 
     const createConversationRequest: CreateConversation = {
-      conversationRequest,
-      messageRequest,
+      conversation_request,
+      init_message_request,
     };
     console.log("Handle Chat", createConversationRequest);
     createConversation(createConversationRequest);
@@ -138,7 +138,7 @@ const AddChat = ({ route }: Props ) => {
             style={styles.composeInput}
             placeholder="Recipient's name"
             value={recipient}
-            // onChangeText={setRecipient}
+            onChangeText={(text) => setRecipient(text)}
             autoFocus={!inNavigator}
             autoCorrect={false}
             editable={true} // Optional: Make input non-editable if desired
