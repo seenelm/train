@@ -41,19 +41,19 @@ const Chat = ({ route }) => {
 
     socket.on("connect", () => {
       console.log("Connected to socket server:", socket.id);
-      setName(`anon-${socket.id}`);
-      setConnected(true);
-      console.log("joining room", currentRoom);
+      // setName(`anon-${socket.id}`);
+      // setConnected(true);
+      // console.log("joining room", currentRoom);
 
-      socket.emit("create-chat", createChat);
-      socket.emit("join", currentRoom);
+      // socket.emit("create-chat", createChat);
+      // socket.emit("join", currentRoom);
     });
 
-    socket.on("message", (msg) => {
-      console.log("Message received", msg);
-      msg.date = new Date(msg.date);
-      setMessages((messages) => [...messages, msg]);
-    });
+    // socket.on("message", (msg) => {
+    //   console.log("Message received", msg);
+    //   msg.date = new Date(msg.date);
+    //   setMessages((messages) => [...messages, msg]);
+    // });
 
     return () => socket.close();
   }, []);
