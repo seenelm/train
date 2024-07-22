@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef, useEffect, Fragment, useId } from "react";
 import Message from "../../components/message";
 import {
   Text,
@@ -13,6 +13,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import Header from "../../components/header";
+import { io } from "socket.io-client";
 
 import compose from "../../assets/icons/compose.png";
 import Button from "../../components/button";
@@ -31,12 +32,27 @@ const ChatList = ({ navigation }) => {
   const userId = useSelector(selectUserById);
   const { data: groups } = useFetchUserGroups(userId);
   const [search, setSearch] = useState("");
+  const [socket, setSocket] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;
   const simplifiedGroups = groups.map(({ groupName, bio, users }) => ({
     groupName,
     bio,
     numberOfUsers: users.length,
   }));
+
+  useEffect(() => {
+    socket?.emit("join", userId);
+  }, [userId]);
+
+  useEffect(() => {
+    const socket = io(`${Config.SOCKET_URL}`);
+    setSocket(socket);
+
+    socket.on("connect", () => {
+      console.log("Connected to socket server:", socket.id);
+    });
+    return () => socket.close();
+  }, []);
 
   const nav = (screen) => {
     navigation.navigate(screen);

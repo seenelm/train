@@ -6,6 +6,7 @@ import {
   FlatList,
   StyleSheet,
   KeyboardAvoidingView,
+  TouchableOpacity,
   ViewStyle,
   Platform
 } from "react-native";
@@ -14,7 +15,6 @@ import Button from "../../components/button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSearchUsers } from "../../services/actions/searchActions";
 import Profile from "../../components/profile";
-// import groupProfile from "../../assets/icons/groupProfile.png";
 import { RouteProp } from "@react-navigation/native";
 import { selectUserById } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
@@ -38,10 +38,11 @@ type ParamList = {
 
 type Props = {
   route: RouteProp<ParamList, 'AddChat'>;
+  navigation: any;
 };
 
 // changes for messages feature on frontend
-const AddChat = ({ route }: Props ) => {
+const AddChat = ({ navigation, route }: Props ) => {
   const userId = useSelector(selectUserById);
   const inNavigator = route.params?.inNavigator ?? false;
   const [messages, setMessages] = useState([]);
@@ -49,20 +50,29 @@ const AddChat = ({ route }: Props ) => {
   const [connected, setConnected] = useState(false);
   const [name, setName] = useState(null);
   const [recipient, setRecipient] = useState<string>("");
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [showProfiles, setShowProfiles] = useState(true);
 
   const { data } = useSearchUsers(recipient);
 
+  const toggleUserSelection = (user: User) => {
+    if (selectedUsers.some(selected => selected.id === user.id)) {
+      setSelectedUsers(selectedUsers.filter(selected => selected.id !== user.id));
+    } else {
+      setSelectedUsers([...selectedUsers, user]);
+    }
+    setRecipient("");
+  };
+  
   const selectUser = (data: any) => {
     const user: User = {
       id: data._id,
       name: data.name,
     };
-    setSelectedUser(user);
-    setShowProfiles(false);
-  };
-  
+    toggleUserSelection(user);
+    setRecipient("");
+  };  
+
   const handleCreateChat = () => {
     const init_message_request: InitMessageRequest = {
       sender_id: userId,
@@ -71,11 +81,11 @@ const AddChat = ({ route }: Props ) => {
     };
 
     const conversation_request: ConversationRequest = {
-      name: recipient,
+      name: selectedUsers.map(user => user.name).join(", "),
       owner_id: userId,
-      members: selectedUser ? [selectedUser] : [],
+      members: selectedUsers,
       created_at: new Date(),
-    }
+    };
 
     const createConversationRequest: CreateConversation = {
       conversation_request,
@@ -83,15 +93,19 @@ const AddChat = ({ route }: Props ) => {
     };
     console.log("Handle Chat", createConversationRequest);
     createConversation(createConversationRequest);
-      // Optionally clear the input field after sending
     setInput("");
+
+    navigation.navigate('ChatScreen', {
+      chatName: conversation_request.name,
+      initialMessage: init_message_request.text
+    });
   };
 
     interface Item {
       username?: string;
       name?: string;
     }
-    
+
     interface Props {
       item: Item;
     }
@@ -112,15 +126,6 @@ const AddChat = ({ route }: Props ) => {
       return null;
     };
 
-  // const sendMessage = () => {
-  //   if (input.trim()) {
-  //     socket?.emit("create-chat", {
-  //       createConversation,
-  //     });
-  //     setInput("");
-  //   }
-  // };
-
   const renderMessage = (message: MessageResponse ) => (
     <View style={styles.message}>
       <Text>{message.text}</Text>
@@ -134,15 +139,24 @@ const AddChat = ({ route }: Props ) => {
         <Text style={styles.name}>New Chat</Text>
         <View style={styles.compose}>
           <Text style={styles.label}>To:</Text>
-          <TextInput
-            style={styles.composeInput}
-            placeholder="Recipient's name"
-            value={recipient}
-            onChangeText={(text) => setRecipient(text)}
-            autoFocus={!inNavigator}
-            autoCorrect={false}
-            editable={true} // Optional: Make input non-editable if desired
-          />
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', flex: 1 }}>
+            {selectedUsers.map(user => (
+              <View key={user.id.toString()} style={styles.selectedUser}>
+                <Text>{user.name}</Text>
+                <TouchableOpacity onPress={() => toggleUserSelection(user)}>
+                  <Text style={styles.removeIcon}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+            <TextInput
+              style={styles.composeInput}
+              placeholder={selectedUsers.length > 0 ? "" : "Recipient's name"}
+              value={recipient}
+              onChangeText={(text) => setRecipient(text)}
+              autoFocus={!inNavigator}
+              autoCorrect={false}
+            />
+          </View>
         </View>
       </View>
       {showProfiles && (
@@ -196,6 +210,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 20,
   },
+  selectedUser: {
+    flexDirection: 'row',
+    backgroundColor: '#e1e1e1',
+    borderRadius: 10,
+    padding: 5,
+    margin: 2,
+  },
+  removeIcon: {
+    marginLeft: 5,
+    color: 'black',
+  },  
   header: {
     flexDirection: "column",
     alignItems: "center",

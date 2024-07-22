@@ -8,7 +8,7 @@ export const useSocket = () => {
     useEffect(() => {
         socket.on('connect', () => {
             console.log('Connected to socket server');
-            
+
 
         });
 

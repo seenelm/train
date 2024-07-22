@@ -3,8 +3,8 @@ import { apiUrl } from "../common/config";
 import { getToken } from "../api/actions";
 
 const api = axios.create({
-  // baseURL: `${apiUrl}/api`,
-  baseURL: "http://10.0.0.203:3000/api"
+  //baseURL: `${apiUrl}/api`,
+  baseURL: "http://192.168.1.24:3000/api"
 });
 
 api.interceptors.request.use(
