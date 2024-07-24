@@ -26,7 +26,7 @@ import {
   InitMessageRequest,
   User
 } from "./types";
-import { socket, createConversation } from "./socketClient";
+import { socketClient, createConversation, handleCreateConversation } from "./client/ChatClient";
 
 
 type ParamList = {
@@ -73,7 +73,7 @@ const AddChat = ({ navigation, route }: Props ) => {
     setRecipient("");
   };  
 
-  const handleCreateChat = () => {
+  const handleCreateChat = async () => {
     const init_message_request: InitMessageRequest = {
       sender_id: userId,
       text: input,
