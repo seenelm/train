@@ -1,74 +1,102 @@
 import React, { useState, useEffect } from "react";
+import { ObjectId } from "mongodb";
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   FlatList,
   KeyboardAvoidingView,
   Image,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/button";
 import send from "../../assets/icons/send.png";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import groupProfile from "../../assets/icons/groupProfile.png";
 import Config from "react-native-config";
-// changes for messages feature on frontend
-const Chat = ({ route }) => {
-  const inNavigator = route.params?.inNavigator ?? false;
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [socket, setSocket] = useState(null);
-  const [connected, setConnected] = useState(false);
-  const [name, setName] = useState(null);
-  const { currentRoom, id } = route.params;
+import { selectUserById } from "../auth/usersSlice";
+import { useSelector } from "react-redux";
+import { sendMessage as sendChatMessage, handleMessage } from "./client/ChatClient";
 
-  const createChat = {
-    chat_name: currentRoom,
-    group_id: id,
+interface Message {
+  sender_id: ObjectId;
+  conversation_id: ObjectId;
+  text: string;
+  created_at: Date;
+}
+
+interface RouteParams {
+  currentRoom: string;
+}
+
+interface ChatProps {
+  route: {
+    params: RouteParams;
   };
+}
+
+const Chat = ({ route }: ChatProps) => {
+  const userId = useSelector(selectUserById);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState<string>("");
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const { conversationId, currentRoom } = route.params;
+  console.log("currentRoom", conversationId);
+ 
+  const handleNewMessage = async () => {
+    try{
+      const message = await handleMessage();
+      console.log("Received message:", message);
+      setMessages((prevMessages) => [...prevMessages, message]);
+    } catch (error) {
+      console.log("Error receiving message:", error);
+    }
+    
+  }
 
   useEffect(() => {
-    setMessages([]);
-    socket?.emit("join", currentRoom);
-  }, [currentRoom]);
-
-  useEffect(() => {
-    const socket = io(`${Config.SOCKET_URL}`);
-    setSocket(socket);
-
-    socket.on("connect", () => {
-      console.log("Connected to socket server:", socket.id);
-      // setName(`anon-${socket.id}`);
-      // setConnected(true);
-      // console.log("joining room", currentRoom);
-
-      // socket.emit("create-chat", createChat);
-      // socket.emit("join", currentRoom);
+    const socketUrl = Config.SOCKET_URL || "http://localhost:3000";
+    const newSocket = io(socketUrl);
+    setSocket(newSocket);
+  
+    newSocket.on("connect", () => {
+      console.log("Connected to socket server:", newSocket.id);
+      newSocket.emit("join-chat", { conversationId });
     });
-
-    // socket.on("message", (msg) => {
-    //   console.log("Message received", msg);
-    //   msg.date = new Date(msg.date);
-    //   setMessages((messages) => [...messages, msg]);
+  
+    // handleMessage().then((message) => {
+    //   console.log("Received message:", message);
+    //   setMessages((prevMessages) => [...prevMessages, message]);
     // });
 
-    return () => socket.close();
-  }, []);
+    handleNewMessage();
+  
+    return () => {
+      newSocket.emit("leaveRoom", { conversationId });
+      newSocket.disconnect();
+    };
+  }, [conversationId]);
+  
 
-  const sendMessage = () => {
-    if (input.trim()) {
-      socket?.emit("message", {
+  const handleSendMessage = () => {
+    if (input.trim() && socket) {
+      const message: Message = {
+        sender_id: userId,
+        conversation_id: conversationId,
         text: input,
-        room: currentRoom,
-      });
+        created_at: new Date(),
+      };
+      console.log("Sending message:", message);
+      sendChatMessage(message);
+      setMessages((prevMessages) => [...prevMessages, message]);
       setInput("");
     }
   };
+  
 
-  const renderMessage = ({ item }) => (
+  const renderMessage = ({ item }: { item: Message }) => (
     <View style={styles.message}>
       <Text>{item.text}</Text>
       {/* Render additional message details */}
@@ -88,9 +116,7 @@ const Chat = ({ route }) => {
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={
-          Platform.OS === "ios" ? (inNavigator ? -80 : 10) : 0
-        }
+        keyboardVerticalOffset={Platform.OS === "ios" ? -80 : 0}
       >
         <View style={styles.inputWrapper}>
           <TextInput
@@ -100,7 +126,7 @@ const Chat = ({ route }) => {
             onChangeText={setInput}
           />
           <Button
-            onPress={sendMessage}
+            onPress={handleSendMessage}
             imgSource={send}
             imgStyle={styles.sendIcon}
             style={styles.sendButton}

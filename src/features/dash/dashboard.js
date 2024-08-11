@@ -34,7 +34,7 @@ const Dashboard = ({ navigation }) => {
     useFetchUserGroups(userId);
   const { data: groupImage, isFetching: isFetchingGroupImage } =
     useFetchGroupImage();
-
+  console.log("groups", groups);
   const isLoading = isFetchingGroups || isFetchingGroupImage;
 
   const handleGroupTap = (groupName, groupId) => {

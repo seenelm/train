@@ -1,9 +1,13 @@
 import axios from "axios";
-import { apiUrl } from "../common/config";
+import { apiUrl, chatUrl } from "../common/config";
 import { getToken } from "../api/actions";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: `${apiUrl}/api`,
+});
+
+export const chatApi = axios.create({
+  baseURL: `${chatUrl}/chat/api`,
 });
 
 api.interceptors.request.use(
@@ -19,4 +23,12 @@ api.interceptors.request.use(
   }
 );
 
-export default api;
+
+/** TODO: add in endpoints
+ * 1. /conversations
+ * 2. /messages
+ * 3. send messages over the socket
+ * 4. clean up api folders
+ * 
+ * 
+ */

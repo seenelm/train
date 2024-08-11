@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Fragment, useId } from "react";
+import React, { useState, useRef, useEffect, Fragment } from "react";
 import Message from "../../components/message";
 import {
   Text,
@@ -12,31 +12,22 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import Header from "../../components/header";
-import { io } from "socket.io-client";
-
 import compose from "../../assets/icons/compose.png";
+import Header from "../../components/header";
 import Button from "../../components/button";
 import profile from "../../assets/icons/profilepic.png";
 import groupProfile from "../../assets/icons/groupProfile.png";
 import searchicon from "../../assets/icons/search.png";
 
 import { useSelector } from "react-redux";
-import { useFetchGroupsQuery } from "../../api/usersApi";
 import { useFetchUserGroups } from "../../services/actions/groupActions";
+import { useFetchConversations } from "../../services/actions/chatActions";
 import { selectUserById } from "../auth/usersSlice";
-
-import { socketUrl } from "../../common/config";
 import { socketClient, createSocketConnection, handleCreateConversation } from "./client/ChatClient";
-
-import { GroupProfileType, Group, GroupResponse } from "../../types/group";
+import { Group } from "../../types/group";
+import { ConversationResponse } from "./types";
 
 const HEADER_HEIGHT = 60;
-
-
-// interface ChatListProps {
-//   navigation: NavigationProp<ParamListBase>;
-// }
 
 type Props = {
   navigation: any;
@@ -45,17 +36,11 @@ type Props = {
 const ChatList = ({ navigation }: Props) => {
   const userId = useSelector(selectUserById);
   const { data: groups } = useFetchUserGroups(userId);
+  const { data: conversations } = useFetchConversations(userId);
   const [search, setSearch] = useState("");
-  const [socket, setSocket] = useState(null);
   const scrollY = useRef(new Animated.Value(0)).current;
-  // const simplifiedGroups = groups.map(({ groupName, bio, users }) => ({
-  //   groupName,
-  //   bio,
-  //   numberOfUsers: users.length,
-  // }));
-
+  
   useEffect(() => {
-    // socket?.emit("join", userId);
     createSocketConnection(userId);
   }, [userId]);
 
@@ -65,53 +50,35 @@ const ChatList = ({ navigation }: Props) => {
   };
 
   useEffect(() => {
-    // const socket = io(socketUrl);
-    // setSocket(socket);
-
     socketClient.on("connect", () => {
       console.log("Connected to socket server:", socketClient.id);
     });
 
     fetchData();
-    // return () => socketClient.close();
   }, []);
 
-  const nav = (screen: string) => {
-    navigation.navigate(screen);
+  const nav = (screen: string, params?: any) => {
+    navigation.navigate(screen, params);
+  };
+  
+
+  const handleFilteredMessages = () => {
+    return conversations?.conversations?.filter((conversation: { name: string }) =>
+      conversation.name.toLowerCase().includes(search.toLowerCase())
+    );
   };
 
-  // console.log(JSON.stringify(simplifiedGroups, null, 2));
-
-  const renderItem = ( {item} : {item: Group} ) => {
+  const renderItem = ({ item }: { item: ConversationResponse }) => {
     return (
       <Message
-        name={item.groupName}
-        content={item.bio}
+        name={item.name}
+        content={""}
         profilePic={groupProfile}
         navigation={navigation}
-        route={{ params: { currentRoom: item.groupName, id: item._id } }}
+        route={{ params: { currentRoom: item.name, id: item.id } }}
       />
     );
   };
-
-  const handleFilteredMessages = () => {
-    if (!groups) {
-      console.error("No groups found");
-      return;
-    }
-
-    return groups.filter(
-      (group: GroupResponse) =>
-        group.groupName.toLowerCase().includes(search.toLowerCase()) ||
-        group.bio.toLowerCase().includes(search.toLowerCase())
-    );
-  }
-
-  // const filteredMessages = groups.filter(
-  //   (message) =>
-  //     message.groupName.toLowerCase().includes(search.toLowerCase()) ||
-  //     message.bio.toLowerCase().includes(search.toLowerCase())
-  // );
 
   const searchBarPosition = scrollY.interpolate({
     inputRange: [0, HEADER_HEIGHT],
@@ -144,7 +111,7 @@ const ChatList = ({ navigation }: Props) => {
         <Animated.FlatList
           data={handleFilteredMessages()}
           renderItem={renderItem}
-          keyExtractor={(item: Group) => item._id.toString()}
+          keyExtractor={(item: ConversationResponse) => item.id.toString()}
           contentContainerStyle={style.messageContainer}
           onScroll={Animated.event(
             [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -204,7 +171,6 @@ const style = StyleSheet.create({
   messageContainer: {
     flex: 0,
   },
-
   TextInput: {
     borderWidth: 1,
     borderColor: "#ccc",

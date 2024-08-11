@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { GroupProfileType, GroupType, UserGroupsResponse, GroupResponse } from "../../types/group";
-import api from "../api";
+import { api } from "../api";
 
 export const addGroup = async ( group: GroupType ): Promise<GroupType | undefined> => {
   try {
@@ -40,12 +40,12 @@ export const fetchUserGroups = async (userId: ObjectId): Promise<GroupResponse[]
   try {
     const { data } = await api.get(`/users/${userId}/groups`);
     console.log("fetchUserGroups data: ", data);
-    return data.groups;
+    return data;
   } catch (error) {
-    // log error to file
     console.error("fetchGroup api error: ", error);
   }
 };
+
 
 export const fetchGroupRequests = async (userId: ObjectId) => {
   try {

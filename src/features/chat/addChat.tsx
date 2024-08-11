@@ -28,7 +28,6 @@ import {
 } from "./types";
 import { socketClient, createConversation, handleCreateConversation } from "./client/ChatClient";
 
-
 type ParamList = {
   AddChat: {
     userId: string;
@@ -52,6 +51,7 @@ const AddChat = ({ navigation, route }: Props ) => {
   const [recipient, setRecipient] = useState<string>("");
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [showProfiles, setShowProfiles] = useState(true);
+  // const { joinChat } = useChat(); // Use context
 
   const { data } = useSearchUsers(recipient);
 
