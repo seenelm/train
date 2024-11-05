@@ -5,16 +5,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/button";
 import {
   useFetchUserDataQuery,
-  useFetchGroupsQuery,
   useFetchFollowDataQuery,
 } from "../../api/usersApi";
+import { useFetchUserGroups } from "../../services/actions/groupActions";
 import Card from "../../components/card";
 import trainerImage from "../../assets/trainer.jpg";
 
 const UserProfile = ({ route }) => {
   const { userId } = route.params;
   const { data: users, refetch: refetchUser } = useFetchUserDataQuery(userId);
-  const { data: groups, isLoading: groupLoading } = useFetchGroupsQuery(userId);
+  const { data: groups, isLoading: groupLoading } = useFetchUserGroups(userId);
   const { data: followData, refetch: refetchFollow } =
     useFetchFollowDataQuery(userId);
   console.log("followData", followData);

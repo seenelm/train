@@ -34,7 +34,7 @@ const EditingProfile = ({ navigation }) => {
 
   useEffect(() => {
     if (userData) {
-      setName(userData.name);
+      setName(userData.username);
       setUserBio(userData.bio);
       setAccountType(userData.accountType);
     }
@@ -43,6 +43,7 @@ const EditingProfile = ({ navigation }) => {
   console.log("accountType", accountType);
 
   const { data: userData, refetch } = useFetchUserProfileQuery(userId);
+  console.log("Editing Profile Data: ", userData);
 
   const handleUpdateUserProfile = async () => {
     try {

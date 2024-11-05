@@ -4,22 +4,10 @@ import { createSelector } from "@reduxjs/toolkit";
 export const usersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => {
     return {
-      fetchGroups: builder.query({
-        query: (userId) => {
-          return {
-            url: `/users/${userId}/groups`,
-            method: "GET",
-          };
-        },
-        transformResponse: (response) => {
-          return response;
-        },
-      }),
-
       fetchUserProfile: builder.query({
         query: (userId) => {
           return {
-            url: `users/${userId}`,
+            url: `/${userId}`,
             method: "GET",
           };
         },
@@ -64,11 +52,11 @@ export const usersApi = apiSlice.injectEndpoints({
   },
 });
 
-const selectGroups = usersApi.endpoints.fetchGroups.select();
+// const selectGroups = usersApi.endpoints.fetchGroups.select();
 
-export const selectUserGroups = createSelector(selectGroups, (user) => {
-  return user?.groups;
-});
+// export const selectUserGroups = createSelector(selectGroups, (user) => {
+//   return user?.groups;
+// });
 
 export const {
   useFetchGroupsQuery,

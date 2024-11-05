@@ -4,7 +4,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 const Message = ({ name, content, profilePic, navigation, route }) => {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("ChatScreen", route.params)}
+      onPress={() =>
+        navigation.navigate("ChatScreen", {
+          conversationId: route.params.id, // Passing the conversationId here
+          currentRoom: route.params.currentRoom, // Passing the currentRoom name if needed
+        })
+      }
       style={styles.container}
     >
       <View style={styles.messageContainer}>
@@ -19,6 +24,7 @@ const Message = ({ name, content, profilePic, navigation, route }) => {
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   messageContainer: {
     flexDirection: "row",

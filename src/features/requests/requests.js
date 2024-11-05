@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Request from "../../components/request";
-import { useGroupRequestsQuery } from "../../api/groupsApi";
+import { useFetchGroupRequests } from "../../services/actions/groupActions";
 import { selectUserById } from "../auth/usersSlice";
 import { useSelector } from "react-redux";
 import ProfilePic from "../../assets/icons/profilepic.png";
@@ -9,7 +9,7 @@ import { Image } from "react-native-svg";
 
 function Requests() {
   const userId = useSelector(selectUserById);
-  const { data: groupsWithRequests } = useGroupRequestsQuery(userId);
+  const { data: groupsWithRequests } = useFetchGroupRequests(userId);
   console.log("GroupsWithRequests", groupsWithRequests);
 
   if (!groupsWithRequests || groupsWithRequests.length === 0) {

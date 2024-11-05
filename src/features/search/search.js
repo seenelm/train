@@ -4,29 +4,23 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Profile from "../../components/profile";
 import GroupProfile from "../../components/groupProfile";
 import searchicon from "../../assets/icons/search.png";
-import { useFindUsersQuery } from "../../api/searchApi";
+import { useSearchUsers } from "../../services/actions/searchActions";
 import { useIsFocused } from "@react-navigation/native";
 import back from "../../assets/icons/back.png";
+import Button from "../../components/button";
 
 const Search = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const isFocused = useIsFocused();
   const textInputRef = useRef(null);
 
-  const { data, refetch } = useFindUsersQuery(search);
+  const { data } = useSearchUsers(search);
   console.log("Search Data: ", data);
 
   useEffect(() => {
-    if (search !== "") {
-      refetch();
-    }
-  }, [search]);
-
-  useEffect(() => {
     if (isFocused) {
-      // This will run when the screen comes into focus
       setSearch("");
-      textInputRef.current.focus(); // Focus the text input
+      textInputRef.current.focus();
     }
   }, [isFocused]);
 
@@ -94,7 +88,12 @@ const Search = ({ navigation }) => {
   return (
     <SafeAreaView style={searchStyles.container}>
       <View style={searchStyles.header}>
-        <Image source={back} style={searchStyles.back} />
+        <Button
+          style={searchStyles.iconContainer}
+          imgStyle={searchStyles.back}
+          imgSource={back}
+          onPress={() => navigation.goBack()}
+        />
         <View style={searchStyles.searchBar}>
           <Image
             source={searchicon}
@@ -108,7 +107,6 @@ const Search = ({ navigation }) => {
             value={search}
             autoCorrect={false}
             spellCheck={false}
-            keyboardAppearance="dark"
             autoFocus={true}
           />
         </View>
@@ -162,11 +160,16 @@ const searchStyles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 5,
   },
+  iconContainer: {
+    width: 20,
+    height: 20,
+    backgroundColor: "transparent",
+  },
   back: {
     width: 20,
     height: 20,
     marginLeft: 5,
-    marginTop: 3,
+    marginTop: 4,
   },
   header: {
     flexDirection: "row",
