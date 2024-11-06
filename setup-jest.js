@@ -46,11 +46,6 @@ jest.mock("react-native-config", () => ({
   API_URL: "http://localhost:3000",
 }));
 
-// Mock flipper
-jest.mock("react-native-flipper", () => ({
-  addPlugin: jest.fn(),
-}));
-
 // mock async storage
 jest.mock("@react-native-async-storage/async-storage", () => ({
   setItem: jest.fn(),
