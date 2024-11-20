@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://192.168.1.152:3000",
-  "socketUrl": "http://192.168.1.152:3001",
-  "chatUrl": "http://192.168.1.152:3002"
+  "apiUrl": "http://localhost:3000",
+  "socketUrl": "http://localhost:3001",
+  "chatUrl": "http://localhost:3002"
 }
